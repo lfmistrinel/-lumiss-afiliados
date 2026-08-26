@@ -85,6 +85,22 @@
     margin:0 0 32px;
   }
   .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .hero-grid{display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start;}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr;} .product-card{max-width:340px;}}
+  .product-card{
+    border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
+    background:var(--leather-mid);
+  }
+  .product-card .pc-img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#fff;}
+  .product-card .pc-body{padding:16px;}
+  .product-card .pc-round{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--caramelo-soft);margin:0 0 6px;
+  }
+  .product-card h4{margin:0 0 12px;font-size:15px;line-height:1.3;color:var(--paper);}
+  .product-card a.btn{
+    width:100%;justify-content:center;padding:11px 16px;font-size:13px;
+  }
   .btn{
     display:inline-flex;align-items:center;gap:8px;
     background:var(--stamp);
@@ -145,21 +161,41 @@
   .prize-note{margin-top:12px;font-size:12.5px;color:var(--paper-dim);}
   .prize-note code{background:var(--leather-mid);padding:2px 6px;border-radius:4px;}
 
-  /* ---------- video library ---------- */
+  /* ---------- ranking ---------- */
+  .ranking-list{border:1px solid var(--leather-line);border-radius:10px;overflow:hidden;}
+  .ranking-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 20px;border-bottom:1px solid var(--leather-line);
+    background:var(--leather-mid);
+  }
+  .ranking-row:last-child{border-bottom:none;}
+  .ranking-row.top3{background:linear-gradient(90deg, rgba(217,179,108,.14), transparent);}
+  .ranking-pos{display:flex;align-items:center;gap:12px;}
+  .ranking-pos .rk{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold);min-width:26px;}
+  .ranking-pos .name{font-size:14.5px;color:var(--paper);}
+  .ranking-pos .handle{font-size:12.5px;color:var(--paper-dim);margin-left:6px;}
+  .ranking-gmv{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--paper);}
+  .ranking-empty{color:var(--paper-dim);font-size:13.5px;padding:24px;text-align:center;}
+
+  /* ---------- acesso pós-cadastro ---------- */
   .lib-locked{
     border:1px dashed var(--leather-line);border-radius:10px;
     padding:32px 24px;text-align:center;color:var(--paper-dim);
   }
   .lib-locked .lock{font-size:26px;margin-bottom:10px;}
-  .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
-  .video-card{
-    border:1px solid var(--leather-line);border-radius:8px;padding:16px;
-    background:var(--leather-mid);
+  .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.access-grid{grid-template-columns:1fr;}}
+  .access-card{
+    display:flex;flex-direction:column;gap:10px;
+    border:1px solid var(--leather-line);border-radius:10px;padding:24px;
+    background:var(--leather-mid);text-align:center;align-items:center;
   }
-  .video-card .vt{font-size:13.5px;color:var(--paper);margin:0 0 6px;}
-  .video-card a{color:var(--caramelo-soft);font-size:13px;text-decoration:none;}
-  .video-card a:hover{text-decoration:underline;}
-  .video-empty{grid-column:1/-1;color:var(--paper-dim);font-size:13.5px;padding:20px;text-align:center;border:1px dashed var(--leather-line);border-radius:8px;}
+  .access-card .ic{font-size:28px;}
+  .access-card h3{margin:0;font-size:16px;color:var(--paper);}
+  .access-card p{margin:0;font-size:13px;color:var(--paper-dim);}
+  .access-card a.btn{width:100%;justify-content:center;margin-top:4px;}
+  .access-card.whats a.btn{background:#25D366;}
+  .access-card.whats a.btn:hover{background:#2fe374;}
 
   /* ---------- form ---------- */
   form{border:1px solid var(--leather-line);border-radius:10px;padding:28px;background:var(--leather-mid);}
@@ -195,17 +231,29 @@
   <header>
     <div class="brandrow">
       <div class="brand">LUMISS<span>·</span>AFILIADAS</div>
-      <div class="tag mono">TIKTOK SHOP</div>
+      <div class="tag mono">LUMISSQUAD</div>
     </div>
   </header>
 
   <section class="hero" style="border-top:none;padding-top:24px;">
-    <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
-    <h1 class="display">Poste o produto.<br>Suba no <em>ranking</em>.<br>Ganhe em dinheiro.</h1>
-    <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca de vídeos prontos e poste no seu TikTok. As vendas geradas em 15 dias definem o ranking — e as melhores colocadas ganham prêmio em dinheiro.</p>
-    <div class="cta-row">
-      <button class="btn" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
-      <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
+    <div class="hero-grid">
+      <div>
+        <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
+        <h1 class="display">Poste o produto.<br>Suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
+        <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. As vendas geradas ao longo de 15 dias definem o ranking — e as melhores colocadas recebem premiação em dinheiro.</p>
+        <div class="cta-row">
+          <button class="btn" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
+          <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <img class="pc-img" src="produto-c1.jpg" alt="Produto da rodada">
+        <div class="pc-body">
+          <p class="pc-round mono" id="productRound">Rodada 01</p>
+          <h4 id="productName">Sandália Lançamento Lumiss</h4>
+          <a class="btn" id="productLink" href="#" target="_blank" rel="noopener">Ver no TikTok</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -215,7 +263,7 @@
     <div class="steps">
       <div class="step"><div class="num">01</div><div><h3>Cadastre-se</h3><p>Preencha seu nome, WhatsApp e @ do TikTok no formulário abaixo.</p></div></div>
       <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos prontos do produto da campanha, liberados assim que você se cadastra.</p></div></div>
-      <div class="step"><div class="num">03</div><div><h3>Poste com seu link</h3><p>Use seu link de afiliado do TikTok Shop nos vídeos que publicar.</p></div></div>
+      <div class="step"><div class="num">03</div><div><h3>Poste com seu link</h3><p>Inclua seu link de afiliada em cada vídeo publicado, para que as vendas sejam corretamente atribuídas a você.</p></div></div>
       <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Acompanhamos as vendas geradas pelo seu link durante os 15 dias de campanha.</p></div></div>
       <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As melhores colocadas no fechamento da campanha ganham prêmio em dinheiro.</p></div></div>
     </div>
@@ -225,17 +273,39 @@
     <p class="eyebrow mono">Premiação</p>
     <h2 class="display">Ranking de 15 dias</h2>
     <div class="prize-list" id="prizeList"></div>
-    <p class="prize-note">Valores de exemplo — ajuste em <code>CONFIG.prizes</code> no código da página antes de publicar.</p>
+    <p class="prize-note">Premiação válida para a rodada atual da Lumissquad. Consulte o regulamento completo com a equipe Lumiss.</p>
+  </section>
+
+  <section id="ranking">
+    <p class="eyebrow mono">Ranking ao vivo</p>
+    <h2 class="display">Quem está na frente</h2>
+    <div class="ranking-list" id="rankingList">
+      <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
+    </div>
+    <p class="prize-note">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop.</p>
   </section>
 
   <section id="biblioteca">
-    <p class="eyebrow mono">Biblioteca de vídeos</p>
-    <h2 class="display">Conteúdo pronto pra postar</h2>
+    <p class="eyebrow mono">Acesso liberado</p>
+    <h2 class="display">Onde pegar tudo</h2>
     <div id="libLocked" class="lib-locked">
       <div class="lock">🔒</div>
-      Cadastre-se abaixo para liberar os vídeos da C1.
+      Cadastre-se abaixo para liberar o acesso aos vídeos e ao grupo da Lumissquad.
     </div>
-    <div id="libGrid" class="video-grid" style="display:none;"></div>
+    <div id="libGrid" class="access-grid" style="display:none;">
+      <div class="access-card">
+        <div class="ic">🎬</div>
+        <h3>Vídeos da rodada</h3>
+        <p>Todo o material pronto pra baixar e postar.</p>
+        <a class="btn" id="driveLink" href="#" target="_blank" rel="noopener">Acessar no Drive</a>
+      </div>
+      <div class="access-card whats">
+        <div class="ic">💬</div>
+        <h3>Grupo da Lumissquad</h3>
+        <p>Novidades, novos vídeos e suporte direto com o time.</p>
+        <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
+      </div>
+    </div>
   </section>
 
   <section id="cadastro">
@@ -276,8 +346,8 @@
   </section>
 
   <footer>
-    <div>Lumiss · Campanha de afiliadas TikTok Shop</div>
-    <div class="refs" id="footerRef">C1 · 000000</div>
+    <div>Lumiss · Programa oficial de afiliadas Lumissquad</div>
+    <div class="refs" id="footerRef">Rodada 01</div>
   </footer>
 
 </div>
@@ -289,22 +359,32 @@
 const CONFIG = {
   campaignCode: "C1",
   campaignLabel: "CAMPANHA 01",
+  roundLabel: "Rodada 01",
+  productName: "Sandália Lançamento Lumiss",
+  // cole aqui o link do produto no TikTok Shop
+  productTiktokUrl: "https://shop.tiktok.com/br/pdp/1737138415943255378?encode_params=MIIBpgQMV2gPanSbHwT1pjzhBIIBghVUetEYq6Q3ldaLwqqXJKsTYnJ0x13kPgnsz3xr3bsVzC1VWvmleCeRK_qUxxlQav483S-cW8fDMOpOvh6ILv2cfeG7EylleiCZuJGMSlFWfm_fGwKwAjwMjFCXLbstri-7syMQF9Ly0yrTPpx9D2yNeFWVwDgBkw3IRrFUfLuwZEI1JAEh3CN96AkPD0MIGf1jZHsvv7brle2Yf0atYbUZC_l87do_6eV7xO23b1abhKdzupTAv7Me9gjLjBXLYn42H1mZeZSOBJSbmGGAHs7HfPhYHvLd8sMupWsUOuihdUKEeITFeTW5jvU8xvzGSzKdA7oMvA-iJUJpg329cz4fMYRm5iBj8J4YujtWqibaIZX3yjsi3GCHPyK3-zIxYWOxSvHJMw0kr4qYc6WnhMaXVnoEE1A3AEU2V8kJ0Ov9XBSxAaJyZi7XmACLv3sSnN00EZE_6vK1ZJ7-1SEjkm20Dd5EQVFkZ7aHU3KuK968Nbj8aYdNghIRYjwVAlPEVaheBBCH8a5CafWi-1UgsTPThDQM&region=BR&locale=pt-BR&source=seller_center&hide_tips=&no-cache=1&e=1",
   startDate: "2026-08-24",
   endDate:   "2026-09-08",
+  // cole aqui a URL do Apps Script depois do deploy (veja instruções que a Claude te passou)
+  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwWC2zqzgk5m56IUrkBlgfiivZ2R_0NcDXdJq-WjwRGFzD1Zmr8eFiy-lOa1hpYqz3O/exec",
+  // cole aqui a pasta do Drive com os vídeos desta rodada
+  driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
+  // cole aqui o link de convite do grupo de WhatsApp da Lumissquad
+  whatsappGroupUrl: "https://chat.whatsapp.com/SEU_LINK_AQUI",
   prizes: [
     { place: "1º lugar",     amount: "R$ 1.000" },
     { place: "2º lugar",     amount: "R$ 500" },
     { place: "3º lugar",     amount: "R$ 300" },
-    { place: "4º ao 10º",    amount: "R$ 100 cada" },
-  ],
-  // adicione aqui os links dos vídeos (Google Drive) assim que gravados — tarefa 6
-  videos: [
-    // { title: "Produto C1 — vídeo 1", url: "https://drive.google.com/..." },
+    { place: "4º lugar",     amount: "R$ 200" },
+    { place: "5º lugar",     amount: "R$ 100" },
   ],
 };
 
 document.getElementById('campaignStamp').textContent = CONFIG.campaignLabel;
-document.getElementById('footerRef').textContent = CONFIG.campaignCode + ' · ' + CONFIG.startDate.replaceAll('-','');
+document.getElementById('footerRef').textContent = CONFIG.roundLabel || 'Rodada 01';
+document.getElementById('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
+document.getElementById('productName').textContent = CONFIG.productName;
+document.getElementById('productLink').href = CONFIG.productTiktokUrl;
 
 /* prize list render */
 const prizeListEl = document.getElementById('prizeList');
@@ -317,34 +397,62 @@ CONFIG.prizes.forEach((p, i) => {
   prizeListEl.appendChild(row);
 });
 
-/* video library render (used after unlock) */
-function renderLibrary(){
-  const grid = document.getElementById('libGrid');
-  grid.innerHTML = '';
-  if(!CONFIG.videos.length){
-    grid.innerHTML = '<div class="video-empty">Os vídeos da C1 ainda estão sendo gravados — assim que prontos, aparecem aqui automaticamente.</div>';
+/* ranking ao vivo — busca a aba "Ranking" da planilha */
+async function refreshRanking(){
+  const list = document.getElementById('rankingList');
+  if(!CONFIG.sheetWebAppUrl){
+    list.innerHTML = '<div class="ranking-empty">Ranking ainda não conectado.</div>';
     return;
   }
-  CONFIG.videos.forEach(v=>{
-    const card = document.createElement('div');
-    card.className = 'video-card';
-    card.innerHTML = `<p class="vt">${v.title}</p><a href="${v.url}" target="_blank" rel="noopener">Baixar / assistir →</a>`;
-    grid.appendChild(card);
-  });
+  try{
+    const res = await fetch(CONFIG.sheetWebAppUrl + '?action=ranking');
+    const data = await res.json();
+    const ranking = (data.ranking || []).slice(0, 10);
+    if(!ranking.length){
+      list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    ranking.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'ranking-row' + (i < 3 ? ' top3' : '');
+      row.innerHTML = `
+        <div class="ranking-pos">
+          <span class="rk">#${r.posicao || (i+1)}</span>
+          <span class="name">${r.nome || ''}</span>
+          <span class="handle">${r.tiktok || ''}</span>
+        </div>
+        <div class="ranking-gmv">${r.gmv || ''}</div>`;
+      list.appendChild(row);
+    });
+  }catch(e){
+    list.innerHTML = '<div class="ranking-empty">Não foi possível carregar o ranking agora.</div>';
+  }
+}
+refreshRanking();
+setInterval(refreshRanking, 5 * 60 * 1000); // atualiza sozinho a cada 5 minutos, enquanto a página estiver aberta
+function fillAccessLinks(){
+  document.getElementById('driveLink').href = CONFIG.driveFolderUrl;
+  document.getElementById('whatsLink').href = CONFIG.whatsappGroupUrl;
 }
 
 function unlockLibrary(){
   document.getElementById('libLocked').style.display = 'none';
   document.getElementById('libGrid').style.display = 'grid';
-  renderLibrary();
+  fillAccessLinks();
 }
 
-/* affiliate counter — real count from shared storage */
+/* affiliate counter — real count from Google Sheets */
 async function refreshCounter(){
   const el = document.getElementById('counterText');
+  if(!CONFIG.sheetWebAppUrl){
+    el.textContent = 'seja a primeira a se cadastrar nesta campanha';
+    return;
+  }
   try{
-    const list = await window.storage.list('afiliada:', true);
-    const n = list && list.keys ? list.keys.length : 0;
+    const res = await fetch(CONFIG.sheetWebAppUrl);
+    const data = await res.json();
+    const n = data.count || 0;
     el.innerHTML = `<b>${n}</b> criadora${n===1?'':'s'} já confirmada${n===1?'':'s'} nesta campanha`;
   }catch(e){
     el.textContent = 'seja a primeira a se cadastrar nesta campanha';
@@ -370,24 +478,34 @@ form.addEventListener('submit', async (e)=>{
     return;
   }
   if(!tiktok.startsWith('@')) tiktok = '@' + tiktok;
-  const key = 'afiliada:' + tiktok.toLowerCase().replace(/[^a-z0-9_.]/g,'');
+
+  if(!CONFIG.sheetWebAppUrl){
+    msg.textContent = 'Cadastro ainda não conectado à planilha — fale com a equipe Lumiss.';
+    msg.className = 'msg err';
+    return;
+  }
 
   const submitBtn = form.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Enviando…';
 
   try{
-    const existing = await window.storage.get(key, true).catch(()=>null);
-    if(existing){
+    const entry = { nome, whats, tiktok, seguidores, campanha: CONFIG.campaignCode };
+    const res = await fetch(CONFIG.sheetWebAppUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
+      body: JSON.stringify(entry)
+    });
+    const result = await res.json();
+
+    if(result.status === 'duplicate'){
       msg.textContent = 'Esse @ já está cadastrado nesta campanha — biblioteca liberada abaixo.';
       msg.className = 'msg ok';
       unlockLibrary();
       document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
       return;
     }
-    const entry = { nome, whats, tiktok, seguidores, campanha: CONFIG.campaignCode, criadoEm: new Date().toISOString() };
-    const result = await window.storage.set(key, JSON.stringify(entry), true);
-    if(!result){
+    if(result.status !== 'ok'){
       msg.textContent = 'Não deu pra salvar agora. Tenta de novo em instantes.';
       msg.className = 'msg err';
       return;
