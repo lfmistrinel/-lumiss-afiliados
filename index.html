@@ -46,7 +46,7 @@
   .brandrow{display:flex;align-items:center;justify-content:space-between;}
   .brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.16em;color:var(--paper);}
   .brand span{color:var(--caramelo-soft);}
-  .brand img{height:20px;display:block;}
+  .brand img{height:36px;display:block;}
   .tag{
     border:1px solid var(--leather-line);
     padding:4px 10px;
@@ -92,7 +92,8 @@
     border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
     background:var(--leather-mid);
   }
-  .product-card .pc-img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;background:#fff;}
+  .product-card .pc-gallery{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--leather-line);}
+  .product-card .pc-gallery img{width:100%;aspect-ratio:3/4;object-fit:contain;display:block;background:#fff;}
   .product-card .pc-body{padding:16px;}
   .product-card .pc-round{
     font-size:11px;text-transform:uppercase;letter-spacing:.12em;
@@ -247,24 +248,54 @@
 
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+
+  /* ---------- faixa animada ---------- */
+  .marquee-wrap{
+    overflow:hidden;background:var(--leather-mid);
+    border-top:1px solid var(--leather-line);border-bottom:1px solid var(--leather-line);
+    padding:26px 0;
+  }
+  .marquee-track{display:flex;width:max-content;animation:marquee 16s linear infinite;}
+  .marquee-track span{
+    font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.16em;
+    color:var(--paper);padding:0 16px;white-space:nowrap;flex-shrink:0;
+  }
+  .marquee-track span.dot{color:var(--caramelo-soft);}
+  @keyframes marquee{
+    from{transform:translateX(-50%);}
+    to{transform:translateX(0%);}
+  }
+  @media (prefers-reduced-motion: reduce){.marquee-track{animation:none;}}
 </style>
 </head>
 <body>
 
 <div class="ticket-edge"></div>
-<div class="wrap">
 
-  <header>
-    <div class="brandrow">
-      <div class="brand"><img src="lumiss-logo-branco.png" alt="Lumiss"></div>
-    </div>
-  </header>
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+    <span>LUMISS</span><span class="dot">•</span>
+  </div>
+</div>
+
+<div class="wrap">
 
   <section class="hero" style="border-top:none;padding-top:24px;">
     <div class="hero-grid">
       <div>
         <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
-        <h1 class="display">Poste o produto.<br>Suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
+        <h1 class="display">Poste o produto.<br>Venda e suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
         <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. As vendas geradas ao longo de 15 dias definem o ranking — e as melhores colocadas recebem premiação em dinheiro.</p>
         <div class="cta-row">
           <button class="btn" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
@@ -272,7 +303,12 @@
         </div>
       </div>
       <div class="product-card">
-        <img class="pc-img" src="produto-c1.jpg" alt="Produto da rodada">
+        <div class="pc-gallery">
+          <img src="produto-c1-2.jpg" alt="Produto da rodada — foto 1">
+          <img src="produto-c1-3.jpg" alt="Produto da rodada — foto 2">
+          <img src="produto-c1-4.jpg" alt="Produto da rodada — foto 3">
+          <img src="produto-c1-5.jpg" alt="Produto da rodada — foto 4">
+        </div>
         <div class="pc-body">
           <p class="pc-round mono" id="productRound">Rodada 01</p>
           <h4 id="productName">Sandália Lançamento Lumiss</h4>
