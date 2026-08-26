@@ -83,7 +83,11 @@
     font-size:clamp(16px,2.2vw,19px);
     color:var(--paper-dim);
     max-width:46ch;
-    margin:0 0 32px;
+    margin:0 0 14px;
+  }
+  .hero-dates{
+    font-size:12.5px;letter-spacing:.05em;color:var(--caramelo-soft);
+    margin:0 0 28px;
   }
   .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
   .hero-grid{display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start;}
@@ -129,6 +133,7 @@
     color:var(--caramelo-soft);margin:0 0 8px;
   }
   h2.display{font-size:clamp(30px,5vw,46px);margin:0 0 28px;color:var(--paper);}
+  .section-dates{font-size:12.5px;color:var(--paper-dim);margin:-16px 0 28px;}
 
   /* ---------- steps ---------- */
   .steps{display:grid;gap:0;}
@@ -168,6 +173,19 @@
   }
   .prize-note{margin-top:12px;font-size:12.5px;color:var(--paper-dim);}
   .prize-note code{background:var(--leather-mid);padding:2px 6px;border-radius:4px;}
+  .bonus-card{
+    display:flex;gap:14px;align-items:flex-start;
+    margin-top:18px;padding:20px 22px;border-radius:10px;
+    border:1px dashed var(--gold);
+    background:linear-gradient(90deg, rgba(217,179,108,.10), transparent);
+  }
+  .bonus-card .ic{font-size:24px;line-height:1;}
+  .bonus-card h4{
+    margin:0 0 6px;font-size:13px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--gold);
+  }
+  .bonus-card p{margin:0;font-size:13.5px;color:var(--paper-dim);line-height:1.55;}
+  .bonus-card p strong{color:var(--paper);}
 
   /* ---------- ranking ---------- */
   .ranking-list{border:1px solid var(--leather-line);border-radius:10px;overflow:hidden;}
@@ -297,6 +315,7 @@
         <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
         <h1 class="display">Poste o produto.<br>Venda e suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
         <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. As vendas geradas ao longo de 15 dias definem o ranking — e as melhores colocadas recebem premiação em dinheiro.</p>
+        <p class="hero-dates mono" id="heroDates"></p>
         <div class="cta-row">
           <button class="btn" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
           <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
@@ -332,7 +351,15 @@
   <section id="premiacao">
     <h2 class="display">Premiação</h2>
     <div class="prize-list" id="prizeList"></div>
-    <p class="prize-note">Premiação válida para a rodada atual da campanha. Consulte o regulamento completo com a equipe Lumiss.</p>
+    <p class="prize-note">Premiação válida para a rodada atual da campanha (<span id="premioDates"></span>). Consulte o regulamento completo com a equipe Lumiss.</p>
+
+    <div class="bonus-card">
+      <div class="ic">🎁</div>
+      <div>
+        <h4>Benefício extra · Top <span id="bonusCount">50</span></h4>
+        <p>Além da premiação em dinheiro, as <strong><span id="bonusCount2">50</span> afiliadas com mais vendas</strong> nesta rodada recebem convite para solicitar <strong>amostra grátis</strong> do produto da próxima campanha — sem fila, direto por merecimento. Vale a pena brigar por uma posição entre as melhores.</p>
+      </div>
+    </div>
   </section>
 
   <section id="ranking">
@@ -340,11 +367,12 @@
     <div class="ranking-list" id="rankingList">
       <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
     </div>
-    <p class="prize-note">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop.</p>
+    <p class="prize-note">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop. Rodada aberta até <span id="rankingDates"></span>.</p>
   </section>
 
   <section id="cadastro">
-    <h2 class="display">Cadastro para a campanha</h2>
+    <h2 class="display">Cadastro para a <span id="cadastroLabel"></span></h2>
+    <p class="section-dates mono" id="cadastroDates"></p>
     <form id="signupForm" novalidate>
       <div class="field">
         <label for="nome">Nome</label>
@@ -410,6 +438,7 @@
 
         <h3>1. Sobre a campanha</h3>
         <p>Esta é uma campanha de afiliadas promovida pela <strong>Lumiss</strong> (Amorelle Vestuário e Calçados LTDA — CNPJ 31.205.194/0001-95), com o objetivo de impulsionar a divulgação e a venda de produtos Lumiss através de conteúdo criado por afiliadas no TikTok, dentro do programa de afiliados do TikTok Shop. A campanha é organizada em rodadas periódicas, cada uma com produto, prazo e premiação próprios, sempre informados nos canais oficiais da Lumiss no início de cada rodada.</p>
+        <p>Esta campanha caracteriza-se como um <strong>concurso de desempenho comercial</strong>, cuja apuração dos resultados depende exclusivamente do volume de vendas gerado por cada afiliada — não envolvendo sorteio, loteria, vale-brinde ou qualquer modalidade que dependa de fator aleatório ou de sorte. Por esse motivo, não se sujeita à autorização prévia da Secretaria de Prêmios e Apostas (SPA/MF) ou de qualquer outro órgão federal aplicável a modalidades de sorteio, nos termos da legislação vigente (Lei nº 13.756/2018 e normas correlatas).</p>
 
         <h3>2. Quem pode participar</h3>
         <p>Podem participar pessoas maiores de 18 anos, com conta ativa e regular no TikTok e cadastro como criadora afiliada no TikTok Shop. Menores de 18 anos só podem participar mediante autorização expressa de responsável legal, enviada à equipe Lumiss antes do início da rodada. Colaboradores diretos da Lumiss e familiares até 2º grau podem se cadastrar, mas não concorrem à premiação.</p>
@@ -418,7 +447,7 @@
         <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, WhatsApp válido, @ do TikTok e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento e autoriza a Lumiss a entrar em contato pelo WhatsApp informado para assuntos relacionados à campanha. Após o cadastro, a afiliada recebe acesso à biblioteca de vídeos crus e fotos do produto da rodada, além do grupo oficial da campanha no WhatsApp.</p>
 
         <h3>4. Duração de cada rodada</h3>
-        <p>Cada rodada tem duração de <strong>15 dias corridos</strong>, com início e encerramento informados pela Lumiss nos canais oficiais (esta página, TikTok e WhatsApp) antes do começo de cada edição.</p>
+        <p>Cada rodada tem duração de <strong>15 dias corridos</strong>, com início e encerramento informados pela Lumiss nos canais oficiais (esta página, TikTok e WhatsApp) antes do começo de cada edição. A rodada atual é válida de <span id="regDates"></span>.</p>
 
         <h3>5. Como o ranking é calculado</h3>
         <p>O ranking de cada rodada é definido exclusivamente pela quantidade de itens da campanha vendidos através do link de afiliada de cada participante, atribuída automaticamente pelo TikTok Shop. Visualizações, curtidas, comentários e outras métricas de engajamento não pontuam isoladamente — só a venda efetivamente atribuída conta. É responsabilidade da afiliada garantir que seu link esteja corretamente incluído em cada conteúdo publicado; a Lumiss não se responsabiliza por vendas não atribuídas por uso incorreto do link.</p>
@@ -446,7 +475,7 @@
         <p>A Lumiss se reserva o direito de alterar, suspender ou cancelar a campanha, no todo ou em parte, a qualquer momento, mediante aviso nos canais oficiais — especialmente em caso de indisponibilidade de estoque, problemas técnicos na plataforma do TikTok Shop, ou motivo de força maior.</p>
 
         <h3>11. Disposições gerais</h3>
-        <p>A participação na campanha implica a aceitação integral deste regulamento. Casos omissos serão decididos pela equipe Lumiss. Fica eleito o foro da comarca de [cidade/UF] para dirimir eventuais dúvidas ou controvérsias decorrentes deste regulamento, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+        <p>A participação na campanha implica a aceitação integral deste regulamento. Casos omissos serão decididos pela equipe Lumiss. Fica eleito o foro da comarca de Birigui/SP para dirimir eventuais dúvidas ou controvérsias decorrentes deste regulamento, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
 
         <h3>12. Dúvidas e contato</h3>
         <p>Em caso de dúvidas sobre este regulamento ou sobre a campanha, entre em contato pelo WhatsApp oficial da Lumiss ou pelo grupo da campanha.</p>
@@ -473,8 +502,10 @@ const CONFIG = {
   productName: "Sandália Lançamento Lumiss",
   // cole aqui o link do produto no TikTok Shop
   productTiktokUrl: "https://shop.tiktok.com/br/pdp/1737138415943255378?encode_params=MIIBpgQMV2gPanSbHwT1pjzhBIIBghVUetEYq6Q3ldaLwqqXJKsTYnJ0x13kPgnsz3xr3bsVzC1VWvmleCeRK_qUxxlQav483S-cW8fDMOpOvh6ILv2cfeG7EylleiCZuJGMSlFWfm_fGwKwAjwMjFCXLbstri-7syMQF9Ly0yrTPpx9D2yNeFWVwDgBkw3IRrFUfLuwZEI1JAEh3CN96AkPD0MIGf1jZHsvv7brle2Yf0atYbUZC_l87do_6eV7xO23b1abhKdzupTAv7Me9gjLjBXLYn42H1mZeZSOBJSbmGGAHs7HfPhYHvLd8sMupWsUOuihdUKEeITFeTW5jvU8xvzGSzKdA7oMvA-iJUJpg329cz4fMYRm5iBj8J4YujtWqibaIZX3yjsi3GCHPyK3-zIxYWOxSvHJMw0kr4qYc6WnhMaXVnoEE1A3AEU2V8kJ0Ov9XBSxAaJyZi7XmACLv3sSnN00EZE_6vK1ZJ7-1SEjkm20Dd5EQVFkZ7aHU3KuK968Nbj8aYdNghIRYjwVAlPEVaheBBCH8a5CafWi-1UgsTPThDQM&region=BR&locale=pt-BR&source=seller_center&hide_tips=&no-cache=1&e=1",
-  startDate: "2026-08-24",
-  endDate:   "2026-09-08",
+  // quantas melhores colocadas recebem o convite de amostra grátis da próxima rodada
+  topBenefitCount: 50,
+  startDate: "2026-09-01",
+  endDate:   "2026-09-15",
   // cole aqui a URL do Apps Script depois do deploy (veja instruções que a Claude te passou)
   sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwWC2zqzgk5m56IUrkBlgfiivZ2R_0NcDXdJq-WjwRGFzD1Zmr8eFiy-lOa1hpYqz3O/exec",
   // cole aqui a pasta do Drive com os vídeos desta rodada
@@ -491,10 +522,45 @@ const CONFIG = {
 };
 
 document.getElementById('campaignStamp').textContent = CONFIG.campaignLabel;
-document.getElementById('footerRef').textContent = CONFIG.roundLabel || 'Rodada 01';
+document.getElementById('cadastroLabel').textContent = 'Campanha ' + CONFIG.campaignLabel.replace(/^campanha\s*/i,'');
+document.getElementById('footerRef').textContent = (CONFIG.roundLabel || 'Rodada 01') + ' · até ' + formatDateShort(CONFIG.endDate);
+
+const fullRange = formatDateRange(CONFIG.startDate, CONFIG.endDate);
+document.getElementById('heroDates').textContent = 'Campanha ativa de ' + fullRange;
+document.getElementById('cadastroDates').textContent = 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
+document.getElementById('premioDates').textContent = fullRange;
+document.getElementById('rankingDates').textContent = formatDateLong(CONFIG.endDate);
+document.getElementById('regDates').textContent = fullRange;
+
+function formatDateRange(startStr, endStr){
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const pad = n => String(n).padStart(2,'0');
+  const [sy, sm, sd] = startStr.split('-').map(Number);
+  const [ey, em, ed] = endStr.split('-').map(Number);
+  if(sy === ey && sm === em){
+    return `${pad(sd)} a ${pad(ed)} de ${meses[sm-1]} de ${sy}`;
+  }
+  if(sy === ey){
+    return `${pad(sd)} de ${meses[sm-1]} a ${pad(ed)} de ${meses[em-1]} de ${sy}`;
+  }
+  return `${pad(sd)} de ${meses[sm-1]} de ${sy} a ${pad(ed)} de ${meses[em-1]} de ${ey}`;
+}
+
+function formatDateLong(dateStr){
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return `${String(d).padStart(2,'0')} de ${meses[m-1]} de ${y}`;
+}
+
+function formatDateShort(dateStr){
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
+}
 document.getElementById('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
 document.getElementById('productName').textContent = CONFIG.productName;
 document.getElementById('productLink').href = CONFIG.productTiktokUrl;
+document.getElementById('bonusCount').textContent = CONFIG.topBenefitCount;
+document.getElementById('bonusCount2').textContent = CONFIG.topBenefitCount;
 
 /* prize list render */
 const prizeListEl = document.getElementById('prizeList');
