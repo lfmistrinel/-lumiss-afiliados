@@ -46,6 +46,7 @@
   .brandrow{display:flex;align-items:center;justify-content:space-between;}
   .brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.16em;color:var(--paper);}
   .brand span{color:var(--caramelo-soft);}
+  .brand img{height:20px;display:block;}
   .tag{
     border:1px solid var(--leather-line);
     padding:4px 10px;
@@ -91,7 +92,7 @@
     border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
     background:var(--leather-mid);
   }
-  .product-card .pc-img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#fff;}
+  .product-card .pc-img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block;background:#fff;}
   .product-card .pc-body{padding:16px;}
   .product-card .pc-round{
     font-size:11px;text-transform:uppercase;letter-spacing:.12em;
@@ -158,6 +159,12 @@
   .place .rank{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);min-width:34px;}
   .place .lbl{font-size:14.5px;color:var(--paper);}
   .amount{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--paper);}
+  .amount-wrap{display:flex;align-items:center;gap:8px;}
+  .pix-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;
+    letter-spacing:.04em;color:var(--leather-dark);background:var(--gold);
+    padding:2px 7px;border-radius:999px;
+  }
   .prize-note{margin-top:12px;font-size:12.5px;color:var(--paper-dim);}
   .prize-note code{background:var(--leather-mid);padding:2px 6px;border-radius:4px;}
 
@@ -176,6 +183,25 @@
   .ranking-pos .handle{font-size:12.5px;color:var(--paper-dim);margin-left:6px;}
   .ranking-gmv{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--paper);}
   .ranking-empty{color:var(--paper-dim);font-size:13.5px;padding:24px;text-align:center;}
+
+  /* ---------- regulamento ---------- */
+  .reg-details{border:1px solid var(--leather-line);border-radius:10px;overflow:hidden;}
+  .reg-details summary{
+    cursor:pointer;padding:18px 20px;font-size:14px;color:var(--paper);
+    background:var(--leather-mid);list-style:none;display:flex;align-items:center;justify-content:space-between;
+  }
+  .reg-details summary::-webkit-details-marker{display:none;}
+  .reg-details summary::after{content:'+';font-size:20px;color:var(--caramelo-soft);}
+  .reg-details[open] summary::after{content:'–';}
+  .reg-block{padding:8px 24px 28px;max-height:520px;overflow-y:auto;}
+  .reg-block h3{
+    font-size:13px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--caramelo-soft);margin:22px 0 8px;
+  }
+  .reg-block h3:first-child{margin-top:20px;}
+  .reg-block p, .reg-block li{font-size:13px;line-height:1.6;color:var(--paper-dim);margin:0 0 8px;}
+  .reg-block ul, .reg-block ol{margin:0 0 8px;padding-left:20px;}
+  .reg-block strong{color:var(--paper);}
 
   /* ---------- acesso pós-cadastro ---------- */
   .lib-locked{
@@ -230,8 +256,7 @@
 
   <header>
     <div class="brandrow">
-      <div class="brand">LUMISS<span>·</span>AFILIADAS</div>
-      <div class="tag mono">LUMISSQUAD</div>
+      <div class="brand"><img src="lumiss-logo-branco.png" alt="Lumiss"></div>
     </div>
   </header>
 
@@ -258,59 +283,32 @@
   </section>
 
   <section id="como-funciona">
-    <p class="eyebrow mono">Como funciona</p>
-    <h2 class="display">Cinco passos até o prêmio</h2>
+    <h2 class="display">Como funciona</h2>
     <div class="steps">
       <div class="step"><div class="num">01</div><div><h3>Cadastre-se</h3><p>Preencha seu nome, WhatsApp e @ do TikTok no formulário abaixo.</p></div></div>
-      <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos prontos do produto da campanha, liberados assim que você se cadastra.</p></div></div>
-      <div class="step"><div class="num">03</div><div><h3>Poste com seu link</h3><p>Inclua seu link de afiliada em cada vídeo publicado, para que as vendas sejam corretamente atribuídas a você.</p></div></div>
+      <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos crus e fotos do produto da campanha, liberados assim que você se cadastra, prontos pra virarem seu conteúdo.</p></div></div>
+      <div class="step"><div class="num">03</div><div><h3>Publique e venda</h3><p>Crie vídeos e conteúdos autorais que conectem de verdade com a consumidora — sempre com seu link de afiliada, pra garantir que cada venda seja atribuída a você.</p></div></div>
       <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Acompanhamos as vendas geradas pelo seu link durante os 15 dias de campanha.</p></div></div>
-      <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As melhores colocadas no fechamento da campanha ganham prêmio em dinheiro.</p></div></div>
+      <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As 5 melhores colocadas no fechamento da campanha recebem premiação em dinheiro, via Pix, dentro do prazo estabelecido no regulamento da campanha*.</p></div></div>
     </div>
   </section>
 
   <section id="premiacao">
-    <p class="eyebrow mono">Premiação</p>
-    <h2 class="display">Ranking de 15 dias</h2>
+    <h2 class="display">Premiação</h2>
     <div class="prize-list" id="prizeList"></div>
-    <p class="prize-note">Premiação válida para a rodada atual da Lumissquad. Consulte o regulamento completo com a equipe Lumiss.</p>
+    <p class="prize-note">Premiação válida para a rodada atual da campanha. Consulte o regulamento completo com a equipe Lumiss.</p>
   </section>
 
   <section id="ranking">
-    <p class="eyebrow mono">Ranking ao vivo</p>
-    <h2 class="display">Quem está na frente</h2>
+    <h2 class="display">Ranking</h2>
     <div class="ranking-list" id="rankingList">
       <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
     </div>
     <p class="prize-note">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop.</p>
   </section>
 
-  <section id="biblioteca">
-    <p class="eyebrow mono">Acesso liberado</p>
-    <h2 class="display">Onde pegar tudo</h2>
-    <div id="libLocked" class="lib-locked">
-      <div class="lock">🔒</div>
-      Cadastre-se abaixo para liberar o acesso aos vídeos e ao grupo da Lumissquad.
-    </div>
-    <div id="libGrid" class="access-grid" style="display:none;">
-      <div class="access-card">
-        <div class="ic">🎬</div>
-        <h3>Vídeos da rodada</h3>
-        <p>Todo o material pronto pra baixar e postar.</p>
-        <a class="btn" id="driveLink" href="#" target="_blank" rel="noopener">Acessar no Drive</a>
-      </div>
-      <div class="access-card whats">
-        <div class="ic">💬</div>
-        <h3>Grupo da Lumissquad</h3>
-        <p>Novidades, novos vídeos e suporte direto com o time.</p>
-        <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
-      </div>
-    </div>
-  </section>
-
   <section id="cadastro">
-    <p class="eyebrow mono">Cadastro</p>
-    <h2 class="display">Entrar na campanha</h2>
+    <h2 class="display">Cadastro para a campanha</h2>
     <form id="signupForm" novalidate>
       <div class="field">
         <label for="nome">Nome</label>
@@ -345,8 +343,84 @@
     </form>
   </section>
 
+  <section id="biblioteca">
+    <p class="eyebrow mono">Acesso liberado</p>
+    <h2 class="display">Onde pegar tudo</h2>
+    <div id="libLocked" class="lib-locked">
+      <div class="lock">🔒</div>
+      Cadastre-se acima para liberar o acesso aos vídeos e ao grupo da campanha.
+    </div>
+    <div id="libGrid" class="access-grid" style="display:none;">
+      <div class="access-card">
+        <div class="ic">🎬</div>
+        <h3>Vídeos da rodada</h3>
+        <p>Todo o material pronto pra baixar e postar.</p>
+        <a class="btn" id="driveLink" href="#" target="_blank" rel="noopener">Acessar no Drive</a>
+      </div>
+      <div class="access-card whats">
+        <div class="ic">💬</div>
+        <h3>Grupo da campanha</h3>
+        <p>Novidades, novos vídeos e suporte direto com o time.</p>
+        <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="regulamento">
+    <h2 class="display">Regulamento</h2>
+    <details class="reg-details">
+      <summary>Ver regulamento completo</summary>
+      <div class="reg-block">
+
+        <h3>1. Sobre a campanha</h3>
+        <p>Esta é uma campanha de afiliadas promovida pela <strong>Lumiss</strong> (Amorelle Vestuário e Calçados LTDA — CNPJ 31.205.194/0001-95), com o objetivo de impulsionar a divulgação e a venda de produtos Lumiss através de conteúdo criado por afiliadas no TikTok, dentro do programa de afiliados do TikTok Shop. A campanha é organizada em rodadas periódicas, cada uma com produto, prazo e premiação próprios, sempre informados nos canais oficiais da Lumiss no início de cada rodada.</p>
+
+        <h3>2. Quem pode participar</h3>
+        <p>Podem participar pessoas maiores de 18 anos, com conta ativa e regular no TikTok e cadastro como criadora afiliada no TikTok Shop. Menores de 18 anos só podem participar mediante autorização expressa de responsável legal, enviada à equipe Lumiss antes do início da rodada. Colaboradores diretos da Lumiss e familiares até 2º grau podem se cadastrar, mas não concorrem à premiação.</p>
+
+        <h3>3. Como participar</h3>
+        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, WhatsApp válido, @ do TikTok e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento e autoriza a Lumiss a entrar em contato pelo WhatsApp informado para assuntos relacionados à campanha. Após o cadastro, a afiliada recebe acesso à biblioteca de vídeos crus e fotos do produto da rodada, além do grupo oficial da campanha no WhatsApp.</p>
+
+        <h3>4. Duração de cada rodada</h3>
+        <p>Cada rodada tem duração de <strong>15 dias corridos</strong>, com início e encerramento informados pela Lumiss nos canais oficiais (esta página, TikTok e WhatsApp) antes do começo de cada edição.</p>
+
+        <h3>5. Como o ranking é calculado</h3>
+        <p>O ranking de cada rodada é definido exclusivamente pela quantidade de itens da campanha vendidos através do link de afiliada de cada participante, atribuída automaticamente pelo TikTok Shop. Visualizações, curtidas, comentários e outras métricas de engajamento não pontuam isoladamente — só a venda efetivamente atribuída conta. É responsabilidade da afiliada garantir que seu link esteja corretamente incluído em cada conteúdo publicado; a Lumiss não se responsabiliza por vendas não atribuídas por uso incorreto do link.</p>
+
+        <h3>6. Premiação</h3>
+        <p>As <strong>5 (cinco) afiliadas mais bem colocadas</strong> no ranking ao final de cada rodada recebem premiação em dinheiro, conforme a tabela de valores divulgada nesta página no momento da rodada. Os valores podem variar entre rodadas, a critério da Lumiss, e são sempre informados previamente. Ao final da rodada, a Lumiss entra em contato com cada ganhadora solicitando sua chave Pix para recebimento; a ganhadora tem até <strong>2 (dois) dias</strong> a partir desse contato para informar a chave — caso não informe dentro desse prazo, será desclassificada e perderá o direito à premiação. Uma vez recebida a chave, o pagamento é feito via <strong>Pix</strong> em até <strong>2 (dois) dias úteis</strong>. Em caso de empate na quantidade de itens vendidos, o critério de desempate é a data e hora da venda que gerou o item empatado, tendo prioridade a venda mais antiga.</p>
+
+        <h3>7. Uso do conteúdo produzido</h3>
+        <p>Ao publicar vídeos com os materiais e/ou produtos da campanha, a afiliada autoriza a Lumiss a compartilhar, repostar e impulsionar esse conteúdo (inclusive via anúncios pagos), sempre com os devidos créditos ao perfil da criadora, sem que isso gere remuneração adicional além da premiação e das comissões já previstas no programa de afiliados do TikTok Shop.</p>
+
+        <h3>8. Condutas proibidas e desclassificação</h3>
+        <p>Pode ser desclassificada, a qualquer momento, a afiliada que:</p>
+        <ul>
+          <li>fornecer dados falsos no cadastro;</li>
+          <li>utilizar meios artificiais para gerar vendas ou engajamento (compra de visualizações, contas falsas, etc.);</li>
+          <li>publicar conteúdo ofensivo, discriminatório ou que viole as diretrizes da comunidade do TikTok;</li>
+          <li>utilizar o link de afiliada de forma fraudulenta ou em desacordo com as políticas do TikTok Shop;</li>
+          <li>descumprir qualquer regra deste regulamento.</li>
+        </ul>
+
+        <h3>9. Privacidade e uso de dados</h3>
+        <p>Os dados fornecidos no cadastro (nome, WhatsApp, @ do TikTok e faixa de seguidores) são usados exclusivamente para organizar e comunicar esta campanha, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). A Lumiss não compartilha, vende ou cede esses dados a terceiros para finalidades diferentes das aqui previstas. A afiliada pode solicitar a exclusão dos seus dados a qualquer momento pelos canais oficiais de contato da Lumiss.</p>
+
+        <h3>10. Alterações e cancelamento</h3>
+        <p>A Lumiss se reserva o direito de alterar, suspender ou cancelar a campanha, no todo ou em parte, a qualquer momento, mediante aviso nos canais oficiais — especialmente em caso de indisponibilidade de estoque, problemas técnicos na plataforma do TikTok Shop, ou motivo de força maior.</p>
+
+        <h3>11. Disposições gerais</h3>
+        <p>A participação na campanha implica a aceitação integral deste regulamento. Casos omissos serão decididos pela equipe Lumiss. Fica eleito o foro da comarca de [cidade/UF] para dirimir eventuais dúvidas ou controvérsias decorrentes deste regulamento, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+
+        <h3>12. Dúvidas e contato</h3>
+        <p>Em caso de dúvidas sobre este regulamento ou sobre a campanha, entre em contato pelo WhatsApp oficial da Lumiss ou pelo grupo da campanha.</p>
+
+      </div>
+    </details>
+  </section>
+
   <footer>
-    <div>Lumiss · Programa oficial de afiliadas Lumissquad</div>
+    <div>Lumiss · Programa oficial de afiliadas</div>
     <div class="refs" id="footerRef">Rodada 01</div>
   </footer>
 
@@ -369,7 +443,7 @@ const CONFIG = {
   sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwWC2zqzgk5m56IUrkBlgfiivZ2R_0NcDXdJq-WjwRGFzD1Zmr8eFiy-lOa1hpYqz3O/exec",
   // cole aqui a pasta do Drive com os vídeos desta rodada
   driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
-  // cole aqui o link de convite do grupo de WhatsApp da Lumissquad
+  // cole aqui o link de convite do grupo de WhatsApp da campanha
   whatsappGroupUrl: "https://chat.whatsapp.com/SEU_LINK_AQUI",
   prizes: [
     { place: "1º lugar",     amount: "R$ 1.000" },
@@ -388,12 +462,13 @@ document.getElementById('productLink').href = CONFIG.productTiktokUrl;
 
 /* prize list render */
 const prizeListEl = document.getElementById('prizeList');
+const medals = ['🏆','🥈','🥉'];
 CONFIG.prizes.forEach((p, i) => {
   const row = document.createElement('div');
   row.className = 'prize-row' + (i === 0 ? ' gold' : '');
   row.innerHTML = `
-    <div class="place"><span class="rank mono">${i===0?'🏆':'#'+(i+1)}</span><span class="lbl">${p.place}</span></div>
-    <div class="amount">${p.amount}</div>`;
+    <div class="place"><span class="rank mono">${medals[i] || '#'+(i+1)}</span><span class="lbl">${p.place}</span></div>
+    <div class="amount-wrap"><div class="amount">${p.amount}</div><span class="pix-tag">NO PIX</span></div>`;
   prizeListEl.appendChild(row);
 });
 
@@ -499,7 +574,7 @@ form.addEventListener('submit', async (e)=>{
     const result = await res.json();
 
     if(result.status === 'duplicate'){
-      msg.textContent = 'Esse @ já está cadastrado nesta campanha — biblioteca liberada abaixo.';
+      msg.textContent = 'Esse @ já está cadastrado nesta campanha — acesso liberado.';
       msg.className = 'msg ok';
       unlockLibrary();
       document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
@@ -510,7 +585,7 @@ form.addEventListener('submit', async (e)=>{
       msg.className = 'msg err';
       return;
     }
-    msg.textContent = 'Cadastro confirmado! Biblioteca de vídeos liberada abaixo. 🎬';
+    msg.textContent = 'Cadastro confirmado! Acesse os links liberados. 🎬';
     msg.className = 'msg ok';
     unlockLibrary();
     refreshCounter();
