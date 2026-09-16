@@ -703,50 +703,54 @@ const CONFIG = {
   ],
 };
 
-document.getElementById('campaignStamp').textContent = CONFIG.campaignLabel;
-document.getElementById('cadastroLabel').textContent = 'Campanha ' + CONFIG.campaignLabel.replace(/^campanha\s*/i,'');
-document.getElementById('footerRef').textContent = (CONFIG.roundLabel || 'Rodada 01') + ' · até ' + formatDateShort(CONFIG.endDate);
+/* atalho seguro: se o elemento não existir, apenas ignora em vez de quebrar a página */
+const $ = id => document.getElementById(id) || { style:{}, classList:{add(){},remove(){}}, addEventListener(){} };
+
+$('campaignStamp').textContent = CONFIG.campaignLabel;
+$('cadastroLabel').textContent = 'Campanha ' + CONFIG.campaignLabel.replace(/^campanha\s*/i,'');
+$('footerRef').textContent = (CONFIG.roundLabel || 'Rodada 01') + ' · até ' + formatDateShort(CONFIG.endDate);
 
 const fullRange = formatDateRange(CONFIG.startDate, CONFIG.endDate);
 const encerrada = CONFIG.campaignEnded === true;
-document.getElementById('heroDates').textContent = encerrada
+$('heroDates').textContent = encerrada
   ? 'Campanha 01 encerrada · ' + fullRange + ' · Campanha 02 será divulgada em breve'
   : 'Campanha ativa de ' + fullRange;
-document.getElementById('cadastroDates').textContent = encerrada
+$('cadastroDates').textContent = encerrada
   ? 'Cadastros já abertos para a Campanha 02 — garanta sua vaga e entre no grupo agora para ser a primeira a saber do novo produto.'
   : 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
-document.getElementById('rankingDates').textContent = formatDateLong(CONFIG.endDate);
+$('rankingDates').textContent = formatDateLong(CONFIG.endDate);
+$('regDates').textContent = fullRange;
 
 if(encerrada){
   const proxCamp = CONFIG.nextCampaignLabel || 'CAMPANHA 02';
   const proxRodada = CONFIG.nextRoundLabel || 'Rodada 02';
 
   // carimbo do hero passa a anunciar a próxima campanha
-  document.getElementById('campaignStamp').textContent = proxCamp + ' · EM BREVE';
+  $('campaignStamp').textContent = proxCamp + ' · EM BREVE';
   // card do produto vira suspense
-  document.getElementById('productCard').style.display = 'none';
-  document.getElementById('productMystery').style.display = 'block';
+  $('productCard').style.display = 'none';
+  $('productMystery').style.display = 'block';
   // cadastro e rodapé apontam para a próxima campanha
-  document.getElementById('cadastroLabel').textContent =
+  $('cadastroLabel').textContent =
     proxCamp.charAt(0) + proxCamp.slice(1).toLowerCase();
-  document.getElementById('footerRef').textContent = proxRodada + ' · em breve';
-  document.getElementById('whatsDesc').textContent =
+  $('footerRef').textContent = proxRodada + ' · em breve';
+  $('whatsDesc').textContent =
     'É por lá que a Campanha 02 será anunciada primeiro — com o novo produto e os novos prêmios.';
-  document.getElementById('regRoundStatus').innerHTML =
+  $('regRoundStatus').innerHTML =
     'A <strong>Campanha 01</strong> foi realizada de ' + fullRange + ' e está oficialmente encerrada, ' +
     'com resultado final já publicado nesta página. As datas da <strong>' +
     proxCamp.charAt(0) + proxCamp.slice(1).toLowerCase() + '</strong> serão divulgadas em breve nos canais oficiais.';
 
-  document.getElementById('rankingTitle').textContent = 'Resultado final · Campanha 01';
-  document.getElementById('rankingNote').innerHTML =
+  $('rankingTitle').textContent = 'Resultado final · Campanha 01';
+  $('rankingNote').innerHTML =
     'Ranking final da Campanha 01, encerrada em ' + formatDateLong(CONFIG.endDate) +
     ', apurado com base nas vendas do TikTok Shop. As ganhadoras serão contatadas pela equipe Lumiss para o envio da chave Pix.';
-  document.getElementById('heroCta').textContent = 'Garantir vaga na Campanha 02 →';
-  document.getElementById('endedBanner').innerHTML =
+  $('heroCta').textContent = 'Garantir vaga na Campanha 02 →';
+  $('endedBanner').innerHTML =
     '<strong>Campanha 01 encerrada!</strong> Confira o resultado final no ranking. A Campanha 02 será divulgada em breve.' +
     '<a href="#ranking">Ver ranking →</a>';
-  document.getElementById('endedBanner').style.display = 'block';
-  document.getElementById('tieNote').style.display = 'block';
+  $('endedBanner').style.display = 'block';
+  $('tieNote').style.display = 'block';
 
   /* teaser de suspense da Campanha 02 */
   const teaser = document.getElementById('teaser');
@@ -764,7 +768,6 @@ if(encerrada){
     document.getElementById('cadastro').scrollIntoView({behavior:'smooth'});
   });
 }
-document.getElementById('regDates').textContent = fullRange;
 
 function formatDateRange(startStr, endStr){
   const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -790,9 +793,9 @@ function formatDateShort(dateStr){
   const [y, m, d] = dateStr.split('-').map(Number);
   return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
 }
-document.getElementById('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
-document.getElementById('productName').textContent = CONFIG.productName;
-document.getElementById('productLink').href = CONFIG.productTiktokUrl;
+$('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
+$('productName').textContent = CONFIG.productName;
+$('productLink').href = CONFIG.productTiktokUrl;
 /* ranking ao vivo — busca a aba "Ranking" da planilha */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let rankingJaAnimado = false;
@@ -804,11 +807,16 @@ async function refreshRanking(){
     return;
   }
   try{
-    const res = await fetch(CONFIG.sheetWebAppUrl + '?action=ranking');
+    const ctrl = new AbortController();
+    const limite = setTimeout(() => ctrl.abort(), 15000);
+    const res = await fetch(CONFIG.sheetWebAppUrl + '?action=ranking', { signal: ctrl.signal });
+    clearTimeout(limite);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const ranking = (data.ranking || []).slice(0, 10);
     if(!ranking.length){
       list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
+      console.warn('[ranking] resposta sem lista de ranking:', data);
       return;
     }
 
@@ -838,22 +846,44 @@ async function refreshRanking(){
       observarRanking();
     }
   }catch(e){
-    list.innerHTML = '<div class="ranking-empty">Não foi possível carregar o ranking agora.</div>';
+    console.error('[ranking] falha ao carregar:', e);
+    const motivo = e.name === 'AbortError'
+      ? 'A planilha demorou demais para responder.'
+      : 'Não foi possível conectar à planilha.';
+    list.innerHTML = '<div class="ranking-empty">' + motivo + ' Recarregue a página em instantes.</div>';
   }
 }
 
 /* dispara a revelação quando a seção entra na tela */
 function observarRanking(){
   const secao = document.getElementById('ranking');
+
+  // rede de segurança: se por qualquer motivo o gatilho não disparar,
+  // revela tudo mesmo assim — o ranking nunca pode ficar invisível
+  const fallback = setTimeout(() => {
+    if(!rankingJaAnimado){
+      rankingJaAnimado = true;
+      revelarRanking();
+    }
+  }, 2500);
+
+  if(!('IntersectionObserver' in window)){
+    clearTimeout(fallback);
+    rankingJaAnimado = true;
+    revelarRanking();
+    return;
+  }
+
   const obs = new IntersectionObserver((entries, o) => {
     entries.forEach(e => {
       if(e.isIntersecting && !rankingJaAnimado){
+        clearTimeout(fallback);
         rankingJaAnimado = true;
         revelarRanking();
         o.disconnect();
       }
     });
-  }, { threshold: .25 });
+  }, { threshold: .05 });
   obs.observe(secao);
 }
 
@@ -916,13 +946,13 @@ function soltarConfete(){
 refreshRanking();
 setInterval(refreshRanking, 5 * 60 * 1000); // atualiza sozinho a cada 5 minutos, enquanto a página estiver aberta
 function fillAccessLinks(){
-  document.getElementById('driveLink').href = CONFIG.driveFolderUrl;
-  document.getElementById('whatsLink').href = CONFIG.whatsappGroupUrl;
+  $('driveLink').href = CONFIG.driveFolderUrl;
+  $('whatsLink').href = CONFIG.whatsappGroupUrl;
 }
 
 function unlockLibrary(){
-  document.getElementById('libLocked').style.display = 'none';
-  document.getElementById('libGrid').style.display = 'grid';
+  $('libLocked').style.display = 'none';
+  $('libGrid').style.display = 'grid';
   fillAccessLinks();
 }
 
@@ -934,11 +964,16 @@ async function refreshCounter(){
     return;
   }
   try{
-    const res = await fetch(CONFIG.sheetWebAppUrl);
+    const ctrl = new AbortController();
+    const limite = setTimeout(() => ctrl.abort(), 15000);
+    const res = await fetch(CONFIG.sheetWebAppUrl, { signal: ctrl.signal });
+    clearTimeout(limite);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const n = data.count || 0;
     el.innerHTML = `<b>${n}</b> criadora${n===1?'':'s'} já confirmada${n===1?'':'s'} nesta campanha`;
   }catch(e){
+    console.error('[contador] falha ao carregar:', e);
     el.textContent = 'seja a primeira a se cadastrar nesta campanha';
   }
 }
