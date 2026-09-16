@@ -305,6 +305,72 @@
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 
   /* ---------- faixa animada ---------- */
+  /* ---------- teaser campanha 02 ---------- */
+  .teaser{
+    position:fixed;inset:0;z-index:100;display:none;
+    align-items:center;justify-content:center;padding:24px;
+    background:rgba(20,12,9,.86);backdrop-filter:blur(6px);
+    animation:teaserIn .45s ease;
+  }
+  .teaser.open{display:flex;}
+  @keyframes teaserIn{from{opacity:0;}to{opacity:1;}}
+  .teaser-box{
+    position:relative;max-width:440px;width:100%;
+    background:var(--leather-mid);border:1px solid var(--leather-line);
+    border-radius:16px;padding:34px 30px 30px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+    animation:teaserPop .5s cubic-bezier(.2,1.1,.4,1);
+  }
+  @keyframes teaserPop{from{transform:translateY(18px) scale(.97);}to{transform:none;}}
+  .teaser-close{
+    position:absolute;top:10px;right:14px;background:none;border:none;
+    color:var(--paper-dim);font-size:26px;line-height:1;cursor:pointer;padding:4px;
+  }
+  .teaser-close:hover{color:var(--paper);}
+  .teaser-art{
+    position:relative;height:120px;display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .teaser-num{
+    font-family:'Bebas Neue',sans-serif;font-size:116px;line-height:1;
+    color:transparent;-webkit-text-stroke:2px var(--gold);opacity:.55;
+  }
+  .teaser-q{
+    position:absolute;font-family:'Bebas Neue',sans-serif;font-size:62px;
+    color:var(--stamp);animation:teaserPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes teaserPulse{
+    0%,100%{transform:scale(1);opacity:.9;}
+    50%{transform:scale(1.12);opacity:1;}
+  }
+  .teaser-stamp{
+    display:inline-block;border:2px solid var(--stamp);color:var(--stamp);
+    font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:.16em;
+    padding:4px 12px;border-radius:4px;transform:rotate(-4deg);margin-bottom:14px;
+  }
+  .teaser-box h3{font-size:34px;margin:0 0 12px;color:var(--paper);}
+  .teaser-box p{font-size:14px;color:var(--paper-dim);margin:0 0 18px;line-height:1.6;}
+  .teaser-hint{
+    font-size:12.5px;color:var(--gold);border:1px dashed var(--gold);
+    border-radius:8px;padding:10px 12px;margin-bottom:20px;line-height:1.5;
+  }
+  .teaser-actions{display:flex;flex-direction:column;gap:9px;}
+  .teaser-actions .btn{width:100%;justify-content:center;}
+  .btn.ghost{background:transparent;border:1px solid var(--leather-line);color:var(--paper);}
+  .btn.ghost:hover{background:rgba(243,234,216,.06);}
+  @media (prefers-reduced-motion: reduce){
+    .teaser,.teaser-box,.teaser-q{animation:none;}
+  }
+
+  .ended-banner{
+    background:var(--gold);color:var(--leather-dark);
+    text-align:center;padding:12px 20px;font-size:14px;line-height:1.5;
+  }
+  .ended-banner strong{font-weight:700;}
+  .ended-banner a{
+    color:var(--leather-dark);font-weight:600;text-decoration:underline;
+    margin-left:6px;white-space:nowrap;
+  }
   .marquee-wrap{
     overflow:hidden;background:var(--leather-mid);
     border-top:1px solid var(--leather-line);border-bottom:1px solid var(--leather-line);
@@ -326,6 +392,29 @@
 <body>
 
 <div class="ticket-edge"></div>
+
+<div id="teaser" class="teaser" role="dialog" aria-modal="true" aria-label="Campanha 02 em breve">
+  <div class="teaser-box">
+    <button class="teaser-close" id="teaserClose" aria-label="Fechar">×</button>
+    <div class="teaser-art">
+      <span class="teaser-num">02</span>
+      <span class="teaser-q">?</span>
+    </div>
+    <div class="teaser-stamp mono">Em breve</div>
+    <h3 class="display">Campanha 02<br>está chegando</h3>
+    <p>Novo produto. Novos prêmios. Novo ranking.<br>A Campanha 01 foi só o começo.</p>
+    <div class="teaser-hint">🎁 Vendeu na Campanha 01? Sua amostra grátis já está garantida.</div>
+    <div class="teaser-actions">
+      <button class="btn" id="teaserRanking">Ver resultado da Campanha 01</button>
+      <button class="btn ghost" id="teaserSignup">Quero participar da 02</button>
+    </div>
+  </div>
+</div>
+
+<div id="endedBanner" class="ended-banner" style="display:none;">
+  <strong>Campanha 01 encerrada!</strong> O resultado final já está no ranking — confira quem levou os prêmios.
+  <a href="#ranking">Ver ranking →</a>
+</div>
 
 <div class="marquee-wrap">
   <div class="marquee-track">
@@ -354,7 +443,7 @@
         <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. As vendas geradas ao longo de 15 dias definem o ranking — e as melhores colocadas recebem premiação em dinheiro.</p>
         <p class="hero-dates mono" id="heroDates"></p>
         <div class="cta-row">
-          <button class="btn" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
+          <button class="btn" id="heroCta" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
           <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
         </div>
       </div>
@@ -374,6 +463,31 @@
     </div>
   </section>
 
+  <section id="ranking">
+    <h2 class="display" id="rankingTitle">Ranking</h2>
+    <div class="ranking-wrap">
+      <div class="ranking-list" id="rankingList">
+        <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
+      </div>
+      <canvas id="confettiCanvas"></canvas>
+    </div>
+    <p class="prize-note" id="rankingNote">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop. Rodada aberta até <span id="rankingDates"></span>.</p>
+    <p class="prize-note" id="tieNote" style="display:none;">
+      <strong>Sobre a 5ª colocação:</strong> houve empate técnico na disputa pela última posição premiada. Em vez de aplicar o critério de desempate previsto no regulamento, a Lumiss optou por abrir uma exceção e premiar as <strong>duas criadoras</strong> envolvidas com R$ 100 cada — por isso o 6º lugar também aparece com premiação neste ranking.
+    </p>
+  </section>
+
+  <section id="beneficio">
+    <h2 class="display">Benefício para a Campanha 02</h2>
+    <div class="bonus-card">
+      <div class="ic">🎁</div>
+      <div>
+        <h4>Amostra grátis garantida</h4>
+        <p><strong>Todas as afiliadas que registraram vendas na Campanha 01</strong> — não importa a posição no ranking — já garantiram o direito de solicitar <strong>amostra grátis</strong> do produto da Campanha 02. Quem vendeu, participou. E quem participou, sai na frente na próxima rodada.</p>
+      </div>
+    </div>
+  </section>
+
   <section id="como-funciona">
     <h2 class="display">Como funciona</h2>
     <div class="steps">
@@ -383,31 +497,6 @@
       <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Acompanhamos as vendas geradas pelo seu link durante os 15 dias de campanha.</p></div></div>
       <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As 5 melhores colocadas no fechamento da campanha recebem premiação em dinheiro, via Pix, dentro do prazo estabelecido no regulamento da campanha*.</p></div></div>
     </div>
-  </section>
-
-  <section id="premiacao">
-    <h2 class="display">Premiação</h2>
-    <div class="prize-list" id="prizeList"></div>
-    <p class="prize-note">Premiação válida para a rodada atual da campanha (<span id="premioDates"></span>). Consulte o regulamento completo com a equipe Lumiss.</p>
-
-    <div class="bonus-card">
-      <div class="ic">🎁</div>
-      <div>
-        <h4>Benefício extra · Top <span id="bonusCount">50</span></h4>
-        <p>Além da premiação em dinheiro, as <strong><span id="bonusCount2">50</span> afiliadas com mais vendas</strong> nesta rodada recebem convite para solicitar <strong>amostra grátis</strong> do produto da próxima campanha — sem fila, direto por merecimento. Vale a pena brigar por uma posição entre as melhores.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="ranking">
-    <h2 class="display">Ranking</h2>
-    <div class="ranking-wrap">
-      <div class="ranking-list" id="rankingList">
-        <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
-      </div>
-      <canvas id="confettiCanvas"></canvas>
-    </div>
-    <p class="prize-note">Atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop. Rodada aberta até <span id="rankingDates"></span>.</p>
   </section>
 
   <section id="cadastro">
@@ -552,6 +641,10 @@ const CONFIG = {
   driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
   // cole aqui o link de convite do grupo de WhatsApp da campanha
   whatsappGroupUrl: "https://chat.whatsapp.com/EdcLE7jj055Etg9ZhAFP94?s=cl&p=i&mlu=4",
+  // vire para false ao abrir a próxima rodada
+  campaignEnded: true,
+  // prêmios extras fora da tabela oficial (ex.: exceção por empate) — chave = posição
+  extraPrizes: { 6: "R$ 100" },
   prizes: [
     { place: "1º lugar",     amount: "R$ 1.000" },
     { place: "2º lugar",     amount: "R$ 500" },
@@ -566,10 +659,43 @@ document.getElementById('cadastroLabel').textContent = 'Campanha ' + CONFIG.camp
 document.getElementById('footerRef').textContent = (CONFIG.roundLabel || 'Rodada 01') + ' · até ' + formatDateShort(CONFIG.endDate);
 
 const fullRange = formatDateRange(CONFIG.startDate, CONFIG.endDate);
-document.getElementById('heroDates').textContent = 'Campanha ativa de ' + fullRange;
-document.getElementById('cadastroDates').textContent = 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
-document.getElementById('premioDates').textContent = fullRange;
+const encerrada = CONFIG.campaignEnded === true;
+document.getElementById('heroDates').textContent = encerrada
+  ? 'Campanha 01 encerrada · ' + fullRange + ' · Campanha 02 será divulgada em breve'
+  : 'Campanha ativa de ' + fullRange;
+document.getElementById('cadastroDates').textContent = encerrada
+  ? 'A Campanha 01 foi encerrada em ' + formatDateLong(CONFIG.endDate) + '. A Campanha 02 será divulgada em breve — cadastre-se agora para garantir sua vaga.'
+  : 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
 document.getElementById('rankingDates').textContent = formatDateLong(CONFIG.endDate);
+
+if(encerrada){
+  document.getElementById('rankingTitle').textContent = 'Resultado final · Campanha 01';
+  document.getElementById('rankingNote').innerHTML =
+    'Ranking final da Campanha 01, encerrada em ' + formatDateLong(CONFIG.endDate) +
+    ', apurado com base nas vendas do TikTok Shop. As ganhadoras serão contatadas pela equipe Lumiss para o envio da chave Pix.';
+  document.getElementById('heroCta').textContent = 'Garantir vaga na Campanha 02 →';
+  document.getElementById('endedBanner').innerHTML =
+    '<strong>Campanha 01 encerrada!</strong> Confira o resultado final no ranking. A Campanha 02 será divulgada em breve.' +
+    '<a href="#ranking">Ver ranking →</a>';
+  document.getElementById('endedBanner').style.display = 'block';
+  document.getElementById('tieNote').style.display = 'block';
+
+  /* teaser de suspense da Campanha 02 */
+  const teaser = document.getElementById('teaser');
+  setTimeout(() => teaser.classList.add('open'), 600);
+  const fecharTeaser = () => teaser.classList.remove('open');
+  document.getElementById('teaserClose').addEventListener('click', fecharTeaser);
+  teaser.addEventListener('click', e => { if(e.target === teaser) fecharTeaser(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharTeaser(); });
+  document.getElementById('teaserRanking').addEventListener('click', () => {
+    fecharTeaser();
+    document.getElementById('ranking').scrollIntoView({behavior:'smooth'});
+  });
+  document.getElementById('teaserSignup').addEventListener('click', () => {
+    fecharTeaser();
+    document.getElementById('cadastro').scrollIntoView({behavior:'smooth'});
+  });
+}
 document.getElementById('regDates').textContent = fullRange;
 
 function formatDateRange(startStr, endStr){
@@ -599,21 +725,6 @@ function formatDateShort(dateStr){
 document.getElementById('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
 document.getElementById('productName').textContent = CONFIG.productName;
 document.getElementById('productLink').href = CONFIG.productTiktokUrl;
-document.getElementById('bonusCount').textContent = CONFIG.topBenefitCount;
-document.getElementById('bonusCount2').textContent = CONFIG.topBenefitCount;
-
-/* prize list render */
-const prizeListEl = document.getElementById('prizeList');
-const medals = ['🏆','🥈','🥉'];
-CONFIG.prizes.forEach((p, i) => {
-  const row = document.createElement('div');
-  row.className = 'prize-row' + (i === 0 ? ' gold' : '');
-  row.innerHTML = `
-    <div class="place"><span class="rank mono">${medals[i] || '#'+(i+1)}</span><span class="lbl">${p.place}</span></div>
-    <div class="amount-wrap"><div class="amount">${p.amount}</div><span class="pix-tag">NO PIX</span></div>`;
-  prizeListEl.appendChild(row);
-});
-
 /* ranking ao vivo — busca a aba "Ranking" da planilha */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let rankingJaAnimado = false;
@@ -637,7 +748,7 @@ async function refreshRanking(){
     list.innerHTML = '';
     ranking.forEach((r, i) => {
       const pos = Number(r.posicao) || (i+1);
-      const prize = (CONFIG.prizes[pos-1] || {}).amount;
+      const prize = (CONFIG.prizes[pos-1] || {}).amount || (CONFIG.extraPrizes || {})[pos];
 
       const row = document.createElement('div');
       row.className = 'ranking-row' + (i < 3 ? ' top3' : '') + (pos === 1 ? ' rank-1' : '');
