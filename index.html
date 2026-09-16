@@ -305,6 +305,28 @@
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 
   /* ---------- faixa animada ---------- */
+  .product-card.mystery{border-color:rgba(217,179,108,.4);}
+  .pm-art{
+    position:relative;display:flex;align-items:center;justify-content:center;
+    aspect-ratio:1/1;
+    background:
+      repeating-linear-gradient(45deg, rgba(217,179,108,.05) 0 12px, transparent 12px 24px),
+      var(--leather-dark);
+  }
+  .pm-num{
+    font-family:'Bebas Neue',sans-serif;font-size:150px;line-height:1;
+    color:transparent;-webkit-text-stroke:2px var(--gold);opacity:.5;
+  }
+  .pm-q{
+    position:absolute;font-family:'Bebas Neue',sans-serif;font-size:80px;
+    color:var(--stamp);animation:teaserPulse 2.2s ease-in-out infinite;
+  }
+  .pm-soon{
+    text-align:center;border:1px dashed var(--gold);color:var(--gold);
+    border-radius:8px;padding:9px;font-size:11.5px;letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+
   /* ---------- teaser campanha 02 ---------- */
   .teaser{
     position:fixed;inset:0;z-index:100;display:none;
@@ -447,7 +469,7 @@
           <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
         </div>
       </div>
-      <div class="product-card">
+      <div class="product-card" id="productCard">
         <div class="pc-gallery">
           <img src="produto-c1-2.jpg" alt="Produto da rodada — foto 1">
           <img src="produto-c1-3.jpg" alt="Produto da rodada — foto 2">
@@ -458,6 +480,18 @@
           <p class="pc-round mono" id="productRound">Rodada 01</p>
           <h4 id="productName">Sandália Lançamento Lumiss</h4>
           <a class="btn" id="productLink" href="#" target="_blank" rel="noopener">Ver no TikTok</a>
+        </div>
+      </div>
+
+      <div class="product-card mystery" id="productMystery" style="display:none;">
+        <div class="pm-art">
+          <span class="pm-num">02</span>
+          <span class="pm-q">?</span>
+        </div>
+        <div class="pc-body">
+          <p class="pc-round mono">Campanha 02</p>
+          <h4>Produto ainda em segredo</h4>
+          <div class="pm-soon mono">Revelação em breve</div>
         </div>
       </div>
     </div>
@@ -553,7 +587,7 @@
       <div class="access-card whats">
         <div class="ic">💬</div>
         <h3>Grupo da campanha</h3>
-        <p>Novidades, novos vídeos e suporte direto com o time.</p>
+        <p id="whatsDesc">Novidades, novos vídeos e suporte direto com o time.</p>
         <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
       </div>
     </div>
@@ -643,6 +677,9 @@ const CONFIG = {
   whatsappGroupUrl: "https://chat.whatsapp.com/EdcLE7jj055Etg9ZhAFP94?s=cl&p=i&mlu=4",
   // vire para false ao abrir a próxima rodada
   campaignEnded: true,
+  // rótulos da próxima campanha (usados enquanto a atual está encerrada)
+  nextCampaignLabel: "CAMPANHA 02",
+  nextRoundLabel: "Rodada 02",
   // prêmios extras fora da tabela oficial (ex.: exceção por empate) — chave = posição
   extraPrizes: { 6: "R$ 100" },
   prizes: [
@@ -664,11 +701,26 @@ document.getElementById('heroDates').textContent = encerrada
   ? 'Campanha 01 encerrada · ' + fullRange + ' · Campanha 02 será divulgada em breve'
   : 'Campanha ativa de ' + fullRange;
 document.getElementById('cadastroDates').textContent = encerrada
-  ? 'A Campanha 01 foi encerrada em ' + formatDateLong(CONFIG.endDate) + '. A Campanha 02 será divulgada em breve — cadastre-se agora para garantir sua vaga.'
+  ? 'Cadastros já abertos para a Campanha 02 — garanta sua vaga e entre no grupo agora para ser a primeira a saber do novo produto.'
   : 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
 document.getElementById('rankingDates').textContent = formatDateLong(CONFIG.endDate);
 
 if(encerrada){
+  const proxCamp = CONFIG.nextCampaignLabel || 'CAMPANHA 02';
+  const proxRodada = CONFIG.nextRoundLabel || 'Rodada 02';
+
+  // carimbo do hero passa a anunciar a próxima campanha
+  document.getElementById('campaignStamp').textContent = proxCamp + ' · EM BREVE';
+  // card do produto vira suspense
+  document.getElementById('productCard').style.display = 'none';
+  document.getElementById('productMystery').style.display = 'block';
+  // cadastro e rodapé apontam para a próxima campanha
+  document.getElementById('cadastroLabel').textContent =
+    proxCamp.charAt(0) + proxCamp.slice(1).toLowerCase();
+  document.getElementById('footerRef').textContent = proxRodada + ' · em breve';
+  document.getElementById('whatsDesc').textContent =
+    'É por lá que a Campanha 02 será anunciada primeiro — com o novo produto e os novos prêmios.';
+
   document.getElementById('rankingTitle').textContent = 'Resultado final · Campanha 01';
   document.getElementById('rankingNote').innerHTML =
     'Ranking final da Campanha 01, encerrada em ' + formatDateLong(CONFIG.endDate) +
