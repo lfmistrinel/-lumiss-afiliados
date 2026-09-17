@@ -305,8 +305,60 @@
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 
   /* ---------- faixa animada ---------- */
-  .product-card.mystery{border-color:rgba(217,179,108,.4);}
-  .pm-art{
+  /* ---------- vitrine de produtos da rodada ---------- */
+  .products-panel{
+    border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
+    background:var(--leather-mid);
+  }
+  .pp-head{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:11px 14px;background:rgba(217,179,108,.12);
+    border-bottom:1px solid var(--leather-line);
+  }
+  .pp-count{
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--leather-dark);background:var(--gold);
+    padding:3px 9px;border-radius:999px;font-weight:600;
+  }
+  .pp-sum{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+  .pp-item{
+    display:flex;gap:12px;align-items:center;padding:12px 14px;
+    border-bottom:1px solid var(--leather-line);
+  }
+  .pp-item:last-child{border-bottom:none;}
+  .pp-thumb{
+    width:74px;height:74px;flex-shrink:0;border-radius:8px;
+    object-fit:contain;background:#fff;
+  }
+  .pp-info{min-width:0;flex:1;}
+  .pp-tag{
+    display:inline-block;font-family:'JetBrains Mono',monospace;
+    font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--caramelo-soft);border:1px solid rgba(224,164,104,.4);
+    padding:1px 6px;border-radius:999px;margin-bottom:5px;
+  }
+  .pp-name{font-size:13.5px;color:var(--paper);margin:0 0 7px;line-height:1.3;}
+  .pp-link{
+    font-size:11.5px;color:var(--stamp);text-decoration:none;font-weight:600;
+  }
+  .pp-link:hover{text-decoration:underline;}
+  .pp-plus{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    padding:5px 0;background:var(--leather-dark);
+  }
+  .pp-plus span{
+    font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--gold);
+  }
+  .pp-plus i{
+    flex:1;height:1px;background:var(--leather-line);font-style:normal;max-width:60px;
+  }
+  .pp-foot{
+    padding:10px 14px;font-size:10.5px;line-height:1.5;
+    color:var(--paper-dim);border-top:1px solid var(--leather-line);
+    text-align:center;
+  }
+
+  .product-card.mystery{border-color:rgba(217,179,108,.4);}  .pm-art{
     position:relative;display:flex;align-items:center;justify-content:center;
     aspect-ratio:1/1;
     background:
@@ -462,34 +514,29 @@
       <div>
         <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
         <h1 class="display">Poste o produto.<br>Venda e suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
-        <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. As vendas geradas ao longo de 15 dias definem o ranking — e as melhores colocadas recebem premiação em dinheiro.</p>
+        <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. Nesta rodada são <strong>dois produtos</strong>, e as vendas dos dois somam no mesmo ranking. As melhores colocadas recebem premiação em dinheiro.</p>
         <p class="hero-dates mono" id="heroDates"></p>
         <div class="cta-row">
           <button class="btn" id="heroCta" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
           <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
         </div>
       </div>
-      <div class="product-card" id="productCard">
-        <div class="pc-gallery">
-          <img src="produto-c1-2.jpg" alt="Produto da rodada — foto 1">
-          <img src="produto-c1-3.jpg" alt="Produto da rodada — foto 2">
-          <img src="produto-c1-4.jpg" alt="Produto da rodada — foto 3">
-          <img src="produto-c1-5.jpg" alt="Produto da rodada — foto 4">
+      <div class="products-panel" id="productCard">
+        <div class="pp-head">
+          <span class="pp-count mono" id="ppCount">2 produtos</span>
+          <span class="pp-sum mono">vendas somadas</span>
         </div>
-        <div class="pc-body">
-          <p class="pc-round mono" id="productRound">Rodada 01</p>
-          <h4 id="productName">Sandália Lançamento Lumiss</h4>
-          <a class="btn" id="productLink" href="#" target="_blank" rel="noopener">Ver no TikTok</a>
-        </div>
+        <div class="pp-list" id="ppList"></div>
+        <div class="pp-foot mono">Cada par vendido de qualquer um dos dois soma no seu ranking.</div>
       </div>
 
       <div class="product-card mystery" id="productMystery" style="display:none;">
         <div class="pm-art">
-          <span class="pm-num">02</span>
+          <span class="pm-num" id="pmNum">03</span>
           <span class="pm-q">?</span>
         </div>
         <div class="pc-body">
-          <p class="pc-round mono">Campanha 02</p>
+          <p class="pc-round mono" id="pmLabel">Campanha 03</p>
           <h4>Produto ainda em segredo</h4>
           <div class="pm-soon mono">Revelação em breve</div>
         </div>
@@ -526,9 +573,9 @@
     <h2 class="display">Como funciona</h2>
     <div class="steps">
       <div class="step"><div class="num">01</div><div><h3>Cadastre-se</h3><p>Preencha seu nome, WhatsApp e @ do TikTok no formulário abaixo.</p></div></div>
-      <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos crus e fotos do produto da campanha, liberados assim que você se cadastra, prontos pra virarem seu conteúdo.</p></div></div>
+      <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos crus e fotos dos dois produtos da campanha, liberados assim que você se cadastra, prontos pra virarem seu conteúdo.</p></div></div>
       <div class="step"><div class="num">03</div><div><h3>Publique e venda</h3><p>Crie vídeos e conteúdos autorais que conectem de verdade com a consumidora — sempre com seu link de afiliada, pra garantir que cada venda seja atribuída a você.</p></div></div>
-      <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Acompanhamos as vendas geradas pelo seu link durante os 15 dias de campanha.</p></div></div>
+      <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Acompanhamos as vendas dos dois produtos geradas pelo seu link durante toda a campanha — tudo somado num ranking só.</p></div></div>
       <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As 5 melhores colocadas no fechamento da campanha recebem premiação em dinheiro, via Pix, dentro do prazo estabelecido no regulamento da campanha*.</p></div></div>
     </div>
   </section>
@@ -607,15 +654,15 @@
         <p>Podem participar pessoas maiores de 18 anos, com conta ativa e regular no TikTok e cadastro como criadora afiliada no TikTok Shop. Menores de 18 anos só podem participar mediante autorização expressa de responsável legal, enviada à equipe Lumiss antes do início da rodada. Colaboradores diretos da Lumiss e familiares até 2º grau podem se cadastrar, mas não concorrem à premiação.</p>
 
         <h3>3. Como participar</h3>
-        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, WhatsApp válido, @ do TikTok e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento e autoriza a Lumiss a entrar em contato pelo WhatsApp informado para assuntos relacionados à campanha. Após o cadastro, a afiliada recebe acesso ao grupo oficial da campanha no WhatsApp e à biblioteca de vídeos crus e fotos do produto da rodada vigente, quando houver rodada em andamento.</p>
+        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, WhatsApp válido, @ do TikTok e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento e autoriza a Lumiss a entrar em contato pelo WhatsApp informado para assuntos relacionados à campanha. Após o cadastro, a afiliada recebe acesso ao grupo oficial da campanha no WhatsApp e à biblioteca de vídeos crus e fotos dos produtos da rodada vigente, quando houver rodada em andamento.</p>
         <p>O cadastro permanece válido para as rodadas seguintes: quem já se cadastrou não precisa repetir o processo a cada nova campanha.</p>
 
         <h3>4. Duração e calendário das rodadas</h3>
-        <p>Cada rodada tem duração de <strong>15 dias corridos</strong>, com início e encerramento informados pela Lumiss nos canais oficiais (esta página, TikTok e WhatsApp) antes do começo de cada edição.</p>
+        <p>Cada rodada tem duração determinada pela Lumiss, com início e encerramento informados nos canais oficiais (esta página, TikTok e WhatsApp) antes do começo de cada edição. A duração pode variar entre rodadas.</p>
         <p id="regRoundStatus">A rodada atual é válida de <span id="regDates"></span>.</p>
 
         <h3>5. Como o ranking é calculado</h3>
-        <p>O ranking de cada rodada é definido exclusivamente pela quantidade de itens da campanha vendidos através do link de afiliada de cada participante, atribuída automaticamente pelo TikTok Shop. Visualizações, curtidas, comentários e outras métricas de engajamento não pontuam isoladamente — só a venda efetivamente atribuída conta. É responsabilidade da afiliada garantir que seu link esteja corretamente incluído em cada conteúdo publicado; a Lumiss não se responsabiliza por vendas não atribuídas por uso incorreto do link.</p>
+        <p>O ranking de cada rodada é definido exclusivamente pela quantidade de itens da campanha vendidos através do link de afiliada de cada participante, atribuída automaticamente pelo TikTok Shop. Quando a rodada contar com <strong>mais de um produto participante</strong>, as vendas de todos eles são <strong>somadas em um único ranking</strong>, sem distinção de qual produto gerou a venda e sem peso diferente entre eles: cada item vendido vale 1 ponto, qualquer que seja o produto. Todas as variações de cor e numeração de um produto participante contam como o mesmo produto. Visualizações, curtidas, comentários e outras métricas de engajamento não pontuam isoladamente — só a venda efetivamente atribuída conta. É responsabilidade da afiliada garantir que seu link esteja corretamente incluído em cada conteúdo publicado; a Lumiss não se responsabiliza por vendas não atribuídas por uso incorreto do link.</p>
         <p>Para efeito de apuração, são consideradas apenas as vendas válidas. <strong>Não são contabilizados</strong> pedidos cancelados, devolvidos, reembolsados, não pagos pelo cliente, ou classificados pelo próprio TikTok Shop como inelegíveis para comissão de afiliado — ainda que tenham aparecido em relatórios parciais durante a rodada.</p>
 
         <h3>6. Premiação</h3>
@@ -624,7 +671,7 @@
         <p>Em caso de empate na quantidade de itens vendidos, o critério de desempate é a data e hora da venda que gerou o item empatado, tendo prioridade a venda mais antiga. A Lumiss poderá, a seu exclusivo critério e em caráter excepcional, optar por premiar todas as afiliadas empatadas em vez de aplicar o desempate — decisão que vale apenas para a rodada em que for adotada e não gera direito adquirido para as rodadas seguintes.</p>
 
         <h3>7. Benefício de amostra grátis</h3>
-        <p>As <strong>50 (cinquenta) afiliadas mais bem colocadas</strong> no ranking de cada rodada — o Top 50 — adquirem o direito de solicitar <strong>amostra grátis</strong> do produto da rodada seguinte. A solicitação deve ser feita pelos canais oficiais da Lumiss dentro do prazo comunicado no grupo da campanha, e o envio está sujeito à disponibilidade de estoque do produto e grade.</p>
+        <p>As <strong>50 (cinquenta) afiliadas mais bem colocadas</strong> no ranking de cada rodada — o Top 50 — adquirem o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da rodada seguinte. A solicitação deve ser feita pelos canais oficiais da Lumiss dentro do prazo comunicado no grupo da campanha, e o envio está sujeito à disponibilidade de estoque do produto e grade.</p>
         <p>Caso o número de afiliadas com vendas válidas na rodada seja inferior a 50, o benefício se estende a todas elas.</p>
 
         <h3>8. Divulgação do resultado</h3>
@@ -671,29 +718,43 @@
    CONFIG — edite os valores abaixo antes de publicar
    ======================================================= */
 const CONFIG = {
-  campaignCode: "C1",
-  campaignLabel: "CAMPANHA 01",
-  roundLabel: "Rodada 01",
-  productName: "Sandália Lançamento Lumiss",
-  // cole aqui o link do produto no TikTok Shop
-  productTiktokUrl: "https://shop.tiktok.com/br/pdp/1737138415943255378?encode_params=MIIBpgQMV2gPanSbHwT1pjzhBIIBghVUetEYq6Q3ldaLwqqXJKsTYnJ0x13kPgnsz3xr3bsVzC1VWvmleCeRK_qUxxlQav483S-cW8fDMOpOvh6ILv2cfeG7EylleiCZuJGMSlFWfm_fGwKwAjwMjFCXLbstri-7syMQF9Ly0yrTPpx9D2yNeFWVwDgBkw3IRrFUfLuwZEI1JAEh3CN96AkPD0MIGf1jZHsvv7brle2Yf0atYbUZC_l87do_6eV7xO23b1abhKdzupTAv7Me9gjLjBXLYn42H1mZeZSOBJSbmGGAHs7HfPhYHvLd8sMupWsUOuihdUKEeITFeTW5jvU8xvzGSzKdA7oMvA-iJUJpg329cz4fMYRm5iBj8J4YujtWqibaIZX3yjsi3GCHPyK3-zIxYWOxSvHJMw0kr4qYc6WnhMaXVnoEE1A3AEU2V8kJ0Ov9XBSxAaJyZi7XmACLv3sSnN00EZE_6vK1ZJ7-1SEjkm20Dd5EQVFkZ7aHU3KuK968Nbj8aYdNghIRYjwVAlPEVaheBBCH8a5CafWi-1UgsTPThDQM&region=BR&locale=pt-BR&source=seller_center&hide_tips=&no-cache=1&e=1",
+  campaignCode: "C2",
+  campaignLabel: "CAMPANHA 02",
+  roundLabel: "Rodada 02",
+  startDate: "2026-09-25",
+  endDate:   "2026-10-15",
+
+  // PRODUTOS DA RODADA — as vendas de todos eles são SOMADAS no ranking
+  products: [
+    {
+      name: "Sandália Salto Bloco Baixo",
+      tag: "Campeã da Campanha 01",
+      img: "produto-c1-3.jpg",
+      url: "https://shop.tiktok.com/br/pdp/1737138415943255378"
+    },
+    {
+      name: "Sandália Anabela Piton com Enfeite Dourado",
+      tag: "Novidade da Campanha 02",
+      img: "produto-c2.jpg",
+      url: "https://shop.tiktok.com/br/pdp/1737510292639876434"
+    }
+  ],
+
   // quantas melhores colocadas recebem o convite de amostra grátis da próxima rodada
   topBenefitCount: 50,
-  startDate: "2026-09-01",
-  endDate:   "2026-09-15",
-  // cole aqui a URL do Apps Script depois do deploy (veja instruções que a Claude te passou)
+  // cole aqui a URL do Apps Script depois do deploy
   sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwWC2zqzgk5m56IUrkBlgfiivZ2R_0NcDXdJq-WjwRGFzD1Zmr8eFiy-lOa1hpYqz3O/exec",
-  // cole aqui a pasta do Drive com os vídeos desta rodada
+  // pasta do Drive com os vídeos desta rodada
   driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
-  // cole aqui o link de convite do grupo de WhatsApp da campanha
+  // link de convite do grupo de WhatsApp da campanha
   whatsappGroupUrl: "https://chat.whatsapp.com/EdcLE7jj055Etg9ZhAFP94?s=cl&p=i&mlu=4",
-  // vire para false ao abrir a próxima rodada
-  campaignEnded: true,
-  // rótulos da próxima campanha (usados enquanto a atual está encerrada)
-  nextCampaignLabel: "CAMPANHA 02",
-  nextRoundLabel: "Rodada 02",
+
+  // vire para true quando a rodada terminar
+  campaignEnded: false,
+  nextCampaignLabel: "CAMPANHA 03",
+  nextRoundLabel: "Rodada 03",
   // prêmios extras fora da tabela oficial (ex.: exceção por empate) — chave = posição
-  extraPrizes: { 6: "R$ 100" },
+  extraPrizes: {},
   prizes: [
     { place: "1º lugar",     amount: "R$ 1.000" },
     { place: "2º lugar",     amount: "R$ 500" },
@@ -793,9 +854,34 @@ function formatDateShort(dateStr){
   const [y, m, d] = dateStr.split('-').map(Number);
   return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
 }
-$('productRound').textContent = CONFIG.roundLabel || 'Rodada 01';
-$('productName').textContent = CONFIG.productName;
-$('productLink').href = CONFIG.productTiktokUrl;
+/* vitrine dos produtos da rodada — todas as vendas somam no mesmo ranking */
+(function montarProdutos(){
+  const lista = CONFIG.products || [];
+  const alvo = document.getElementById('ppList');
+  if(!alvo || !lista.length) return;
+
+  $('ppCount').textContent = lista.length + (lista.length === 1 ? ' produto' : ' produtos');
+  alvo.innerHTML = '';
+
+  lista.forEach((prod, i) => {
+    if(i > 0){
+      const mais = document.createElement('div');
+      mais.className = 'pp-plus';
+      mais.innerHTML = '<i></i><span>+</span><i></i>';
+      alvo.appendChild(mais);
+    }
+    const item = document.createElement('div');
+    item.className = 'pp-item';
+    item.innerHTML = `
+      <img class="pp-thumb" src="${prod.img}" alt="${prod.name}">
+      <div class="pp-info">
+        ${prod.tag ? `<span class="pp-tag mono">${prod.tag}</span>` : ''}
+        <p class="pp-name">${prod.name}</p>
+        <a class="pp-link" href="${prod.url}" target="_blank" rel="noopener">Ver no TikTok →</a>
+      </div>`;
+    alvo.appendChild(item);
+  });
+})();
 /* ranking ao vivo — busca a aba "Ranking" da planilha */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let rankingJaAnimado = false;
