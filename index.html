@@ -760,7 +760,7 @@
     <h2 class="display">Premiação</h2>
     <p class="section-dates mono">As 5 melhores colocadas recebem em dinheiro, no Pix.</p>
     <div class="prize-list" id="prizeList"></div>
-    <p class="prize-note">Premiação válida para a rodada atual da campanha (<span id="premioDates"></span>). Consulte o regulamento completo no final desta página.</p>
+    <p class="prize-note" id="premioNote">Premiação desta rodada (<span id="premioDates"></span>). Consulte o regulamento completo no final desta página.</p>
   </section>
 
   <section id="ranking">
@@ -981,7 +981,7 @@ const CONFIG = {
   // quantas melhores colocadas recebem o convite de amostra grátis da próxima rodada
   topBenefitCount: 50,
   // cole aqui a URL do Apps Script depois do deploy
-  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbwWC2zqzgk5m56IUrkBlgfiivZ2R_0NcDXdJq-WjwRGFzD1Zmr8eFiy-lOa1hpYqz3O/exec",
+  sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbzDLf8loMU5GzEUUo24yjCRAvlQT24y9I6_C9JSesuHotEB_OI_6OOlgw1r-QWu0Zx2/exec",
   // pasta do Drive com os vídeos desta rodada
   driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
   // link de convite do grupo de WhatsApp da campanha
@@ -1007,16 +1007,47 @@ const $ = id => document.getElementById(id) || { style:{}, classList:{add(){},re
 
 $('campaignStamp').textContent = CONFIG.campaignLabel;
 $('cadastroLabel').textContent = 'Campanha ' + CONFIG.campaignLabel.replace(/^campanha\s*/i,'');
-$('footerRef').textContent = (CONFIG.roundLabel || 'Rodada 01') + ' · até ' + formatDateShort(CONFIG.endDate);
 
 const fullRange = formatDateRange(CONFIG.startDate, CONFIG.endDate);
 const encerrada = CONFIG.campaignEnded === true;
-$('heroDates').textContent = encerrada
-  ? 'Campanha 01 encerrada · ' + fullRange + ' · Campanha 02 será divulgada em breve'
-  : 'Campanha ativa de ' + fullRange;
-$('cadastroDates').textContent = encerrada
-  ? 'Cadastros já abertos para a Campanha 02 — garanta sua vaga e entre no grupo agora para ser a primeira a saber do novo produto.'
-  : 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
+
+/* estado da rodada: 'pre' (ainda não começou), 'ativa', 'apuracao' ou 'encerrada' */
+function hojeZerado(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function dataDe(str){ const [y,m,dd] = str.split('-').map(Number); return new Date(y, m-1, dd); }
+function statusRodada(){
+  if(encerrada) return 'encerrada';
+  const hoje = hojeZerado();
+  if(hoje < dataDe(CONFIG.startDate)) return 'pre';
+  if(hoje > dataDe(CONFIG.endDate))  return 'apuracao';
+  return 'ativa';
+}
+const status = statusRodada();
+const nomeCampanha = CONFIG.campaignLabel.charAt(0) + CONFIG.campaignLabel.slice(1).toLowerCase();
+
+/* --- textos que mudam conforme o estado --- */
+if(status === 'pre'){
+  $('campaignStamp').textContent = CONFIG.campaignLabel + ' · EM BREVE';
+  $('heroDates').textContent = 'Começa em ' + formatDateLong(CONFIG.startDate) + ' · vai até ' + formatDateLong(CONFIG.endDate);
+  $('cadastroDates').textContent = 'A rodada começa em ' + formatDateLong(CONFIG.startDate) + ' — cadastre-se agora para largar na frente no primeiro dia.';
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · começa ' + formatDateShort(CONFIG.startDate);
+  $('premioNote').textContent = 'Premiação desta rodada (' + fullRange + '). Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A <strong>' + nomeCampanha + '</strong> ainda não começou: acontece de ' + fullRange + '.';
+  $('heroCta').textContent = 'Quero garantir minha vaga →';
+}else if(status === 'ativa'){
+  $('heroDates').textContent = 'Campanha em andamento · ' + fullRange;
+  $('cadastroDates').textContent = 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · até ' + formatDateShort(CONFIG.endDate);
+  $('premioNote').textContent = 'Premiação válida para a rodada em andamento (' + fullRange + '). Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A rodada em andamento é válida de <span>' + fullRange + '</span>.';
+}else if(status === 'apuracao'){
+  $('heroDates').textContent = 'Rodada finalizada em ' + formatDateLong(CONFIG.endDate) + ' · resultado em apuração';
+  $('cadastroDates').textContent = 'Esta rodada foi finalizada. Cadastre-se para participar da próxima.';
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · em apuração';
+  $('premioNote').textContent = 'Premiação da rodada de ' + fullRange + '. Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A rodada de <strong>' + fullRange + '</strong> foi finalizada e o resultado está em apuração.';
+  $('rankingNote').textContent = 'Rodada finalizada em ' + formatDateLong(CONFIG.endDate) + '. O resultado final está sendo conferido e será publicado aqui em breve.';
+}
+
 $('rankingDates').textContent = formatDateLong(CONFIG.endDate);
 $('premioDates').textContent = fullRange;
 $('regDates').textContent = fullRange;
@@ -1261,10 +1292,10 @@ async function refreshRanking(){
       const prize = (CONFIG.prizes[pos-1] || {}).amount || (CONFIG.extraPrizes || {})[pos];
 
       const row = document.createElement('div');
-      row.className = 'ranking-row' + (i < 3 ? ' top3' : '') + (pos === 1 ? ' rank-1' : '');
+      row.className = 'ranking-row' + (i < 3 ? ' top3' : '') + (pos === 1 && status === 'encerrada' ? ' rank-1' : '');
       // durante a rodada é liderança; encerrada, é título
-      const selo = pos === 1
-        ? `<span class="champ-badge">${CONFIG.campaignEnded === true ? '👑 Campeã' : 'Liderando'}</span>`
+      const selo = (pos === 1 && status === 'encerrada')
+        ? '<span class="champ-badge">👑 Campeã</span>'
         : '';
       row.innerHTML = `
         <div class="ranking-pos">
@@ -1336,7 +1367,7 @@ function revelarRanking(){
     setTimeout(() => {
       row.classList.add('revealed', 'pop');
       setTimeout(() => row.classList.remove('pop'), 600);
-      if(row.classList.contains('rank-1')) soltarConfete();
+      if(row.classList.contains('rank-1') && status === 'encerrada') soltarConfete();
     }, idx * passo);
   });
 }
@@ -1449,12 +1480,18 @@ form.addEventListener('submit', async (e)=>{
   submitBtn.textContent = 'Enviando…';
 
   try{
-    const entry = { nome, whats, tiktok, seguidores, campanha: CONFIG.campaignCode };
-    const res = await fetch(CONFIG.sheetWebAppUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
-      body: JSON.stringify(entry)
+    // GET com parâmetros: funciona nos navegadores internos do TikTok/WhatsApp,
+    // que frequentemente bloqueiam POST entre domínios
+    const params = new URLSearchParams({
+      action: 'signup',
+      nome, whats, tiktok, seguidores,
+      campanha: CONFIG.campaignCode
     });
+    const ctrl = new AbortController();
+    const limite = setTimeout(() => ctrl.abort(), 20000);
+    const res = await fetch(CONFIG.sheetWebAppUrl + '?' + params.toString(), { signal: ctrl.signal });
+    clearTimeout(limite);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const result = await res.json();
 
     if(result.status === 'duplicate'){
@@ -1465,9 +1502,7 @@ form.addEventListener('submit', async (e)=>{
       return;
     }
     if(result.status !== 'ok'){
-      msg.textContent = 'Não deu pra salvar agora. Tenta de novo em instantes.';
-      msg.className = 'msg err';
-      return;
+      throw new Error('resposta inesperada: ' + JSON.stringify(result));
     }
     msg.textContent = 'Cadastro confirmado! Acesse os links liberados. 🎬';
     msg.className = 'msg ok';
@@ -1475,8 +1510,16 @@ form.addEventListener('submit', async (e)=>{
     refreshCounter();
     document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
   }catch(err){
-    console.error(err);
-    msg.textContent = 'Erro ao salvar o cadastro. Tenta novamente.';
+    console.error('[cadastro] falha:', err);
+    // não perder a criadora: oferece envio manual pelo WhatsApp
+    const texto = encodeURIComponent(
+      `Olá! Quero me cadastrar na ${CONFIG.campaignLabel} da Lumiss.\n\n` +
+      `Nome: ${nome}\nWhatsApp: ${whats}\n@ do TikTok: ${tiktok}\nSeguidores: ${seguidores}`
+    );
+    msg.innerHTML =
+      'Não conseguimos salvar automaticamente por aqui. ' +
+      '<a href="' + CONFIG.whatsappGroupUrl + '" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">Entre no grupo</a> ' +
+      'ou <a href="https://wa.me/?text=' + texto + '" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">envie seus dados pelo WhatsApp</a> que a gente cadastra pra você.';
     msg.className = 'msg err';
   }finally{
     submitBtn.disabled = false;
