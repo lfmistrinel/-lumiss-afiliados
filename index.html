@@ -204,11 +204,46 @@
   .ranking-row:last-child{border-bottom:none;}
   .ranking-row.top3{background:linear-gradient(90deg, rgba(217,179,108,.14), transparent);}
   .ranking-row.rank-1{
-    background:linear-gradient(90deg, rgba(217,179,108,.30), rgba(217,179,108,.04));
-    box-shadow:inset 0 0 0 1px rgba(217,179,108,.45);
-    padding-top:18px;padding-bottom:18px;
+    background:linear-gradient(90deg, rgba(217,179,108,.38), rgba(217,179,108,.05));
+    box-shadow:inset 0 0 0 1.5px rgba(217,179,108,.7), 0 0 26px rgba(217,179,108,.16);
+    padding-top:22px;padding-bottom:22px;
+    position:relative;overflow:hidden;
   }
-  .ranking-row.rank-1 .name{font-size:16.5px;font-weight:600;}
+  /* brilho que atravessa a linha da campeã */
+  .ranking-row.rank-1::after{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.18) 50%, transparent 60%);
+    transform:translateX(-120%);
+  }
+  .ranking-row.rank-1.revealed::after{
+    animation:champShine 2.6s ease .5s infinite;
+  }
+  @keyframes champShine{
+    0%{transform:translateX(-120%);}
+    35%,100%{transform:translateX(120%);}
+  }
+  .ranking-row.rank-1 .name{
+    font-size:18px;font-weight:700;color:var(--paper);
+    text-shadow:0 0 18px rgba(217,179,108,.35);
+  }
+  .ranking-row.rank-1 .rk{
+    animation:champPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes champPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+  }
+  .champ-badge{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--leather-dark);background:var(--gold);
+    padding:3px 9px;border-radius:999px;white-space:nowrap;
+    box-shadow:0 0 14px rgba(217,179,108,.5);
+  }
+  .ranking-row.rank-1 .prize-badge{
+    font-size:12px;padding:4px 11px;
+    box-shadow:0 0 16px rgba(217,179,108,.45);
+  }
   .ranking-row.pop{animation:rowPop .55s cubic-bezier(.2,1.2,.4,1);}
   @keyframes rowPop{
     0%{transform:scale(.97);}
@@ -237,6 +272,21 @@
     .ranking-row.pop{animation:none;}
   }
   .ranking-empty{color:var(--paper-dim);font-size:13.5px;padding:24px;text-align:center;}
+  .ranking-soon{padding:34px 24px;text-align:center;}
+  .ranking-soon .rs-days{
+    font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1;
+    color:var(--gold);letter-spacing:.03em;margin-bottom:10px;
+  }
+  .ranking-soon p{
+    margin:0 auto;max-width:44ch;font-size:13.5px;line-height:1.6;
+    color:var(--paper-dim);
+  }
+  .ranking-soon strong{color:var(--paper);}
+  @media(max-width:640px){
+    .ranking-soon{padding:26px 16px;}
+    .ranking-soon .rs-days{font-size:31px;}
+    .ranking-soon p{font-size:12.5px;}
+  }
 
   /* ---------- regulamento ---------- */
   .reg-details{border:1px solid var(--leather-line);border-radius:10px;overflow:hidden;}
@@ -298,6 +348,112 @@
 
   footer{padding:36px 0 60px;color:var(--paper-dim);font-size:12px;border-top:1px dashed var(--leather-line);}
   footer .refs{margin-top:8px;font-family:'JetBrains Mono',monospace;opacity:.6;}
+
+
+  /* ================= AJUSTES MOBILE ================= */
+  @media(max-width:640px){
+    .wrap{padding:0 18px;}
+
+    /* faixa animada mais discreta */
+    .marquee-wrap{padding:16px 0;}
+    .marquee-track span{font-size:21px;padding:0 11px;}
+
+    /* hero */
+    section{padding:38px 0;}
+    .hero{padding-top:18px !important;}
+    h1.display{font-size:38px;max-width:none;}
+    .hero p.lead{font-size:15.5px;max-width:none;}
+    .hero-dates{font-size:11.5px;}
+    .cta-row{flex-direction:column;align-items:stretch;gap:12px;}
+    .cta-row .btn{width:100%;justify-content:center;padding:15px 20px;}
+    .counter{text-align:center;font-size:12px;}
+    h2.display{font-size:27px;margin-bottom:20px;}
+
+    /* produtos: foto grande ocupando a largura toda */
+    .prod-head{margin-bottom:18px;}
+    .showcase{gap:14px;}
+    .sc-photo{aspect-ratio:4/3;}
+    .sc-body{padding:14px 14px 16px;}
+    .sc-name{font-size:14.5px;margin-bottom:11px;}
+    .sc-body .btn{padding:14px 16px;}
+
+    /* ranking: nome em cima, prêmio embaixo — sem espremer */
+    .ranking-row{
+      flex-direction:column;align-items:flex-start;gap:7px;
+      padding:13px 15px;
+    }
+    .ranking-row.rank-1{padding-top:17px;padding-bottom:17px;}
+    .ranking-row.rank-1 .name{font-size:15.5px;}
+    .champ-badge{font-size:8.5px;padding:2px 7px;}
+    .ranking-pos{width:100%;}
+    .ranking-pos .name{font-size:14px;}
+    .ranking-items{padding-left:42px;}
+    .ranking-row.rank-1 .rk{font-size:20px;}
+
+    /* pódio: cabe em 3 colunas sem quebrar nome */
+    .hall-card{padding:18px 14px 0;}
+    .hall-title{font-size:19px;}
+    .hall-period{font-size:10px;}
+    .podium{gap:6px;}
+    .podium-medal{font-size:21px;}
+    .podium-name{font-size:10.5px;hyphens:auto;overflow-wrap:anywhere;}
+    .podium-col.p1 .podium-base{height:92px;}
+    .podium-col.p2 .podium-base{height:70px;}
+    .podium-col.p3 .podium-base{height:54px;}
+    .podium-pos{font-size:19px;}
+    .podium-col.p1 .podium-pos{font-size:24px;}
+
+    /* passos: número menor, mais espaço pro texto */
+    .step{grid-template-columns:38px 1fr;gap:9px;padding:16px 0;}
+    .step .num{font-size:38px;-webkit-text-stroke-width:1px;}
+    .step h3{font-size:15.5px;}
+    .step p{font-size:13.5px;}
+
+    /* benefício */
+    .bonus-card{flex-direction:column;gap:9px;padding:16px;}
+
+    /* acesso */
+    .access-card{padding:20px 16px;}
+
+    /* formulário: alvos de toque maiores e sem zoom no iOS */
+    form{padding:20px 16px;}
+    input,select{padding:14px;font-size:16px;}
+    .agree{font-size:12px;}
+    form .btn{width:100%;justify-content:center;padding:15px 20px;}
+
+    /* regulamento: sem altura fixa, rola com a página */
+    .reg-details summary{padding:16px 15px;font-size:13.5px;}
+    .reg-block{padding:6px 16px 22px;max-height:none;overflow:visible;}
+    .reg-block p,.reg-block li{font-size:12.5px;}
+
+    /* banner de encerramento */
+    .ended-banner{font-size:12.5px;padding:11px 16px;}
+    .ended-banner a{display:block;margin:4px 0 0;}
+
+    /* teaser: cabe na tela e rola por dentro se precisar */
+    .teaser{padding:16px;align-items:flex-start;}
+    .teaser-box{
+      padding:26px 20px 22px;margin-top:22px;
+      max-height:calc(100vh - 44px);overflow-y:auto;
+    }
+    .teaser-art{height:92px;margin-bottom:14px;}
+    .teaser-num{font-size:88px;}
+    .teaser-q{font-size:48px;}
+    .teaser-box h3{font-size:27px;}
+    .teaser-box p{font-size:13.5px;}
+    .teaser-hint{font-size:11.5px;}
+    .teaser-actions .btn{padding:14px 16px;}
+    .teaser-close{font-size:30px;top:6px;right:10px;padding:8px;}
+
+    footer{padding:28px 0 44px;}
+  }
+
+  @media(max-width:380px){
+    h1.display{font-size:33px;}
+    .marquee-track span{font-size:18px;}
+    .podium-name{font-size:9.5px;}
+    .sc-photo{aspect-ratio:1/1;}
+  }
 
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
@@ -600,6 +756,13 @@
     </div>
   </section>
 
+  <section id="premiacao">
+    <h2 class="display">Premiação</h2>
+    <p class="section-dates mono">As 5 melhores colocadas recebem em dinheiro, no Pix.</p>
+    <div class="prize-list" id="prizeList"></div>
+    <p class="prize-note">Premiação válida para a rodada atual da campanha (<span id="premioDates"></span>). Consulte o regulamento completo no final desta página.</p>
+  </section>
+
   <section id="ranking">
     <h2 class="display" id="rankingTitle">Ranking</h2>
     <div class="ranking-wrap">
@@ -855,6 +1018,7 @@ $('cadastroDates').textContent = encerrada
   ? 'Cadastros já abertos para a Campanha 02 — garanta sua vaga e entre no grupo agora para ser a primeira a saber do novo produto.'
   : 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
 $('rankingDates').textContent = formatDateLong(CONFIG.endDate);
+$('premioDates').textContent = fullRange;
 $('regDates').textContent = fullRange;
 
 if(encerrada){
@@ -865,6 +1029,7 @@ if(encerrada){
   $('campaignStamp').textContent = proxCamp + ' · EM BREVE';
   // card do produto vira suspense
   $('ppList').style.display = 'none';
+  $('premiacao').style.display = 'none';
   $('prodTitle').textContent = 'Próxima rodada';
   $('prodSub').textContent = 'Os produtos da Campanha 03 serão revelados em breve.';
   $('ppCount').style.display = 'none';
@@ -973,6 +1138,26 @@ function formatDateShort(dateStr){
   });
 })();
 
+/* tabela de premiação da rodada */
+(function montarPremios(){
+  const alvo = document.getElementById('prizeList');
+  const secao = document.getElementById('premiacao');
+  const lista = CONFIG.prizes || [];
+  if(!alvo) return;
+  if(!lista.length){ if(secao) secao.style.display = 'none'; return; }
+
+  const medals = ['🏆','🥈','🥉'];
+  alvo.innerHTML = '';
+  lista.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'prize-row' + (i === 0 ? ' gold' : '');
+    row.innerHTML = `
+      <div class="place"><span class="rank mono">${medals[i] || '#'+(i+1)}</span><span class="lbl">${p.place}</span></div>
+      <div class="amount-wrap"><div class="amount">${p.amount}</div><span class="pix-tag">NO PIX</span></div>`;
+    alvo.appendChild(row);
+  });
+})();
+
 /* vitrine dos produtos da rodada — todas as vendas somam no mesmo ranking */
 (function montarProdutos(){
   const lista = CONFIG.products || [];
@@ -1015,8 +1200,42 @@ function formatDateShort(dateStr){
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let rankingJaAnimado = false;
 
+/* a campanha já começou? (compara só a data, sem hora) */
+function campanhaComecou(){
+  const [y,m,d] = CONFIG.startDate.split('-').map(Number);
+  const inicio = new Date(y, m-1, d);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  return hoje >= inicio;
+}
+
+function diasAteInicio(){
+  const [y,m,d] = CONFIG.startDate.split('-').map(Number);
+  const inicio = new Date(y, m-1, d);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  return Math.ceil((inicio - hoje) / 86400000);
+}
+
 async function refreshRanking(){
   const list = document.getElementById('rankingList');
+
+  // antes do início da rodada, o ranking dá lugar à contagem regressiva
+  if(!campanhaComecou() && CONFIG.campaignEnded !== true){
+    const dias = diasAteInicio();
+    const quando = dias === 1 ? 'Começa amanhã!' : `Faltam ${dias} dias`;
+    list.innerHTML =
+      '<div class="ranking-soon">' +
+        '<div class="rs-days">' + quando + '</div>' +
+        '<p>O ranking abre em <strong>' + formatDateLong(CONFIG.startDate) + '</strong>, ' +
+        'quando a campanha começar. Cadastre-se agora para largar na frente.</p>' +
+      '</div>';
+    $('rankingTitle').textContent = 'Ranking';
+    $('rankingNote').textContent =
+      'Assim que a campanha começar, o ranking passa a ser atualizado diariamente pela equipe Lumiss com base nas vendas do TikTok Shop.';
+    return;
+  }
+
   if(!CONFIG.sheetWebAppUrl){
     list.innerHTML = '<div class="ranking-empty">Ranking ainda não conectado.</div>';
     return;
@@ -1043,12 +1262,17 @@ async function refreshRanking(){
 
       const row = document.createElement('div');
       row.className = 'ranking-row' + (i < 3 ? ' top3' : '') + (pos === 1 ? ' rank-1' : '');
+      // durante a rodada é liderança; encerrada, é título
+      const selo = pos === 1
+        ? `<span class="champ-badge">${CONFIG.campaignEnded === true ? '👑 Campeã' : 'Liderando'}</span>`
+        : '';
       row.innerHTML = `
         <div class="ranking-pos">
           <span class="rk">${medals[pos-1] || '#'+pos}</span>
           <div class="who">
             <span class="name">${r.nome || ''}</span>
             ${r.tiktok ? `<span class="handle">${r.tiktok}</span>` : ''}
+            ${selo}
           </div>
         </div>
         ${prize ? `<div class="ranking-items"><span class="prize-badge">${prize}</span></div>` : ''}`;
@@ -1106,7 +1330,7 @@ function observarRanking(){
 function revelarRanking(){
   const rows = [...document.querySelectorAll('#rankingList .ranking-row')];
   const ordem = [...rows].reverse();
-  const passo = 260;
+  const passo = window.innerWidth < 640 ? 170 : 260;
 
   ordem.forEach((row, idx) => {
     setTimeout(() => {
@@ -1125,7 +1349,8 @@ function soltarConfete(){
   canvas.width = rect.width; canvas.height = rect.height;
   const ctx = canvas.getContext('2d');
   const cores = ['#d9b36c','#e0a468','#f3ead8','#c97a3e','#ff3b62'];
-  const pecas = Array.from({length: 90}, () => ({
+  const qtd = window.innerWidth < 640 ? 45 : 90; // menos peças no celular
+  const pecas = Array.from({length: qtd}, () => ({
     x: Math.random() * canvas.width,
     y: -20 - Math.random() * canvas.height * .5,
     w: 5 + Math.random() * 5,
