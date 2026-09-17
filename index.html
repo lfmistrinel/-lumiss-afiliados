@@ -91,8 +91,6 @@
     margin:0 0 28px;
   }
   .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
-  .hero-grid{display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start;}
-  @media(max-width:760px){.hero-grid{grid-template-columns:1fr;} .product-card{max-width:340px;}}
   .product-card{
     border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
     background:var(--leather-mid);
@@ -305,58 +303,117 @@
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 
   /* ---------- faixa animada ---------- */
-  /* ---------- vitrine de produtos da rodada ---------- */
-  .products-panel{
-    border:1px solid var(--leather-line);border-radius:12px;overflow:hidden;
-    background:var(--leather-mid);
+  /* ---------- hall da fama ---------- */
+  .hall-card{
+    border:1px solid var(--leather-line);border-radius:12px;
+    background:var(--leather-mid);padding:22px 20px 0;margin-bottom:16px;overflow:hidden;
   }
-  .pp-head{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding:11px 14px;background:rgba(217,179,108,.12);
-    border-bottom:1px solid var(--leather-line);
+  .hall-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;margin-bottom:22px;
   }
+  .hall-title{
+    font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;
+    color:var(--paper);
+  }
+  .hall-period{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--paper-dim);}
+  .podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;}
+  .podium-col{flex:1;max-width:150px;text-align:center;}
+  .podium-medal{font-size:26px;line-height:1;margin-bottom:6px;}
+  .podium-name{
+    font-size:13px;color:var(--paper);margin-bottom:8px;
+    word-break:break-word;line-height:1.3;
+  }
+  .podium-base{
+    border-radius:8px 8px 0 0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:3px;padding:10px 6px;
+    background:linear-gradient(180deg, rgba(217,179,108,.22), rgba(217,179,108,.05));
+    border:1px solid rgba(217,179,108,.3);border-bottom:none;
+  }
+  .podium-col.p1 .podium-base{
+    height:112px;
+    background:linear-gradient(180deg, rgba(217,179,108,.45), rgba(217,179,108,.08));
+    border-color:rgba(217,179,108,.6);
+  }
+  .podium-col.p2 .podium-base{height:82px;}
+  .podium-col.p3 .podium-base{height:62px;}
+  .podium-pos{
+    font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;
+    color:var(--gold);opacity:.85;
+  }
+  .podium-col.p1 .podium-pos{font-size:30px;opacity:1;}
+  .podium-prize{
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--paper);
+  }
+  .podium-col.p1 .podium-prize{font-size:14px;color:var(--gold);}
+  @media(max-width:480px){
+    .podium-col{max-width:none;}
+    .podium-name{font-size:11.5px;}
+    .podium-prize{font-size:10.5px;}
+    .podium-col.p1 .podium-prize{font-size:12px;}
+  }
+
+  /* ---------- vitrine grande de produtos ---------- */
+  .prod-head{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;margin-bottom:26px;
+  }
+  .prod-head h2{margin-bottom:6px;}
+  .prod-head .section-dates{margin:0;}
   .pp-count{
     font-size:11px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--leather-dark);background:var(--gold);
-    padding:3px 9px;border-radius:999px;font-weight:600;
+    padding:5px 12px;border-radius:999px;font-weight:600;white-space:nowrap;
   }
-  .pp-sum{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
-  .pp-item{
-    display:flex;gap:12px;align-items:center;padding:12px 14px;
-    border-bottom:1px solid var(--leather-line);
+  .showcase{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:700px){.showcase{grid-template-columns:1fr;}}
+
+  .sc-card{
+    position:relative;border-radius:14px;overflow:hidden;
+    border:1px solid var(--leather-line);background:var(--leather-mid);
+    transition:transform .35s cubic-bezier(.2,.8,.3,1), border-color .35s ease, box-shadow .35s ease;
   }
-  .pp-item:last-child{border-bottom:none;}
-  .pp-thumb{
-    width:74px;height:74px;flex-shrink:0;border-radius:8px;
-    object-fit:contain;background:#fff;
+  .sc-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(217,179,108,.65);
+    box-shadow:0 22px 50px rgba(0,0,0,.45), 0 0 0 1px rgba(217,179,108,.25);
   }
-  .pp-info{min-width:0;flex:1;}
-  .pp-tag{
-    display:inline-block;font-family:'JetBrains Mono',monospace;
-    font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--caramelo-soft);border:1px solid rgba(224,164,104,.4);
-    padding:1px 6px;border-radius:999px;margin-bottom:5px;
+  .sc-photo{
+    position:relative;aspect-ratio:1/1;overflow:hidden;background:#fff;
   }
-  .pp-name{font-size:13.5px;color:var(--paper);margin:0 0 7px;line-height:1.3;}
-  .pp-link{
-    font-size:11.5px;color:var(--stamp);text-decoration:none;font-weight:600;
+  .sc-photo img{
+    width:100%;height:100%;object-fit:contain;display:block;
+    transition:transform .6s cubic-bezier(.2,.8,.3,1);
   }
-  .pp-link:hover{text-decoration:underline;}
-  .pp-plus{
-    display:flex;align-items:center;justify-content:center;gap:9px;
-    padding:5px 0;background:var(--leather-dark);
+  .sc-card:hover .sc-photo img{transform:scale(1.07);}
+  .sc-shine{
+    position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.55) 50%, transparent 62%);
+    transform:translateX(-120%);
   }
-  .pp-plus span{
-    font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--gold);
+  .sc-card:hover .sc-shine{transition:transform .9s ease;transform:translateX(120%);}
+  .sc-tag{
+    position:absolute;top:12px;left:12px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--leather-dark);
+    background:var(--gold);padding:4px 10px;border-radius:999px;font-weight:600;
   }
-  .pp-plus i{
-    flex:1;height:1px;background:var(--leather-line);font-style:normal;max-width:60px;
+  .sc-body{padding:18px 18px 20px;}
+  .sc-name{
+    font-size:15.5px;line-height:1.35;color:var(--paper);margin:0 0 14px;
   }
-  .pp-foot{
-    padding:10px 14px;font-size:10.5px;line-height:1.5;
-    color:var(--paper-dim);border-top:1px solid var(--leather-line);
-    text-align:center;
+  .sc-body .btn{width:100%;justify-content:center;font-size:13.5px;padding:12px 16px;}
+  .sc-plus{
+    position:absolute;z-index:3;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:46px;height:46px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Bebas Neue',sans-serif;font-size:26px;
+    color:var(--leather-dark);background:var(--gold);
+    box-shadow:0 0 0 6px var(--leather-dark);
   }
+  @media(max-width:700px){.sc-plus{display:none;}}
 
   .product-card.mystery{border-color:rgba(217,179,108,.4);}  .pm-art{
     position:relative;display:flex;align-items:center;justify-content:center;
@@ -510,36 +567,35 @@
 <div class="wrap">
 
   <section class="hero" style="border-top:none;padding-top:24px;">
-    <div class="hero-grid">
-      <div>
-        <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
-        <h1 class="display">Poste o produto.<br>Venda e suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
-        <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. Nesta rodada são <strong>dois produtos</strong>, e as vendas dos dois somam no mesmo ranking. As melhores colocadas recebem premiação em dinheiro.</p>
-        <p class="hero-dates mono" id="heroDates"></p>
-        <div class="cta-row">
-          <button class="btn" id="heroCta" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
-          <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
-        </div>
-      </div>
-      <div class="products-panel" id="productCard">
-        <div class="pp-head">
-          <span class="pp-count mono" id="ppCount">2 produtos</span>
-          <span class="pp-sum mono">vendas somadas</span>
-        </div>
-        <div class="pp-list" id="ppList"></div>
-        <div class="pp-foot mono">Cada par vendido de qualquer um dos dois soma no seu ranking.</div>
-      </div>
+    <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
+    <h1 class="display">Poste o produto.<br>Venda e suba no <em>ranking</em>.<br>Fature em dinheiro.</h1>
+    <p class="lead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e poste no seu TikTok. Nesta rodada são <strong>dois produtos</strong>, e as vendas dos dois somam no mesmo ranking. As melhores colocadas recebem premiação em dinheiro.</p>
+    <p class="hero-dates mono" id="heroDates"></p>
+    <div class="cta-row">
+      <button class="btn" id="heroCta" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
+      <span class="counter mono" id="counterText">carregando afiliadas confirmadas…</span>
+    </div>
+  </section>
 
-      <div class="product-card mystery" id="productMystery" style="display:none;">
-        <div class="pm-art">
-          <span class="pm-num" id="pmNum">03</span>
-          <span class="pm-q">?</span>
-        </div>
-        <div class="pc-body">
-          <p class="pc-round mono" id="pmLabel">Campanha 03</p>
-          <h4>Produto ainda em segredo</h4>
-          <div class="pm-soon mono">Revelação em breve</div>
-        </div>
+  <section id="produtos">
+    <div class="prod-head">
+      <div>
+        <h2 class="display" id="prodTitle">Os produtos da rodada</h2>
+        <p class="section-dates mono" id="prodSub">As vendas dos dois somam no mesmo ranking.</p>
+      </div>
+      <span class="pp-count mono" id="ppCount">2 produtos</span>
+    </div>
+    <div class="showcase" id="ppList"></div>
+
+    <div class="product-card mystery" id="productMystery" style="display:none;max-width:340px;">
+      <div class="pm-art">
+        <span class="pm-num" id="pmNum">03</span>
+        <span class="pm-q">?</span>
+      </div>
+      <div class="pc-body">
+        <p class="pc-round mono" id="pmLabel">Campanha 03</p>
+        <h4>Produto ainda em segredo</h4>
+        <div class="pm-soon mono">Revelação em breve</div>
       </div>
     </div>
   </section>
@@ -556,6 +612,12 @@
     <p class="prize-note" id="tieNote" style="display:none;">
       <strong>Sobre a 5ª colocação:</strong> houve empate técnico na disputa pela última posição premiada. Em vez de aplicar o critério de desempate previsto no regulamento, a Lumiss optou por abrir uma exceção e premiar as <strong>duas criadoras</strong> envolvidas com R$ 100 cada — por isso o 6º lugar também aparece com premiação neste ranking.
     </p>
+  </section>
+
+  <section id="hall">
+    <h2 class="display">Hall da Fama</h2>
+    <p class="section-dates mono">Quem já subiu ao pódio e levou o prêmio pra casa.</p>
+    <div id="hallList"></div>
   </section>
 
   <section id="beneficio">
@@ -740,6 +802,19 @@ const CONFIG = {
     }
   ],
 
+  // HALL DA FAMA — pódio de cada campanha encerrada (mais recente primeiro)
+  hallOfFame: [
+    {
+      campaign: "Campanha 01",
+      period: "01 a 15 de setembro de 2026",
+      winners: [
+        { pos: 1, name: "helenlourenco_", prize: "R$ 1.000" },
+        { pos: 2, name: "dessaschmitz",   prize: "R$ 500" },
+        { pos: 3, name: "laiseez",        prize: "R$ 300" },
+      ]
+    },
+  ],
+
   // quantas melhores colocadas recebem o convite de amostra grátis da próxima rodada
   topBenefitCount: 50,
   // cole aqui a URL do Apps Script depois do deploy
@@ -789,7 +864,10 @@ if(encerrada){
   // carimbo do hero passa a anunciar a próxima campanha
   $('campaignStamp').textContent = proxCamp + ' · EM BREVE';
   // card do produto vira suspense
-  $('productCard').style.display = 'none';
+  $('ppList').style.display = 'none';
+  $('prodTitle').textContent = 'Próxima rodada';
+  $('prodSub').textContent = 'Os produtos da Campanha 03 serão revelados em breve.';
+  $('ppCount').style.display = 'none';
   $('productMystery').style.display = 'block';
   // cadastro e rodapé apontam para a próxima campanha
   $('cadastroLabel').textContent =
@@ -854,6 +932,47 @@ function formatDateShort(dateStr){
   const [y, m, d] = dateStr.split('-').map(Number);
   return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
 }
+/* hall da fama — pódio das campanhas já encerradas */
+(function montarHall(){
+  const alvo = document.getElementById('hallList');
+  const hall = CONFIG.hallOfFame || [];
+  const secao = document.getElementById('hall');
+  if(!alvo) return;
+  if(!hall.length){ if(secao) secao.style.display = 'none'; return; }
+
+  const medalhas = { 1:'🏆', 2:'🥈', 3:'🥉' };
+  // ordem visual do pódio: 2º à esquerda, 1º no centro, 3º à direita
+  const ordemVisual = [2, 1, 3];
+
+  alvo.innerHTML = '';
+  hall.forEach(ed => {
+    const card = document.createElement('div');
+    card.className = 'hall-card';
+
+    const colunas = ordemVisual.map(pos => {
+      const w = (ed.winners || []).find(x => x.pos === pos);
+      if(!w) return '';
+      return `
+        <div class="podium-col p${pos}">
+          <div class="podium-medal">${medalhas[pos] || ''}</div>
+          <div class="podium-name">${w.name}</div>
+          <div class="podium-base">
+            <span class="podium-pos">${pos}º</span>
+            <span class="podium-prize">${w.prize || ''}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="hall-head">
+        <span class="hall-title">${ed.campaign}</span>
+        <span class="hall-period">${ed.period || ''}</span>
+      </div>
+      <div class="podium">${colunas}</div>`;
+    alvo.appendChild(card);
+  });
+})();
+
 /* vitrine dos produtos da rodada — todas as vendas somam no mesmo ranking */
 (function montarProdutos(){
   const lista = CONFIG.products || [];
@@ -861,26 +980,36 @@ function formatDateShort(dateStr){
   if(!alvo || !lista.length) return;
 
   $('ppCount').textContent = lista.length + (lista.length === 1 ? ' produto' : ' produtos');
+  if(lista.length === 1){
+    $('prodTitle').textContent = 'O produto da rodada';
+    $('prodSub').textContent = 'Todas as vendas dele contam para o ranking.';
+  }
   alvo.innerHTML = '';
 
   lista.forEach((prod, i) => {
-    if(i > 0){
-      const mais = document.createElement('div');
-      mais.className = 'pp-plus';
-      mais.innerHTML = '<i></i><span>+</span><i></i>';
-      alvo.appendChild(mais);
-    }
-    const item = document.createElement('div');
-    item.className = 'pp-item';
-    item.innerHTML = `
-      <img class="pp-thumb" src="${prod.img}" alt="${prod.name}">
-      <div class="pp-info">
-        ${prod.tag ? `<span class="pp-tag mono">${prod.tag}</span>` : ''}
-        <p class="pp-name">${prod.name}</p>
-        <a class="pp-link" href="${prod.url}" target="_blank" rel="noopener">Ver no TikTok →</a>
+    const card = document.createElement('div');
+    card.className = 'sc-card';
+    card.innerHTML = `
+      <div class="sc-photo">
+        ${prod.tag ? `<span class="sc-tag">${prod.tag}</span>` : ''}
+        <img src="${prod.img}" alt="${prod.name}" loading="lazy">
+        <span class="sc-shine"></span>
+      </div>
+      <div class="sc-body">
+        <p class="sc-name">${prod.name}</p>
+        <a class="btn" href="${prod.url}" target="_blank" rel="noopener">Ver no TikTok →</a>
       </div>`;
-    alvo.appendChild(item);
+    alvo.appendChild(card);
   });
+
+  // "+" entre os dois primeiros cards, só no desktop
+  if(lista.length === 2){
+    const mais = document.createElement('span');
+    mais.className = 'sc-plus';
+    mais.textContent = '+';
+    alvo.style.position = 'relative';
+    alvo.appendChild(mais);
+  }
 })();
 /* ranking ao vivo — busca a aba "Ranking" da planilha */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
