@@ -457,10 +457,6 @@
       $('#f-arroba').value = arroba;
       if (!arrobaValida(arroba)) erros.push(['arroba', 'Confira o @: só letras, números, ponto e _.']);
       if (!whatsValido($('#f-whatsapp').value)) erros.push(['whatsapp', 'Coloque o WhatsApp com DDD.']);
-      var email = $('#f-email').value.trim();
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) erros.push(['email', 'Esse e-mail parece incompleto.']);
-      if (!radio('seguidores')) erros.push(['seguidores', 'Escolha uma faixa.']);
-      if (!radio('vendas_mes')) erros.push(['vendas_mes', 'Escolha uma opção.']);
     } else if (n === 2) {
       if (!radio('formato')) erros.push(['formato', 'Escolha live, vídeo ou os dois.']);
     } else if (n === 3) {
@@ -508,7 +504,7 @@
   });
   $('#f-arroba').addEventListener('blur', function () { this.value = normalizarArroba(this.value); });
 
-  var sequencia = ['#f-nome', '#f-arroba', '#f-whatsapp', '#f-email', '#f-cidade'];
+  var sequencia = ['#f-nome', '#f-arroba', '#f-whatsapp'];
   sequencia.forEach(function (sel, i) {
     $(sel).addEventListener('keydown', function (ev) {
       if (ev.key !== 'Enter') return;
@@ -564,11 +560,6 @@
         nome: $('#f-nome').value.trim(),
         arroba: normalizarArroba($('#f-arroba').value),
         whatsapp: $('#f-whatsapp').value,
-        email: $('#f-email').value.trim(),
-        cidade: $('#f-cidade').value.trim(),
-        uf: $('#f-uf').value,
-        seguidores: radio('seguidores'),
-        vendas_mes: radio('vendas_mes'),
         formato: radio('formato'),
         numero: E.sel.numero,
         favoritos: E.sel.favoritos.slice(),
@@ -730,7 +721,7 @@
   });
 
   if (MODO === 'tablet') {
-    ['#f-nome', '#f-whatsapp', '#f-email', '#f-cidade', '#f-uf'].forEach(function (s) { $(s).setAttribute('autocomplete', 'off'); });
+    ['#f-nome', '#f-whatsapp'].forEach(function (s) { $(s).setAttribute('autocomplete', 'off'); });
     setInterval(function () { if (E.tela === 'tela-inicio') atualizarConfig(); }, TEMPOS.atualizar);
   }
 
@@ -957,8 +948,7 @@
         (c.concorrente ? '<span class="etiqueta etiqueta-sol">Já criou para ' + esc(c.concorrente) + '</span>' : '') +
         (c.pendencias ? '<span class="etiqueta etiqueta-perigo">Conferir: ' + esc(c.pendencias) + '</span>' : '') +
       '</div>' +
-      '<p class="ficha-linha">' + esc(c.nome) + ' · ' + linkWhats(c.whatsapp) + (c.cidade ? ' · ' + esc(c.cidade) + (c.uf ? '/' + esc(c.uf) : '') : '') + '</p>' +
-      '<p class="ficha-linha">' + esc(c.seguidores) + ' seguidores · vende ' + esc(c.vendas_mes) + ' · ' + esc(c.formato) + '</p>' +
+      '<p class="ficha-linha">' + esc(c.nome) + ' · ' + linkWhats(c.whatsapp) + ' · ' + esc(c.formato) + '</p>' +
       '<p class="ficha-linha">Favoritos: ' + esc(favs || '—') + ' · topou: ' + esc(c.compromissos || '—') + '</p>' +
       '<div class="ficha-amostra"><p><span class="etiqueta ' + st[1] + '">' + st[0] + '</span> ' + textoAmostra + '</p>' +
         '<div class="ficha-botoes">' + botoes + '</div>' + troca + '</div>' +
@@ -1181,7 +1171,7 @@
 
   $('#botao-csv').addEventListener('click', function () {
     var cs = (E.equipe.dados && E.equipe.dados.cadastros) || [];
-    var colunas = ['codigo', 'arroba', 'nome', 'whatsapp', 'email', 'cidade', 'uf', 'turma', 'perfil', 'formato', 'seguidores', 'vendas_mes',
+    var colunas = ['codigo', 'arroba', 'nome', 'whatsapp', 'turma', 'perfil', 'formato',
       'numero', 'favoritos', 'amostra_status', 'amostra_modelo', 'amostra_numero', 'compromissos', 'convite', 'temperatura', 'anotacao', 'concorrente', 'criado_em'];
     function cel(v) {
       var s = String(v === null || v === undefined ? '' : v);
