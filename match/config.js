@@ -26,7 +26,7 @@ window.LUMISS_CONFIG = {
     compromissos: ['1 vídeo em até 7 dias', '3 vídeos em até 15 dias', '1 live com a LUMISS em até 15 dias'],
     whatsapp_grupo: '',
     numeros: ['33', '34', '35', '36', '37', '38', '39', '40'],
-    max_favoritos: 3
+    max_favoritos: 5
   },
 
   perfis: {

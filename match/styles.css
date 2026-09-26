@@ -72,10 +72,31 @@ h3 { font-size: 18px; font-weight: 800; letter-spacing: .01em; }
   font-size: 12px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
   padding: 7px 14px; border-radius: 3px; transform: rotate(-5deg);
 }
+@media (max-width: 420px) {
+  .carimbo { font-size: 10.5px; letter-spacing: .13em; padding: 6px 11px; }
+}
 .sobretitulo {
   margin: 0 0 10px; font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .24em; color: var(--ink-faint);
 }
+
+/* ---------- ranking do match ---------- */
+table.ranking { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.ranking th {
+  text-align: left; font-size: 10.5px; font-weight: 800; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-faint); padding: 8px 10px; border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.ranking td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+table.ranking tr:first-child td { background: rgba(255, 59, 98, .07); }
+.rk-pos { width: 34px; font-weight: 900; font-size: 15px; color: var(--ink-faint); }
+.rk-nome { font-weight: 700; min-width: 180px; }
+.rk-barra { display: block; height: 5px; margin-top: 6px; background: rgba(255, 255, 255, .09); border-radius: 999px; overflow: hidden; }
+.rk-barra i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.rk-votos { white-space: nowrap; text-align: right; }
+.rk-votos strong { font-size: 18px; font-weight: 900; }
+.rk-votos small { display: block; color: var(--ink-faint); font-size: 11px; }
+.rk-perfil, .rk-turma { color: var(--ink-faint); white-space: nowrap; }
 
 /* ---------- botões ---------- */
 .botao {
@@ -108,7 +129,8 @@ h3 { font-size: 18px; font-weight: 800; letter-spacing: .01em; }
   padding: 36px 24px max(52px, env(safe-area-inset-bottom));
 }
 .inicio-texto { max-width: 620px; }
-.inicio-texto .carimbo { margin-bottom: 22px; }
+.inicio-texto .marca { margin-bottom: 26px; }
+.inicio-texto .carimbo { margin-bottom: 26px; }
 .inicio-titulo { margin: 0 0 20px; }
 .inicio-sub { margin: 0 0 30px; color: var(--ink-dim); font-size: clamp(15px, 1.9vw, 17.5px); max-width: 44ch; }
 .inicio-qr {
@@ -226,8 +248,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); box-shadow
 @media (min-width: 700px) { .formato-caixa { min-height: 210px; } .formato-caixa svg { width: 58px; height: 58px; } }
 
 /* produtos */
-.produtos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-@media (min-width: 760px) { .produtos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.produtos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 560px) { .produtos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; } }
+@media (min-width: 900px) { .produtos { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; } }
 .produto { position: relative; display: block; }
 .produto > input { position: absolute; opacity: 0; top: 0; right: 0; bottom: 0; left: 0; margin: 0; cursor: pointer; z-index: 2; }
 .produto-caixa {
@@ -242,9 +265,21 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); box-shadow
   padding: 12px; text-align: center; background: var(--surface-2);
   font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint);
 }
-.produto-info { padding: 12px; display: grid; gap: 3px; }
-.produto-info strong { font-size: 14px; font-weight: 800; line-height: 1.3; text-transform: uppercase; letter-spacing: .01em; }
-.produto-info small { color: var(--ink-faint); font-size: 12.5px; font-weight: 500; line-height: 1.35; }
+.produto-info { padding: 8px; display: grid; gap: 2px; }
+.produto-info strong { font-size: 11.5px; font-weight: 800; line-height: 1.25; text-transform: uppercase; letter-spacing: .01em; }
+.produto-info small { display: none; }
+@media (min-width: 900px) {
+  .produto-info { padding: 10px; }
+  .produto-info strong { font-size: 13px; }
+}
+.contador {
+  float: right; font-size: 11px; font-weight: 800; letter-spacing: .1em;
+  color: var(--ink-faint); background: rgba(255, 255, 255, .07);
+  border-radius: 999px; padding: 3px 10px; text-transform: none;
+}
+.contador.completo { color: #000; background: var(--ok); }
+.produto-cheio .produto-caixa { opacity: .45; }
+.produto-cheio .coracao { display: none; }
 .selo {
   justify-self: start; margin-top: 8px; padding: 3px 9px; border-radius: 99px;
   font-size: 10.5px; font-weight: 700; font-style: normal; letter-spacing: .06em; text-transform: uppercase;

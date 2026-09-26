@@ -111,13 +111,12 @@
   var E = {
     conf: Object.assign({}, PADRAO),
     produtos: [],
-    disponivel: {},
     remotoEm: 0,
     tela: 'tela-inicio',
     passo: 0,
     inicioEm: 0,
     enviando: false,
-    sel: { numero: '', favoritos: [], amostra: '', compromissos: [] },
+    sel: { numero: '', favoritos: [], compromissos: [] },
     ultimo: null,
     recarregarDepois: false,
     equipe: { pin: '', dados: null, filtro: 'todas', busca: '', aba: 'cadastros', trocando: '', confirmando: '', rascunhos: {} }
@@ -154,7 +153,6 @@
     E.conf = Object.assign({}, PADRAO, r.config || {});
     if (!E.conf.numeros || !E.conf.numeros.length) E.conf.numeros = PADRAO.numeros;
     E.produtos = r.produtos || [];
-    E.disponivel = r.disponivel || {};
     E.remotoEm = Date.now();
     renderizarDinamicos();
   }
@@ -245,10 +243,8 @@
     mostrar('passo-' + n);
     if (n === 3) {
       renderizarPasso3();
-      if (Date.now() - E.remotoEm > 20000) {
-        $('#aviso-atualizando').hidden = !CFG.apiUrl;
-        atualizarConfig().then(function () { $('#aviso-atualizando').hidden = true; });
-      }
+      // se os modelos estiverem velhos, busca de novo em segundo plano
+      if (Date.now() - E.remotoEm > 20000) atualizarConfig();
     }
     if (n === 4) renderizarOferta();
     if (!semHistorico) {
@@ -271,16 +267,6 @@
 
   /* ------------------------------------------------------------ renderização */
   function numeros() { return E.conf.numeros && E.conf.numeros.length ? E.conf.numeros : PADRAO.numeros; }
-  function disp(codigo, numero) {
-    var d = E.disponivel[codigo];
-    return d && d[numero] ? d[numero] : 0;
-  }
-  function temEstoque() { return E.remotoEm > 0; }
-  /** Quando a Config traz amostra_modelo, todas levam o mesmo par e ela não escolhe nada. */
-  function amostraFixa() {
-    var c = E.conf.amostra_modelo;
-    return c && produto(c) ? c : '';
-  }
   function produto(codigo) {
     for (var i = 0; i < E.produtos.length; i++) if (E.produtos[i].codigo === codigo) return E.produtos[i];
     return null;
@@ -328,14 +314,9 @@
 
   function renderizarNumeros() {
     var box = $('#lista-numeros');
-    var fixa = amostraFixa();
     box.innerHTML = numeros().map(function (n) {
-      var total = 0;
-      if (fixa) total = disp(fixa, n);
-      else E.produtos.forEach(function (p) { total += disp(p.codigo, n); });
-      var esgotado = temEstoque() && E.produtos.length && total === 0;
       return '<label class="chip"><input type="radio" name="numero" value="' + esc(n) + '"' + (E.sel.numero === n ? ' checked' : '') + '>' +
-        '<span>' + esc(n) + (esgotado ? '<small>esgotado</small>' : '') + '</span></label>';
+        '<span>' + esc(n) + '</span></label>';
     }).join('');
   }
 
@@ -345,83 +326,31 @@
       box.innerHTML = '<p class="vazio">' + (CFG.apiUrl ? 'Carregando os modelos…' : 'Os modelos aparecem quando o site estiver ligado à planilha.') + '</p>';
       return;
     }
+    var max = E.conf.max_favoritos || 5;
     box.innerHTML = E.produtos.map(function (p) {
       var marcado = E.sel.favoritos.indexOf(p.codigo) !== -1;
-      var selo = '';
-      if (E.sel.numero && temEstoque() && !amostraFixa()) {
-        selo = disp(p.codigo, E.sel.numero) > 0
-          ? '<em class="selo selo-tem">Tem nº ' + esc(E.sel.numero) + '</em>'
-          : '<em class="selo selo-acabou">Sem nº ' + esc(E.sel.numero) + '</em>';
-      }
-      return '<label class="produto"><input type="checkbox" name="favoritos" value="' + esc(p.codigo) + '"' + (marcado ? ' checked' : '') + ' aria-label="' + esc(p.nome) + '">' +
+      var cheio = !marcado && E.sel.favoritos.length >= max;
+      return '<label class="produto' + (cheio ? ' produto-cheio' : '') + '"><input type="checkbox" name="favoritos" value="' + esc(p.codigo) + '"' + (marcado ? ' checked' : '') + ' aria-label="' + esc(p.nome) + '">' +
         '<span class="produto-caixa"><span class="produto-foto">' + imagem(p) + '<span class="coracao" aria-hidden="true">♥</span></span>' +
-        '<span class="produto-info"><strong>' + esc(p.nome) + '</strong>' + (p.descricao ? '<small>' + esc(p.descricao) + '</small>' : '') + selo + '</span></span></label>';
+        '<span class="produto-info"><strong>' + esc(p.nome) + '</strong>' + (p.descricao ? '<small>' + esc(p.descricao) + '</small>' : '') + '</span></span></label>';
     }).join('');
     cuidarFotos(box);
+    atualizarContadorFavoritos();
   }
 
-  function opcoesAmostra() {
-    var n = E.sel.numero;
-    if (amostraFixa()) return { lista: [], motivo: 'fixa' };
-    if (!n || !E.sel.favoritos.length) return { lista: [], motivo: 'incompleto' };
-    if (!temEstoque()) return { lista: E.sel.favoritos.slice(), motivo: 'sem_info' };
-    var favs = E.sel.favoritos.filter(function (c) { return disp(c, n) > 0; });
-    if (favs.length) return { lista: favs, motivo: 'favoritos' };
-    var outros = E.produtos.filter(function (p) { return disp(p.codigo, n) > 0; }).map(function (p) { return p.codigo; });
-    if (outros.length) return { lista: outros, motivo: 'outros' };
-    return { lista: [], motivo: 'nada' };
-  }
-
-  function renderizarAmostras() {
-    var bloco = $('#bloco-amostra');
-    var box = $('#lista-amostras');
-    var ajuda = $('#ajuda-amostra');
-    var o = opcoesAmostra();
-    if (o.motivo === 'fixa') {
-      var p = produto(amostraFixa());
-      E.sel.amostra = '';
-      if (!E.sel.numero) { bloco.hidden = true; return; }
-      bloco.hidden = false;
-      var legenda = $('[data-legenda-amostra]');
-      if (legenda) legenda.textContent = 'Sua amostra';
-      ajuda.hidden = false;
-      ajuda.textContent = 'Todas as participantes levam o mesmo modelo. A gente separa no seu número.';
-      var resta = disp(p.codigo, E.sel.numero);
-      var aviso = temEstoque() && resta <= 0
-        ? 'Seu número acabou no stand: a equipe resolve com você no balcão.'
-        : 'Nº ' + esc(E.sel.numero) + (temEstoque() && resta <= 2 ? ' · últimos pares' : '');
-      box.innerHTML = '<div class="amostra"><span class="amostra-caixa"><span class="miniatura">' + imagem(p) + '</span>' +
-        '<span><strong>' + esc(p.nome) + '</strong><small>' + aviso + '</small></span></span></div>';
-      cuidarFotos(box);
-      return;
-    }
-    if (o.motivo === 'incompleto') { bloco.hidden = true; E.sel.amostra = ''; return; }
-    bloco.hidden = false;
-    var leg = $('[data-legenda-amostra]');
-    if (leg) leg.textContent = 'Qual você leva hoje?';
-    if (o.lista.indexOf(E.sel.amostra) === -1) E.sel.amostra = o.lista.length === 1 ? o.lista[0] : '';
-    if (o.motivo === 'nada') {
-      ajuda.hidden = true;
-      box.innerHTML = '<p class="nada-no-numero">O seu número acabou no stand. Pode finalizar: a equipe resolve com você no balcão.</p>';
-      return;
-    }
-    ajuda.hidden = o.motivo === 'favoritos';
-    ajuda.textContent = o.motivo === 'outros' ? 'Seus favoritos acabaram no seu número. Estes ainda têm:' : 'A equipe confirma o seu número no balcão.';
-    box.innerHTML = o.lista.map(function (c) {
-      var p = produto(c) || { codigo: c, nome: c };
-      var resta = disp(c, E.sel.numero);
-      var sub = temEstoque() ? 'Nº ' + esc(E.sel.numero) + (resta <= 2 ? ' · últimos pares' : '') : 'Nº ' + esc(E.sel.numero);
-      return '<label class="amostra"><input type="radio" name="amostra" value="' + esc(c) + '"' + (E.sel.amostra === c ? ' checked' : '') + '>' +
-        '<span class="amostra-caixa"><span class="miniatura">' + imagem(p) + '</span><span><strong>' + esc(p.nome) + '</strong><small>' + sub + '</small></span></span></label>';
-    }).join('');
-    cuidarFotos(box);
+  function atualizarContadorFavoritos() {
+    var el = $('#contador-favoritos');
+    if (!el) return;
+    var max = E.conf.max_favoritos || 5;
+    var n = E.sel.favoritos.length;
+    el.textContent = n + ' de ' + max;
+    el.classList.toggle('completo', n >= max);
   }
 
   function renderizarPasso3() {
-    $$('[data-max-favoritos]').forEach(function (el) { el.textContent = E.conf.max_favoritos || 3; });
+    $$('[data-max-favoritos]').forEach(function (el) { el.textContent = E.conf.max_favoritos || 5; });
     renderizarNumeros();
     renderizarProdutos();
-    renderizarAmostras();
   }
 
   function turmaAgora() { return horaSP() < (E.conf.corte_tarde || '13:30') ? 'manha' : 'tarde'; }
@@ -488,10 +417,11 @@
     } else if (n === 2) {
       if (!radio('formato')) erros.push(['formato', 'Escolha live, vídeo ou os dois.']);
     } else if (n === 3) {
-      if (!E.sel.favoritos.length) erros.push(['favoritos', 'Marque pelo menos um modelo.']);
+      var max = E.conf.max_favoritos || 5;
+      if (E.sel.favoritos.length < max) {
+        erros.push(['favoritos', max === 1 ? 'Marque o seu favorito.' : 'Marque os seus ' + max + ' favoritos.']);
+      }
       if (!E.sel.numero) erros.push(['numero', 'Escolha seu número.']);
-      var op = opcoesAmostra();
-      if (op.motivo !== 'fixa' && op.lista.length && !E.sel.amostra) erros.push(['amostra', 'Escolha qual modelo você leva hoje.']);
     } else if (n === 4) {
       if (!E.sel.compromissos.length) erros.push(['compromissos', 'Escolha pelo menos uma opção.']);
       if (!$('#f-aceita-convite').checked) erros.push(['aceita_convite', 'É assim que a amostra vira parceria.']);
@@ -558,21 +488,16 @@
     if (t.name === 'numero') {
       E.sel.numero = t.value;
       renderizarProdutos();
-      renderizarAmostras();
     } else if (t.name === 'favoritos') {
-      var max = E.conf.max_favoritos || 3;
+      var max = E.conf.max_favoritos || 5;
       var marc = marcados('favoritos');
       if (marc.length > max) {
         t.checked = false;
-        aviso('Escolha até ' + max + ' favoritos.');
+        aviso(max === 1 ? 'Escolha só um favorito.' : 'São ' + max + ' favoritos. Desmarque um pra trocar.');
         return;
       }
       E.sel.favoritos = marc;
-      renderizarAmostras();
-      var erroAmostra = $('[data-erro="amostra"]');
-      if (erroAmostra) erroAmostra.hidden = true;
-    } else if (t.name === 'amostra') {
-      E.sel.amostra = t.value;
+      renderizarProdutos();
     } else if (t.name === 'compromissos') {
       E.sel.compromissos = marcados('compromissos');
     }
@@ -592,7 +517,6 @@
         formato: radio('formato'),
         numero: E.sel.numero,
         favoritos: E.sel.favoritos.slice(),
-        amostra_codigo: E.sel.amostra || '',
         compromissos: E.sel.compromissos.slice(),
         aceita_convite: $('#f-aceita-convite').checked,
         aceite_dados: $('#f-aceite-dados').checked
@@ -625,26 +549,9 @@
     $('#final-perfil-nome').textContent = perfil;
     $('#final-perfil-texto').textContent = (CFG.perfis || {})[perfil] || '';
 
-    var a = (r && r.ok && r.amostra) ? r.amostra : {
-      status: c.amostra_codigo ? 'reservada' : 'sem_estoque', codigo: c.amostra_codigo, numero: c.numero, modelo: nomeProduto(c.amostra_codigo)
-    };
-    var temPar = a.status === 'reservada' || a.status === 'entregue';
-    $('#final-amostra').classList.toggle('sem-par', !temPar);
-    if (a.status === 'entregue') {
-      $('#final-amostra-rotulo').textContent = 'Sua amostra';
-      $('#final-amostra-modelo').textContent = a.modelo + ' · nº ' + a.numero;
-      $('#final-amostra-texto').textContent = 'Você já retirou esta amostra. Obrigada!';
-    } else if (a.status === 'reservada') {
-      $('#final-amostra-rotulo').textContent = 'Sua amostra';
-      $('#final-amostra-modelo').textContent = (a.modelo || nomeProduto(a.codigo)) + ' · nº ' + a.numero;
-      $('#final-amostra-texto').textContent = 'Mostre esta tela pra equipe LUMISS no balcão.';
-    } else {
-      $('#final-amostra-rotulo').textContent = 'Amostra';
-      $('#final-amostra-modelo').textContent = 'Seu número: ' + (a.numero || c.numero);
-      $('#final-amostra-texto').textContent = a.codigo
-        ? 'O modelo que você escolheu acabou no seu número. Mostre esta tela pra equipe: eles resolvem com você.'
-        : 'Mostre esta tela pra equipe LUMISS: eles resolvem a sua amostra no balcão.';
-    }
+    $('#final-amostra-rotulo').textContent = 'Sua amostra';
+    $('#final-amostra-modelo').textContent = 'Número ' + ((r && r.numero) || c.numero || '?');
+    $('#final-amostra-texto').textContent = 'Mostre esta tela pra equipe LUMISS no balcão.';
     $('#final-arroba').textContent = '@' + c.arroba;
     $('#final-codigo').textContent = (r && r.ok && r.codigo) ? r.codigo : '';
 
@@ -683,7 +590,7 @@
     esconderInatividade();
     pararContagemFinal();
     F.reset();
-    E.sel = { numero: '', favoritos: [], amostra: '', compromissos: [] };
+    E.sel = { numero: '', favoritos: [], compromissos: [] };
     E.passo = 0;
     E.enviando = false;
     E.inicioEm = 0;
@@ -691,7 +598,6 @@
     limparErros(document);
     ['#final-titulo', '#final-perfil-nome', '#final-perfil-texto', '#final-amostra-modelo', '#final-amostra-texto', '#final-arroba', '#final-codigo', '#final-envio']
       .forEach(function (s) { $(s).textContent = ''; });
-    $('#bloco-amostra').hidden = true;
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     if (E.recarregarDepois) { location.reload(); return; }
     mostrarInicio();
@@ -839,7 +745,7 @@
     E.equipe.confirmando = '';
     E.equipe.rascunhos = {};
     $('#lista-cadastros').innerHTML = '';
-    $('#tabela-estoque').innerHTML = '';
+    $('#tabela-ranking').innerHTML = '';
     $('#resumo').innerHTML = '';
     $('#f-pin').value = '';
     erroPin('');
@@ -882,7 +788,7 @@
     });
     $$('.aba-painel').forEach(function (p) { p.hidden = p.getAttribute('data-painel') !== E.equipe.aba; });
     if (E.equipe.aba === 'cadastros') renderizarCadastros();
-    if (E.equipe.aba === 'estoque') renderizarEstoque();
+    if (E.equipe.aba === 'ranking') renderizarRanking();
     if (E.equipe.aba === 'resumo') renderizarResumo();
   }
 
@@ -904,21 +810,13 @@
     return lista.filter(function (c) {
       if (f === 'manha' && c.turma !== 'manha') return false;
       if (f === 'tarde' && c.turma !== 'tarde') return false;
-      if (f === 'entregar' && c.amostra_status !== 'reservada') return false;
-      if (f === 'entregue' && c.amostra_status !== 'entregue') return false;
-      if (f === 'sem_estoque' && c.amostra_status !== 'sem_estoque' && c.amostra_status !== 'liberada') return false;
+      if (f === 'sem_convite' && c.convite) return false;
+      if (f === 'quente' && c.temperatura !== 'quente') return false;
       if (f === 'concorrente' && !c.concorrente) return false;
       if (b && (c.arroba + ' ' + c.nome + ' ' + c.codigo).toLowerCase().indexOf(b) === -1) return false;
       return true;
     });
   }
-
-  var ROTULO_STATUS = {
-    reservada: ['Reservada', 'etiqueta-destaque'],
-    entregue: ['Entregue', 'etiqueta-ok'],
-    sem_estoque: ['Sem par', 'etiqueta-perigo'],
-    liberada: ['Liberada', '']
-  };
 
   function segmentos(id, campo, atual, opcoes) {
     return '<span class="segmentos" role="group">' + opcoes.map(function (o) {
@@ -933,40 +831,11 @@
 
   function fichaHTML(c) {
     var d = E.equipe.dados;
-    var st = ROTULO_STATUS[c.amostra_status] || ['Sem amostra', ''];
     var turma = c.turma === 'manha' ? 'Manhã' : (c.turma === 'tarde' ? 'Tarde' : '');
     var favs = String(c.favoritos || '').split('|').map(function (x) { return x.trim(); }).filter(Boolean).map(function (cod) {
       var p = (d.produtos || []).filter(function (x) { return x.codigo === cod; })[0];
       return p ? p.nome : cod;
     }).join(', ');
-    var modelo = c.amostra_modelo || c.amostra_codigo;
-    var textoAmostra = modelo ? esc(modelo) + ' · nº ' + esc(c.amostra_numero) : 'Nº ' + esc(c.numero || c.amostra_numero || '?') + ', sem modelo escolhido';
-    var conf = E.equipe.confirmando;
-    var botoes = '';
-    if (c.amostra_status === 'reservada') {
-      botoes = '<button type="button" class="botao botao-pequeno" data-acao="entregar">' + (conf === c.id + ':entregar' ? 'Confirmar entrega' : 'Entregar') + '</button>' +
-        '<button type="button" class="botao botao-pequeno botao-secundario" data-acao="trocar">Trocar</button>' +
-        '<button type="button" class="botao botao-pequeno botao-secundario" data-acao="liberar">' + (conf === c.id + ':liberar' ? 'Confirmar' : 'Liberar') + '</button>';
-    } else if (c.amostra_status === 'entregue') {
-      botoes = '<button type="button" class="botao botao-pequeno botao-secundario" data-acao="liberar">' + (conf === c.id + ':liberar' ? 'Confirmar: desfazer' : 'Desfazer entrega') + '</button>';
-    } else {
-      botoes = '<button type="button" class="botao botao-pequeno" data-acao="trocar">Escolher par</button>';
-    }
-    var troca = '';
-    if (E.equipe.trocando === c.id) {
-      var numeroPadrao = c.amostra_numero || c.numero;
-      troca = '<div class="ficha-troca">' +
-        '<select data-troca="codigo" aria-label="Modelo">' + (d.produtos || []).map(function (p) {
-          return '<option value="' + esc(p.codigo) + '"' + (p.codigo === c.amostra_codigo ? ' selected' : '') + '>' + esc(p.nome) + '</option>';
-        }).join('') + '</select>' +
-        '<select data-troca="numero" aria-label="Número">' + (d.numeros || []).map(function (n) {
-          return '<option value="' + esc(n) + '"' + (n === numeroPadrao ? ' selected' : '') + '>nº ' + esc(n) + '</option>';
-        }).join('') + '</select>' +
-        '<span class="ajuda" data-troca-disp></span>' +
-        '<button type="button" class="botao botao-pequeno" data-acao="entregar-troca">Entregar este</button>' +
-        '<button type="button" class="botao botao-pequeno botao-secundario" data-acao="reservar-troca">Reservar</button>' +
-        '<button type="button" class="botao botao-pequeno botao-secundario" data-acao="cancelar-troca">Cancelar</button></div>';
-    }
     var rascunho = E.equipe.rascunhos.hasOwnProperty(c.id) ? E.equipe.rascunhos[c.id] : c.anotacao;
     return '<article class="ficha' + (c.concorrente ? ' destaque-concorrente' : '') + '" data-id="' + esc(c.id) + '">' +
       '<div class="ficha-topo">' +
@@ -978,9 +847,8 @@
         (c.pendencias ? '<span class="etiqueta etiqueta-perigo">Conferir: ' + esc(c.pendencias) + '</span>' : '') +
       '</div>' +
       '<p class="ficha-linha">' + esc(c.nome) + ' · ' + linkWhats(c.whatsapp) + ' · ' + esc(c.formato) + '</p>' +
-      '<p class="ficha-linha">Favoritos: ' + esc(favs || '—') + ' · topou: ' + esc(c.compromissos || '—') + '</p>' +
-      '<div class="ficha-amostra"><p><span class="etiqueta ' + st[1] + '">' + st[0] + '</span> ' + textoAmostra + '</p>' +
-        '<div class="ficha-botoes">' + botoes + '</div>' + troca + '</div>' +
+      '<p class="ficha-linha">Nº ' + esc(c.numero || '—') + ' · favoritos: ' + esc(favs || '—') + '</p>' +
+      '<p class="ficha-linha">Topou: ' + esc(c.compromissos || '—') + '</p>' +
       '<div class="ficha-controles">' +
         '<div class="controle"><span>Convite</span>' + segmentos(c.id, 'convite', c.convite, [['', '—'], ['enviado', 'Enviado'], ['aceito', 'Aceito']]) + '</div>' +
         '<div class="controle"><span>Lead</span>' + segmentos(c.id, 'temperatura', c.temperatura, [['quente', 'Quente'], ['morna', 'Morna'], ['fria', 'Fria']]) + '</div>' +
@@ -996,42 +864,24 @@
     var lista = filtrarCadastros(d.cadastros);
     var box = $('#lista-cadastros');
     box.innerHTML = lista.length ? lista.map(fichaHTML).join('') : '<p class="vazio">Nenhum cadastro aqui.</p>';
-    if (E.equipe.trocando) atualizarDispTroca();
   }
 
-  function estoqueDe(codigo, numero) {
-    var e = E.equipe.dados && E.equipe.dados.estoque;
-    return e && e[codigo] && e[codigo][numero] ? e[codigo][numero] : { inicial: 0, reservado: 0, entregue: 0, disponivel: 0 };
-  }
-
-  function atualizarDispTroca() {
-    var ficha = $('.ficha[data-id="' + (window.CSS && CSS.escape ? CSS.escape(E.equipe.trocando) : E.equipe.trocando) + '"]');
-    if (!ficha) return;
-    var cod = $('[data-troca="codigo"]', ficha).value;
-    var num = $('[data-troca="numero"]', ficha).value;
-    var s = estoqueDe(cod, num);
-    $('[data-troca-disp]', ficha).textContent = s.disponivel > 1 ? s.disponivel + ' disponíveis' : (s.disponivel === 1 ? '1 disponível' : 'acabou');
-  }
-
-  function atualizarFichaLocal(cadastro, estoque) {
+  function atualizarFichaLocal(cadastro) {
     var d = E.equipe.dados;
     d.cadastros = d.cadastros.map(function (c) { return c.id === cadastro.id ? cadastro : c; });
-    if (estoque) d.estoque = estoque;
   }
 
   function acaoEquipe(id, extra, mensagemOk) {
     var corpo = Object.assign({ acao: 'equipe_atualizar', pin: E.equipe.pin, id: id, por: APARELHO }, extra);
     return api('POST', corpo).then(function (r) {
       if (r && r.ok) {
-        atualizarFichaLocal(r.cadastro, r.estoque);
-        E.equipe.trocando = '';
+        atualizarFichaLocal(r.cadastro);
         E.equipe.confirmando = '';
         renderizarEquipe();
         if (mensagemOk) aviso(mensagemOk);
         return true;
       }
-      if (r && r.erro === 'sem_estoque') aviso('Esse modelo acabou no número ' + r.numero + '.');
-      else if (r && r.erro === 'pin_errado') sairEquipe();
+      if (r && r.erro === 'pin_errado') sairEquipe();
       else if (r && r.erro === 'nao_encontrado') { aviso('Cadastro não encontrado. Atualizando a lista.'); recarregarEquipe(true); }
       else aviso('Não salvou. Tente de novo.');
       return false;
@@ -1085,22 +935,6 @@
     if (!b) return;
     var acao = b.getAttribute('data-acao');
     if (acao === 'copiar-arroba') copiar('@' + c.arroba, '@' + c.arroba + ' copiado.');
-    if (acao === 'entregar') {
-      if (E.equipe.confirmando !== id + ':entregar') { pedirConfirmacao(id + ':entregar'); return; }
-      acaoEquipe(id, { amostra: { acao: 'entregar' } }, 'Entregue.');
-    }
-    if (acao === 'liberar') {
-      if (E.equipe.confirmando !== id + ':liberar') { pedirConfirmacao(id + ':liberar'); return; }
-      acaoEquipe(id, { amostra: { acao: 'liberar' } }, 'O par voltou pro estoque.');
-    }
-    if (acao === 'trocar') { E.equipe.trocando = id; E.equipe.confirmando = ''; renderizarCadastros(); }
-    if (acao === 'cancelar-troca') { E.equipe.trocando = ''; renderizarCadastros(); }
-    if (acao === 'entregar-troca' || acao === 'reservar-troca') {
-      var cod = $('[data-troca="codigo"]', ficha).value;
-      var num = $('[data-troca="numero"]', ficha).value;
-      acaoEquipe(id, { amostra: { acao: acao === 'entregar-troca' ? 'entregar' : 'reservar', codigo: cod, numero: num } },
-        acao === 'entregar-troca' ? 'Entregue.' : 'Reservado.');
-    }
     if (acao === 'salvar-nota') {
       var nota = $('[data-nota]', ficha).value;
       acaoEquipe(id, { mudancas: { anotacao: nota } }, 'Anotação salva.').then(function (ok) {
@@ -1114,34 +948,34 @@
       E.equipe.rascunhos[id] = ev.target.value;
     }
   });
-  $('#lista-cadastros').addEventListener('change', function (ev) {
-    if (ev.target.matches('[data-troca]')) atualizarDispTroca();
-  });
-
-  function renderizarEstoque() {
+  function renderizarRanking() {
     var d = E.equipe.dados;
-    var nums = d.numeros || [];
-    var codigos = (d.produtos || []).map(function (p) { return p.codigo; });
-    Object.keys(d.estoque || {}).forEach(function (c) { if (codigos.indexOf(c) === -1) codigos.push(c); });
-    var totaisNum = {};
-    var linhas = codigos.map(function (cod) {
-      var p = (d.produtos || []).filter(function (x) { return x.codigo === cod; })[0];
-      var soma = 0;
-      var somaIni = 0;
-      var cel = nums.map(function (n) {
-        var s = estoqueDe(cod, n);
-        soma += Math.max(0, s.disponivel);
-        somaIni += s.inicial;
-        totaisNum[n] = (totaisNum[n] || 0) + Math.max(0, s.disponivel);
-        if (!s.inicial) return '<td><small>—</small></td>';
-        var classe = s.disponivel <= 0 ? 'zero' : (s.disponivel <= 2 ? 'pouco' : '');
-        return '<td><span class="' + classe + '">' + Math.max(0, s.disponivel) + '</span> <small>(' + s.inicial + ')</small></td>';
-      }).join('');
-      return '<tr><td>' + esc(p ? p.nome : cod) + '</td>' + cel + '<td><strong>' + soma + '</strong> <small>(' + somaIni + ')</small></td></tr>';
+    var r = d.ranking || { lista: [], eleitoras: 0, votos: 0 };
+    var topo = $('#ranking-topo');
+    if (topo) {
+      topo.textContent = r.eleitoras
+        ? r.votos + (r.votos === 1 ? ' voto' : ' votos') + ' de ' + r.eleitoras + (r.eleitoras === 1 ? ' criadora' : ' criadoras')
+        : 'Ninguém votou ainda.';
+    }
+    if (!r.lista.length) {
+      $('#tabela-ranking').innerHTML = '<p class="vazio">O ranking aparece quando as primeiras criadoras se cadastrarem.</p>';
+      return;
+    }
+    var maior = r.lista[0].votos || 1;
+    var linhas = r.lista.map(function (x, i) {
+      var largura = Math.round((x.votos / maior) * 100);
+      return '<tr>' +
+        '<td class="rk-pos">' + (i + 1) + '</td>' +
+        '<td class="rk-nome">' + esc(x.nome) +
+          '<span class="rk-barra"><i style="width:' + largura + '%"></i></span></td>' +
+        '<td class="rk-votos"><strong>' + x.votos + '</strong><small>' + x.parte + '%</small></td>' +
+        '<td class="rk-perfil"><small>live ' + x.perfil.live + ' · vídeo ' + x.perfil.video + ' · os dois ' + x.perfil.ambos + '</small></td>' +
+        '<td class="rk-turma"><small>manhã ' + x.turma.manha + ' · tarde ' + x.turma.tarde + '</small></td>' +
+      '</tr>';
     }).join('');
-    var rodape = '<tr><td><strong>Total</strong></td>' + nums.map(function (n) { return '<td><strong>' + (totaisNum[n] || 0) + '</strong></td>'; }).join('') + '<td></td></tr>';
-    $('#tabela-estoque').innerHTML = '<table><thead><tr><th>Modelo</th>' + nums.map(function (n) { return '<th>' + esc(n) + '</th>'; }).join('') +
-      '<th>Total</th></tr></thead><tbody>' + linhas + rodape + '</tbody></table>';
+    $('#tabela-ranking').innerHTML = '<table class="ranking"><thead><tr>' +
+      '<th>#</th><th>Modelo</th><th>Votos</th><th>Por formato</th><th>Por turma</th>' +
+      '</tr></thead><tbody>' + linhas + '</tbody></table>';
   }
 
   function contar(lista, fn) {
@@ -1163,9 +997,7 @@
       [cs.length, 'cadastros'],
       [por(function (c) { return c.turma === 'manha'; }), 'da manhã'],
       [por(function (c) { return c.turma === 'tarde'; }), 'da tarde'],
-      [por(function (c) { return c.amostra_status === 'entregue'; }), 'amostras entregues'],
-      [por(function (c) { return c.amostra_status === 'reservada'; }), 'esperando retirada'],
-      [por(function (c) { return c.amostra_status === 'sem_estoque'; }), 'sem par no número'],
+      [por(function (c) { return c.formato && c.formato.toLowerCase().indexOf('live') !== -1; }), 'fazem live'],
       [por(function (c) { return c.convite === 'enviado' || c.convite === 'aceito'; }), 'convites enviados'],
       [por(function (c) { return c.convite === 'aceito'; }), 'convites aceitos'],
       [por(function (c) { return c.temperatura === 'quente'; }), 'leads quentes'],
@@ -1201,7 +1033,8 @@
   $('#botao-csv').addEventListener('click', function () {
     var cs = (E.equipe.dados && E.equipe.dados.cadastros) || [];
     var colunas = ['codigo', 'arroba', 'nome', 'whatsapp', 'turma', 'perfil', 'formato',
-      'numero', 'favoritos', 'amostra_status', 'amostra_modelo', 'amostra_numero', 'compromissos', 'convite', 'temperatura', 'anotacao', 'concorrente', 'criado_em'];
+      'numero', 'favoritos', 'favorito_1', 'favorito_2', 'favorito_3', 'favorito_4', 'favorito_5',
+      'compromissos', 'convite', 'temperatura', 'anotacao', 'concorrente', 'criado_em'];
     function cel(v) {
       var s = String(v === null || v === undefined ? '' : v);
       if (/^[=+\-@]/.test(s)) s = "'" + s;

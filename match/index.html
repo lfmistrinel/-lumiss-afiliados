@@ -36,8 +36,8 @@
       <div class="inicio-texto">
         <p class="marca"><svg class="logo logo-grande" viewBox="0 0 1000 171.8" role="img" aria-label="LUMISS" focusable="false"><use href="#lumiss-logo"/></svg></p>
         <p class="carimbo">Match de Verão · TikTok Shop</p>
-        <h1 class="inicio-titulo">Vire <b>afiliada Lumiss</b> em 2 minutos</h1>
-        <p class="inicio-sub">Conte como você cria, dê match com o modelo de verão que é a sua cara e saia daqui com a amostra no seu número.</p>
+        <h1 class="inicio-titulo">Seja <b>afiliada Lumiss</b> em 2 minutos</h1>
+        <p class="inicio-sub">Conte como você cria, escolha os modelos com a sua cara e retire a sua amostra com a equipe no balcão.</p>
         <button type="button" class="botao botao-grande" id="botao-comecar">Começar</button>
         <div class="inicio-qr so-tablet">
           <img src="qr.svg" alt="QR code do cadastro" width="116" height="116">
@@ -142,26 +142,19 @@
         <div class="progresso" aria-hidden="true"><span></span></div>
         <p class="passo-contador">Passo 3 de 4</p>
         <h2 class="passo-titulo" tabindex="-1">Seu match de verão</h2>
-        <p class="passo-sub">Marque até <span data-max-favoritos>3</span> favoritos: é assim que a gente entende o seu estilo.</p>
+        <p class="passo-sub">Escolha os <span data-max-favoritos>5</span> modelos com a sua cara. É assim que a gente entende o seu estilo.</p>
       </header>
       <div class="passo-corpo">
-        <fieldset class="campo" data-campo="favoritos">
-          <legend>Seus favoritos</legend>
-          <div class="produtos" id="lista-produtos"></div>
-          <p class="aviso-estoque" id="aviso-atualizando" hidden>Conferindo o estoque do stand…</p>
-          <p class="erro" data-erro="favoritos" hidden></p>
-        </fieldset>
         <fieldset class="campo" data-campo="numero">
           <legend>Qual é o seu número?</legend>
-          <p class="ajuda">É o número que a gente separa na sua amostra.</p>
+          <p class="ajuda">É o número que a equipe separa na sua amostra.</p>
           <div class="chips chips-numero" id="lista-numeros"></div>
           <p class="erro" data-erro="numero" hidden></p>
         </fieldset>
-        <fieldset class="campo" data-campo="amostra" id="bloco-amostra" hidden>
-          <legend data-legenda-amostra>Qual você leva hoje?</legend>
-          <p class="ajuda" id="ajuda-amostra"></p>
-          <div class="amostras" id="lista-amostras"></div>
-          <p class="erro" data-erro="amostra" hidden></p>
+        <fieldset class="campo" data-campo="favoritos">
+          <legend>Seus favoritos <span class="contador" id="contador-favoritos">0 de 5</span></legend>
+          <div class="produtos" id="lista-produtos"></div>
+          <p class="erro" data-erro="favoritos" hidden></p>
         </fieldset>
       </div>
       <footer class="passo-rodape">
@@ -273,7 +266,7 @@
       <p class="equipe-fila" id="equipe-fila" hidden></p>
       <nav class="abas" role="tablist">
         <button type="button" role="tab" class="aba" data-aba="cadastros" aria-selected="true">Cadastros</button>
-        <button type="button" role="tab" class="aba" data-aba="estoque" aria-selected="false">Estoque</button>
+        <button type="button" role="tab" class="aba" data-aba="ranking" aria-selected="false">Ranking</button>
         <button type="button" role="tab" class="aba" data-aba="resumo" aria-selected="false">Resumo</button>
       </nav>
       <div class="aba-painel" data-painel="cadastros">
@@ -281,19 +274,18 @@
           <input type="search" id="busca" placeholder="Buscar por @, nome ou código" autocomplete="off" autocapitalize="none" spellcheck="false">
           <div class="chips chips-filtro" id="filtros">
             <button type="button" class="filtro" data-filtro="todas" aria-pressed="true">Todas</button>
-            <button type="button" class="filtro" data-filtro="entregar" aria-pressed="false">Para entregar</button>
             <button type="button" class="filtro" data-filtro="manha" aria-pressed="false">Manhã</button>
             <button type="button" class="filtro" data-filtro="tarde" aria-pressed="false">Tarde</button>
-            <button type="button" class="filtro" data-filtro="entregue" aria-pressed="false">Entregues</button>
-            <button type="button" class="filtro" data-filtro="sem_estoque" aria-pressed="false">Sem estoque</button>
+            <button type="button" class="filtro" data-filtro="quente" aria-pressed="false">Leads quentes</button>
+            <button type="button" class="filtro" data-filtro="sem_convite" aria-pressed="false">Sem convite</button>
             <button type="button" class="filtro" data-filtro="concorrente" aria-pressed="false">GiGiL / Lorizze</button>
           </div>
         </div>
         <div class="lista-cadastros" id="lista-cadastros"></div>
       </div>
-      <div class="aba-painel" data-painel="estoque" hidden>
-        <p class="ajuda">Disponível agora em cada número. Entre parênteses, quantos pares vieram. A grade se muda na aba Estoque da planilha.</p>
-        <div class="tabela-rolagem" id="tabela-estoque"></div>
+      <div class="aba-painel" data-painel="ranking" hidden>
+        <p class="ajuda">Os modelos mais escolhidos no match, em tempo real. <span id="ranking-topo"></span></p>
+        <div class="tabela-rolagem" id="tabela-ranking"></div>
       </div>
       <div class="aba-painel" data-painel="resumo" hidden>
         <div id="resumo"></div>
