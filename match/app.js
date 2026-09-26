@@ -276,6 +276,11 @@
     return d && d[numero] ? d[numero] : 0;
   }
   function temEstoque() { return E.remotoEm > 0; }
+  /** Quando a Config traz amostra_modelo, todas levam o mesmo par e ela não escolhe nada. */
+  function amostraFixa() {
+    var c = E.conf.amostra_modelo;
+    return c && produto(c) ? c : '';
+  }
   function produto(codigo) {
     for (var i = 0; i < E.produtos.length; i++) if (E.produtos[i].codigo === codigo) return E.produtos[i];
     return null;
@@ -323,9 +328,11 @@
 
   function renderizarNumeros() {
     var box = $('#lista-numeros');
+    var fixa = amostraFixa();
     box.innerHTML = numeros().map(function (n) {
       var total = 0;
-      E.produtos.forEach(function (p) { total += disp(p.codigo, n); });
+      if (fixa) total = disp(fixa, n);
+      else E.produtos.forEach(function (p) { total += disp(p.codigo, n); });
       var esgotado = temEstoque() && E.produtos.length && total === 0;
       return '<label class="chip"><input type="radio" name="numero" value="' + esc(n) + '"' + (E.sel.numero === n ? ' checked' : '') + '>' +
         '<span>' + esc(n) + (esgotado ? '<small>esgotado</small>' : '') + '</span></label>';
@@ -341,7 +348,7 @@
     box.innerHTML = E.produtos.map(function (p) {
       var marcado = E.sel.favoritos.indexOf(p.codigo) !== -1;
       var selo = '';
-      if (E.sel.numero && temEstoque()) {
+      if (E.sel.numero && temEstoque() && !amostraFixa()) {
         selo = disp(p.codigo, E.sel.numero) > 0
           ? '<em class="selo selo-tem">Tem nº ' + esc(E.sel.numero) + '</em>'
           : '<em class="selo selo-acabou">Sem nº ' + esc(E.sel.numero) + '</em>';
@@ -355,6 +362,7 @@
 
   function opcoesAmostra() {
     var n = E.sel.numero;
+    if (amostraFixa()) return { lista: [], motivo: 'fixa' };
     if (!n || !E.sel.favoritos.length) return { lista: [], motivo: 'incompleto' };
     if (!temEstoque()) return { lista: E.sel.favoritos.slice(), motivo: 'sem_info' };
     var favs = E.sel.favoritos.filter(function (c) { return disp(c, n) > 0; });
@@ -369,8 +377,28 @@
     var box = $('#lista-amostras');
     var ajuda = $('#ajuda-amostra');
     var o = opcoesAmostra();
+    if (o.motivo === 'fixa') {
+      var p = produto(amostraFixa());
+      E.sel.amostra = '';
+      if (!E.sel.numero) { bloco.hidden = true; return; }
+      bloco.hidden = false;
+      var legenda = $('[data-legenda-amostra]');
+      if (legenda) legenda.textContent = 'Sua amostra';
+      ajuda.hidden = false;
+      ajuda.textContent = 'Todas as participantes levam o mesmo modelo. A gente separa no seu número.';
+      var resta = disp(p.codigo, E.sel.numero);
+      var aviso = temEstoque() && resta <= 0
+        ? 'Seu número acabou no stand: a equipe resolve com você no balcão.'
+        : 'Nº ' + esc(E.sel.numero) + (temEstoque() && resta <= 2 ? ' · últimos pares' : '');
+      box.innerHTML = '<div class="amostra"><span class="amostra-caixa"><span class="miniatura">' + imagem(p) + '</span>' +
+        '<span><strong>' + esc(p.nome) + '</strong><small>' + aviso + '</small></span></span></div>';
+      cuidarFotos(box);
+      return;
+    }
     if (o.motivo === 'incompleto') { bloco.hidden = true; E.sel.amostra = ''; return; }
     bloco.hidden = false;
+    var leg = $('[data-legenda-amostra]');
+    if (leg) leg.textContent = 'Qual você leva hoje?';
     if (o.lista.indexOf(E.sel.amostra) === -1) E.sel.amostra = o.lista.length === 1 ? o.lista[0] : '';
     if (o.motivo === 'nada') {
       ajuda.hidden = true;
@@ -460,9 +488,10 @@
     } else if (n === 2) {
       if (!radio('formato')) erros.push(['formato', 'Escolha live, vídeo ou os dois.']);
     } else if (n === 3) {
-      if (!E.sel.numero) erros.push(['numero', 'Escolha seu número.']);
       if (!E.sel.favoritos.length) erros.push(['favoritos', 'Marque pelo menos um modelo.']);
-      if (opcoesAmostra().lista.length && !E.sel.amostra) erros.push(['amostra', 'Escolha qual modelo você leva hoje.']);
+      if (!E.sel.numero) erros.push(['numero', 'Escolha seu número.']);
+      var op = opcoesAmostra();
+      if (op.motivo !== 'fixa' && op.lista.length && !E.sel.amostra) erros.push(['amostra', 'Escolha qual modelo você leva hoje.']);
     } else if (n === 4) {
       if (!E.sel.compromissos.length) erros.push(['compromissos', 'Escolha pelo menos uma opção.']);
       if (!$('#f-aceita-convite').checked) erros.push(['aceita_convite', 'É assim que a amostra vira parceria.']);

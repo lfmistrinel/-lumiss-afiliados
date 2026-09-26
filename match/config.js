@@ -4,7 +4,7 @@
    usados se o aparelho abrir sem internet. */
 window.LUMISS_CONFIG = {
   // Cole entre as aspas a URL do App da Web do Apps Script (termina em /exec).
-  apiUrl: '',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbxBWo3vIml9UHTDxVLFdoPgEXgu0Vpnk53E4l7DH4s0P6Qzrne9YWukv6h1h4Q9tsuX/exec',
 
   // Tempos do modo tablet, em milissegundos.
   tempos: {

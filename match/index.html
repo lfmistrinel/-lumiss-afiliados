@@ -142,22 +142,23 @@
         <div class="progresso" aria-hidden="true"><span></span></div>
         <p class="passo-contador">Passo 3 de 4</p>
         <h2 class="passo-titulo" tabindex="-1">Seu match de verão</h2>
-        <p class="passo-sub">Marque até <span data-max-favoritos>3</span> favoritos e escolha qual leva hoje.</p>
+        <p class="passo-sub">Marque até <span data-max-favoritos>3</span> favoritos: é assim que a gente entende o seu estilo.</p>
       </header>
       <div class="passo-corpo">
-        <fieldset class="campo" data-campo="numero">
-          <legend>Qual é o seu número?</legend>
-          <div class="chips chips-numero" id="lista-numeros"></div>
-          <p class="erro" data-erro="numero" hidden></p>
-        </fieldset>
         <fieldset class="campo" data-campo="favoritos">
           <legend>Seus favoritos</legend>
           <div class="produtos" id="lista-produtos"></div>
           <p class="aviso-estoque" id="aviso-atualizando" hidden>Conferindo o estoque do stand…</p>
           <p class="erro" data-erro="favoritos" hidden></p>
         </fieldset>
+        <fieldset class="campo" data-campo="numero">
+          <legend>Qual é o seu número?</legend>
+          <p class="ajuda">É o número que a gente separa na sua amostra.</p>
+          <div class="chips chips-numero" id="lista-numeros"></div>
+          <p class="erro" data-erro="numero" hidden></p>
+        </fieldset>
         <fieldset class="campo" data-campo="amostra" id="bloco-amostra" hidden>
-          <legend>Qual você leva hoje?</legend>
+          <legend data-legenda-amostra>Qual você leva hoje?</legend>
           <p class="ajuda" id="ajuda-amostra"></p>
           <div class="amostras" id="lista-amostras"></div>
           <p class="erro" data-erro="amostra" hidden></p>
