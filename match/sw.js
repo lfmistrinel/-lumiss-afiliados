@@ -1,6 +1,6 @@
 /* LUMISS · Match de Verão — guarda o site no aparelho pra abrir mesmo sem internet.
    Troque a VERSAO sempre que publicar arquivos novos. */
-var VERSAO = 'lumiss-afiliadas-2026-09-25-221953';
+var VERSAO = 'lumiss-afiliadas-2026-09-25-224439';
 var ESSENCIAIS = ['./', './styles.css', './app.js', './config.js', './qr.svg', './manifest.webmanifest',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
 
