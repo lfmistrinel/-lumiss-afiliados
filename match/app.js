@@ -293,24 +293,6 @@
     });
   }
 
-  function renderizarVitrine() {
-    var box = $('#vitrine');
-    // só mostra a vitrine quando existe foto: quadro branco vazio no preto fica feio
-    var comFoto = E.produtos.filter(function (p) { return !!fotoUrl(p); }).slice(0, 4);
-    box.hidden = !comFoto.length;
-    box.innerHTML = comFoto.map(function (p) {
-      return '<div class="vitrine-item"><img src="' + esc(fotoUrl(p)) + '" alt=""></div>';
-    }).join('');
-    $$('img', box).forEach(function (img) {
-      img.addEventListener('error', function () {
-        var item = img.parentNode;
-        img.remove();
-        if (item) item.remove();
-        if (!$$('.vitrine-item', box).length) box.hidden = true;
-      });
-    });
-  }
-
   function renderizarNumeros() {
     var box = $('#lista-numeros');
     box.innerHTML = numeros().map(function (n) {
@@ -355,7 +337,6 @@
   function turmaAgora() { return horaSP() < (E.conf.corte_tarde || '13:30') ? 'manha' : 'tarde'; }
 
   function renderizarDinamicos() {
-    renderizarVitrine();
     if (E.tela === 'passo-3') renderizarPasso3();
   }
 
@@ -517,7 +498,6 @@
     var nome = primeiroNome(c.nome);
     $('#final-titulo').textContent = nome ? 'Deu match, ' + nome + '!' : 'Deu match!';
     $('#final-perfil-nome').textContent = perfil;
-    $('#final-perfil-texto').textContent = (CFG.perfis || {})[perfil] || '';
 
     $('#final-amostra-rotulo').textContent = 'Sua amostra';
     $('#final-amostra-modelo').textContent = 'Número ' + ((r && r.numero) || c.numero || '?');
@@ -566,7 +546,7 @@
     E.inicioEm = 0;
     E.ultimo = null;
     limparErros(document);
-    ['#final-titulo', '#final-perfil-nome', '#final-perfil-texto', '#final-amostra-modelo', '#final-amostra-texto', '#final-arroba', '#final-codigo', '#final-envio']
+    ['#final-titulo', '#final-perfil-nome', '#final-amostra-modelo', '#final-amostra-texto', '#final-arroba', '#final-codigo', '#final-envio']
       .forEach(function (s) { $(s).textContent = ''; });
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     if (E.recarregarDepois) { location.reload(); return; }
@@ -1039,7 +1019,6 @@
   var cache = ler(CHAVE_CACHE, null);
   if (cache) aplicarRemoto(cache);
   E.remotoEm = 0;
-  renderizarVitrine();
   mostrarInicio();
   atualizarConfig();
   if (fila().length) enviarFila().catch(function () {});
