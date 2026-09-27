@@ -4,7 +4,7 @@
 
   var CFG = window.LUMISS_CONFIG || {};
   var TEMPOS = Object.assign({ inatividade: 90000, aviso: 15000, final: 30000, equipe: 180000, atualizar: 60000, atualizarEquipe: 20000 }, CFG.tempos || {});
-  var PADRAO = Object.assign({ numeros: ['33', '34', '35', '36', '37', '38', '39', '40'], compromissos: [], oferta_manha: [], oferta_tarde: [], max_favoritos: 3, corte_tarde: '13:30' }, CFG.padrao || {});
+  var PADRAO = Object.assign({ numeros: ['33', '34', '35', '36', '37', '38', '39', '40'], max_favoritos: 5, corte_tarde: '13:30' }, CFG.padrao || {});
   var CHAVE_FILA = 'lumiss_fila_v1';
   var CHAVE_RECUSADOS = 'lumiss_recusados_v1';
   var CHAVE_CACHE = 'lumiss_config_v1';
@@ -116,7 +116,7 @@
     passo: 0,
     inicioEm: 0,
     enviando: false,
-    sel: { numero: '', favoritos: [], compromissos: [] },
+    sel: { numero: '', favoritos: [] },
     ultimo: null,
     recarregarDepois: false,
     equipe: { pin: '', dados: null, filtro: 'todas', busca: '', aba: 'cadastros', trocando: '', confirmando: '', rascunhos: {} }
@@ -226,7 +226,7 @@
   setInterval(function () { if (fila().length) enviarFila().catch(function () {}); }, 30000);
 
   /* ------------------------------------------------------------ telas */
-  var TELAS = ['tela-inicio', 'passo-1', 'passo-2', 'passo-3', 'passo-4', 'tela-final', 'tela-equipe'];
+  var TELAS = ['tela-inicio', 'passo-1', 'passo-2', 'passo-3', 'tela-final', 'tela-equipe'];
   function mostrar(id) {
     TELAS.forEach(function (t) {
       var el = document.getElementById(t);
@@ -246,7 +246,6 @@
       // se os modelos estiverem velhos, busca de novo em segundo plano
       if (Date.now() - E.remotoEm > 20000) atualizarConfig();
     }
-    if (n === 4) renderizarOferta();
     if (!semHistorico) {
       try { history.pushState({ passo: n }, ''); } catch (e) { /* sem histórico */ }
     }
@@ -355,31 +354,9 @@
 
   function turmaAgora() { return horaSP() < (E.conf.corte_tarde || '13:30') ? 'manha' : 'tarde'; }
 
-  function renderizarOferta() {
-    var t = turmaAgora();
-    $('#oferta-titulo').textContent = t === 'manha' ? 'Parceria Top LUMISS' : 'Colaboração LUMISS';
-    var comissao = t === 'manha' ? E.conf.comissao_manha : E.conf.comissao_tarde;
-    var el = $('#oferta-comissao');
-    if (comissao) {
-      el.textContent = 'Comissão de ' + comissao + '% na colaboração direcionada' +
-        (E.conf.comissao_aberta ? ' (no plano aberto é ' + E.conf.comissao_aberta + '%)' : '');
-      el.hidden = false;
-    } else {
-      el.hidden = true;
-    }
-    var itens = (t === 'manha' ? E.conf.oferta_manha : E.conf.oferta_tarde) || [];
-    $('#oferta-itens').innerHTML = itens.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('');
-    var lista = E.conf.compromissos || [];
-    E.sel.compromissos = E.sel.compromissos.filter(function (c) { return lista.indexOf(c) !== -1; });
-    $('#lista-compromissos').innerHTML = lista.map(function (c) {
-      return '<label class="chip"><input type="checkbox" name="compromissos" value="' + esc(c) + '"' + (E.sel.compromissos.indexOf(c) !== -1 ? ' checked' : '') + '><span>' + esc(c) + '</span></label>';
-    }).join('');
-  }
-
   function renderizarDinamicos() {
     renderizarVitrine();
     if (E.tela === 'passo-3') renderizarPasso3();
-    if (E.tela === 'passo-4') renderizarOferta();
   }
 
   /* ------------------------------------------------------------ validação */
@@ -414,6 +391,7 @@
       $('#f-arroba').value = arroba;
       if (!arrobaValida(arroba)) erros.push(['arroba', 'Confira o @: só letras, números, ponto e _.']);
       if (!whatsValido($('#f-whatsapp').value)) erros.push(['whatsapp', 'Coloque o WhatsApp com DDD.']);
+      if (!$('#f-aceite-dados').checked) erros.push(['aceite_dados', 'Sem essa autorização a gente não consegue falar com você.']);
     } else if (n === 2) {
       if (!radio('formato')) erros.push(['formato', 'Escolha live, vídeo ou os dois.']);
     } else if (n === 3) {
@@ -422,10 +400,6 @@
         erros.push(['favoritos', max === 1 ? 'Marque o seu favorito.' : 'Marque os seus ' + max + ' favoritos.']);
       }
       if (!E.sel.numero) erros.push(['numero', 'Escolha seu número.']);
-    } else if (n === 4) {
-      if (!E.sel.compromissos.length) erros.push(['compromissos', 'Escolha pelo menos uma opção.']);
-      if (!$('#f-aceita-convite').checked) erros.push(['aceita_convite', 'É assim que a amostra vira parceria.']);
-      if (!$('#f-aceite-dados').checked) erros.push(['aceite_dados', 'Sem essa autorização a gente não consegue falar com você.']);
     }
     var tela = document.getElementById('passo-' + n);
     limparErros(tela);
@@ -498,8 +472,6 @@
       }
       E.sel.favoritos = marc;
       renderizarProdutos();
-    } else if (t.name === 'compromissos') {
-      E.sel.compromissos = marcados('compromissos');
     }
   });
 
@@ -517,8 +489,6 @@
         formato: radio('formato'),
         numero: E.sel.numero,
         favoritos: E.sel.favoritos.slice(),
-        compromissos: E.sel.compromissos.slice(),
-        aceita_convite: $('#f-aceita-convite').checked,
         aceite_dados: $('#f-aceite-dados').checked
       }
     };
@@ -526,8 +496,8 @@
 
   F.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    if (E.passo !== 4) return;
-    if (!validar(4) || E.enviando) return;
+    if (E.passo !== 3) return;
+    if (!validar(3) || E.enviando) return;
     E.enviando = true;
     var corpo = montarCorpo();
     enfileirar(corpo);
@@ -590,7 +560,7 @@
     esconderInatividade();
     pararContagemFinal();
     F.reset();
-    E.sel = { numero: '', favoritos: [], compromissos: [] };
+    E.sel = { numero: '', favoritos: [] };
     E.passo = 0;
     E.enviando = false;
     E.inicioEm = 0;
@@ -848,7 +818,7 @@
       '</div>' +
       '<p class="ficha-linha">' + esc(c.nome) + ' · ' + linkWhats(c.whatsapp) + ' · ' + esc(c.formato) + '</p>' +
       '<p class="ficha-linha">Nº ' + esc(c.numero || '—') + ' · favoritos: ' + esc(favs || '—') + '</p>' +
-      '<p class="ficha-linha">Topou: ' + esc(c.compromissos || '—') + '</p>' +
+
       '<div class="ficha-controles">' +
         '<div class="controle"><span>Convite</span>' + segmentos(c.id, 'convite', c.convite, [['', '—'], ['enviado', 'Enviado'], ['aceito', 'Aceito']]) + '</div>' +
         '<div class="controle"><span>Lead</span>' + segmentos(c.id, 'temperatura', c.temperatura, [['quente', 'Quente'], ['morna', 'Morna'], ['fria', 'Fria']]) + '</div>' +
@@ -1034,7 +1004,7 @@
     var cs = (E.equipe.dados && E.equipe.dados.cadastros) || [];
     var colunas = ['codigo', 'arroba', 'nome', 'whatsapp', 'turma', 'perfil', 'formato',
       'numero', 'favoritos', 'favorito_1', 'favorito_2', 'favorito_3', 'favorito_4', 'favorito_5',
-      'compromissos', 'convite', 'temperatura', 'anotacao', 'concorrente', 'criado_em'];
+      'convite', 'temperatura', 'anotacao', 'concorrente', 'criado_em'];
     function cel(v) {
       var s = String(v === null || v === undefined ? '' : v);
       if (/^[=+\-@]/.test(s)) s = "'" + s;

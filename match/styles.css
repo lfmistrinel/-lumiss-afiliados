@@ -165,10 +165,9 @@ table.ranking tr:first-child td { background: rgba(255, 59, 98, .07); }
 .passo-topo { padding: max(18px, env(safe-area-inset-top)) 20px 6px; }
 .passo-topo .marca { margin-bottom: 18px; }
 .progresso { height: 3px; background: rgba(255, 255, 255, .12); border-radius: 99px; margin: 0 0 12px; overflow: hidden; }
-.progresso span { display: block; height: 100%; width: 25%; background: var(--ink); transition: width .3s; }
-.passo[data-passo="2"] .progresso span { width: 50%; }
-.passo[data-passo="3"] .progresso span { width: 75%; }
-.passo[data-passo="4"] .progresso span { width: 100%; }
+.progresso span { display: block; height: 100%; width: 33%; background: var(--ink); transition: width .3s; }
+.passo[data-passo="2"] .progresso span { width: 66%; }
+.passo[data-passo="3"] .progresso span { width: 100%; }
 .passo-contador { margin: 0 0 6px; font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-faint); }
 .passo-titulo { font-size: clamp(26px, 5vw, 40px); font-weight: 900; letter-spacing: -.005em; }
 .passo-sub { margin: 10px 0 0; color: var(--ink-dim); font-size: 15px; }

@@ -57,7 +57,7 @@
       <header class="passo-topo">
         <p class="marca"><svg class="logo" viewBox="0 0 1000 171.8" role="img" aria-label="LUMISS" focusable="false"><use href="#lumiss-logo"/></svg></p>
         <div class="progresso" aria-hidden="true"><span></span></div>
-        <p class="passo-contador">Passo 1 de 4</p>
+        <p class="passo-contador">Passo 1 de 3</p>
         <h2 class="passo-titulo" tabindex="-1">Quem é você</h2>
         <p class="passo-sub">Pra gente te achar no TikTok e no WhatsApp.</p>
       </header>
@@ -81,6 +81,13 @@
           <input id="f-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel-national" enterkeyhint="next" placeholder="(11) 91234-5678" maxlength="16">
           <p class="erro" data-erro="whatsapp" hidden></p>
         </div>
+        <div class="campo" data-campo="aceite_dados">
+          <label class="caixa">
+            <input type="checkbox" name="aceite_dados" id="f-aceite-dados">
+            <span>Autorizo a LUMISS (Amorelle Vestuário e Calçados LTDA) a guardar estes dados e a falar comigo sobre parcerias por WhatsApp. Tenho 18 anos ou mais e posso pedir pra apagar meus dados quando quiser.</span>
+          </label>
+          <p class="erro" data-erro="aceite_dados" hidden></p>
+        </div>
       </div>
       <footer class="passo-rodape">
         <button type="button" class="botao botao-secundario" data-voltar>Voltar</button>
@@ -93,7 +100,7 @@
       <header class="passo-topo">
         <p class="marca"><svg class="logo" viewBox="0 0 1000 171.8" role="img" aria-label="LUMISS" focusable="false"><use href="#lumiss-logo"/></svg></p>
         <div class="progresso" aria-hidden="true"><span></span></div>
-        <p class="passo-contador">Passo 2 de 4</p>
+        <p class="passo-contador">Passo 2 de 3</p>
         <h2 class="passo-titulo" tabindex="-1">Como você cria</h2>
         <p class="passo-sub">Assim a gente monta a parceria do seu jeito.</p>
       </header>
@@ -140,9 +147,9 @@
       <header class="passo-topo">
         <p class="marca"><svg class="logo" viewBox="0 0 1000 171.8" role="img" aria-label="LUMISS" focusable="false"><use href="#lumiss-logo"/></svg></p>
         <div class="progresso" aria-hidden="true"><span></span></div>
-        <p class="passo-contador">Passo 3 de 4</p>
+        <p class="passo-contador">Passo 3 de 3</p>
         <h2 class="passo-titulo" tabindex="-1">Seu match de verão</h2>
-        <p class="passo-sub">Escolha os <span data-max-favoritos>5</span> modelos com a sua cara. É assim que a gente entende o seu estilo.</p>
+        <p class="passo-sub">Escolha os <span data-max-favoritos>5</span> modelos com a sua cara. É a última etapa.</p>
       </header>
       <div class="passo-corpo">
         <fieldset class="campo" data-campo="numero">
@@ -159,50 +166,10 @@
       </div>
       <footer class="passo-rodape">
         <button type="button" class="botao botao-secundario" data-voltar>Voltar</button>
-        <button type="button" class="botao" data-avancar>Continuar</button>
-      </footer>
-    </section>
-
-    <!-- Passo 4 -->
-    <section class="tela passo" id="passo-4" data-passo="4" hidden>
-      <header class="passo-topo">
-        <p class="marca"><svg class="logo" viewBox="0 0 1000 171.8" role="img" aria-label="LUMISS" focusable="false"><use href="#lumiss-logo"/></svg></p>
-        <div class="progresso" aria-hidden="true"><span></span></div>
-        <p class="passo-contador">Passo 4 de 4</p>
-        <h2 class="passo-titulo" tabindex="-1">A proposta</h2>
-        <p class="passo-sub">O que a LUMISS oferece e o que você topa fazer.</p>
-      </header>
-      <div class="passo-corpo">
-        <div class="oferta" id="oferta">
-          <p class="oferta-titulo" id="oferta-titulo"></p>
-          <p class="oferta-comissao" id="oferta-comissao" hidden></p>
-          <ul class="oferta-itens" id="oferta-itens"></ul>
-        </div>
-        <fieldset class="campo" data-campo="compromissos">
-          <legend>Em troca da amostra, eu topo:</legend>
-          <div class="chips chips-coluna" id="lista-compromissos"></div>
-          <p class="erro" data-erro="compromissos" hidden></p>
-        </fieldset>
-        <div class="campo" data-campo="aceita_convite">
-          <label class="caixa">
-            <input type="checkbox" name="aceita_convite" id="f-aceita-convite">
-            <span>Quero receber o convite de colaboração da LUMISS no TikTok Shop.</span>
-          </label>
-          <p class="erro" data-erro="aceita_convite" hidden></p>
-        </div>
-        <div class="campo" data-campo="aceite_dados">
-          <label class="caixa">
-            <input type="checkbox" name="aceite_dados" id="f-aceite-dados">
-            <span>Autorizo a LUMISS (Amorelle Vestuário e Calçados LTDA) a guardar estes dados e a falar comigo sobre parcerias por WhatsApp e e-mail. Tenho 18 anos ou mais e posso pedir pra apagar meus dados quando quiser.</span>
-          </label>
-          <p class="erro" data-erro="aceite_dados" hidden></p>
-        </div>
-      </div>
-      <footer class="passo-rodape">
-        <button type="button" class="botao botao-secundario" data-voltar>Voltar</button>
         <button type="submit" class="botao" id="botao-finalizar">Finalizar</button>
       </footer>
     </section>
+
   </form>
 
   <!-- Final -->
@@ -226,8 +193,7 @@
       </div>
       <ol class="final-passos" id="final-passos">
         <li>Retire sua amostra com a equipe LUMISS no balcão.</li>
-        <li>Aceite o convite de colaboração da LUMISS no TikTok Shop. Ele chega no app, na área de afiliados.</li>
-        <li>Poste do seu jeito e ganhe comissão em cada venda.</li>
+        <li>Fale com a equipe ali mesmo: eles explicam como funciona a parceria.</li>
       </ol>
       <a class="botao botao-whatsapp" id="final-grupo" href="#" target="_blank" rel="noopener" hidden>Entrar no grupo de afiliadas no WhatsApp</a>
       <p class="final-envio" id="final-envio" role="status" aria-live="polite"></p>
