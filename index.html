@@ -1651,6 +1651,39 @@ async function refreshCounter(){
 }
 refreshCounter();
 
+/* Reenvio "às cegas": o pedido chega no servidor mesmo quando o navegador não
+   deixa a página ler a resposta — situação comum nos navegadores internos do
+   TikTok e do WhatsApp e no Safari do iPhone. */
+function enviarAsCegas(url){
+  return new Promise(resolve => {
+    if(navigator.onLine === false){ resolve(false); return; }
+    let pronto = false;
+    const terminar = valor => { if(!pronto){ pronto = true; resolve(valor); } };
+    const temFetch = typeof fetch === 'function';
+
+    // 1) plano B por imagem: em alguns navegadores é o único pedido que passa.
+    //    Só serve de confirmação quando o fetch nem existe, porque a imagem
+    //    dispara erro tanto quando chega quanto quando falha.
+    try{
+      const img = new Image();
+      img.onload = img.onerror = () => { if(!temFetch) terminar(true); };
+      img.src = url + '&_=' + Date.now();
+    }catch(e){}
+
+    // 2) mesmo pedido, sem tentar ler a resposta: só resolve se a resposta chegar
+    if(temFetch){
+      try{
+        fetch(url, { mode: 'no-cors', cache: 'no-store' })
+          .then(() => terminar(true))
+          .catch(() => terminar(false));
+      }catch(e){ terminar(false); }
+    }
+
+    // 3) se nada responder, desiste e cai no WhatsApp
+    setTimeout(() => terminar(false), 8000);
+  });
+}
+
 /* signup handling */
 const form = document.getElementById('signupForm');
 const msg = document.getElementById('formMsg');
@@ -1679,6 +1712,7 @@ form.addEventListener('submit', async (e)=>{
   const submitBtn = form.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Enviando…';
+  let urlCadastro = '';
 
   try{
     // GET com parâmetros: funciona nos navegadores internos do TikTok/WhatsApp,
@@ -1688,9 +1722,10 @@ form.addEventListener('submit', async (e)=>{
       nome, whats, tiktok, seguidores,
       campanha: CONFIG.campaignCode
     });
+    urlCadastro = CONFIG.sheetWebAppUrl + '?' + params.toString();
     const ctrl = new AbortController();
     const limite = setTimeout(() => ctrl.abort(), 20000);
-    const res = await fetch(CONFIG.sheetWebAppUrl + '?' + params.toString(), { signal: ctrl.signal });
+    const res = await fetch(urlCadastro, { signal: ctrl.signal, cache: 'no-store' });
     clearTimeout(limite);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const result = await res.json();
@@ -1711,7 +1746,20 @@ form.addEventListener('submit', async (e)=>{
     refreshCounter();
     document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
   }catch(err){
-    console.error('[cadastro] falha:', err);
+    console.error('[cadastro] falha ao ler a resposta:', err);
+
+    // Alguns navegadores (TikTok, WhatsApp, iOS) bloqueiam a LEITURA da resposta,
+    // mas o pedido chega no servidor. Reenvia às cegas antes de desistir.
+    // O cadastro não duplica: o servidor ignora @ que já existe.
+    const chegou = urlCadastro ? await enviarAsCegas(urlCadastro) : false;
+    if(chegou){
+      msg.textContent = 'Cadastro enviado! Acesse os links liberados abaixo. 🎬';
+      msg.className = 'msg ok';
+      unlockLibrary();
+      document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
+      return;
+    }
+
     // não perder a criadora: oferece envio manual pelo WhatsApp
     const texto = encodeURIComponent(
       `Olá! Quero me cadastrar na ${CONFIG.campaignLabel} da Lumiss.\n\n` +
