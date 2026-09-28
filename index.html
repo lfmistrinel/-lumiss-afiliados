@@ -1629,6 +1629,23 @@ function unlockLibrary(){
 }
 
 /* affiliate counter — real count from Google Sheets */
+let cadastrosNoInicio = null;
+
+/* lê só a contagem de cadastros — é o pedido mais simples que existe aqui e
+   funciona mesmo em navegador que trava o resto */
+async function lerContagem(){
+  if(!CONFIG.sheetWebAppUrl) return null;
+  try{
+    const ctrl = new AbortController();
+    const limite = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(CONFIG.sheetWebAppUrl + '?v=' + Date.now(), { signal: ctrl.signal, cache: 'no-store' });
+    clearTimeout(limite);
+    if(!res.ok) return null;
+    const data = await res.json();
+    return typeof data.count === 'number' ? data.count : null;
+  }catch(e){ return null; }
+}
+
 async function refreshCounter(){
   const el = document.getElementById('counterText');
   if(!CONFIG.sheetWebAppUrl){
@@ -1643,6 +1660,7 @@ async function refreshCounter(){
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const n = data.count || 0;
+    cadastrosNoInicio = n;
     el.innerHTML = `<b>${n}</b> criadora${n===1?'':'s'} já confirmada${n===1?'':'s'} nesta campanha`;
   }catch(e){
     console.error('[contador] falha ao carregar:', e);
@@ -1680,7 +1698,7 @@ function enviarAsCegas(url){
     }
 
     // 3) se nada responder, desiste e cai no WhatsApp
-    setTimeout(() => terminar(false), 8000);
+    setTimeout(() => terminar(false), 5000);
   });
 }
 
@@ -1713,6 +1731,12 @@ form.addEventListener('submit', async (e)=>{
   submitBtn.disabled = true;
   submitBtn.textContent = 'Enviando…';
   let urlCadastro = '';
+  // depois de 2,5s o formulário avisa que está confirmando, para não parecer travado
+  const avisoLento = setTimeout(() => {
+    submitBtn.textContent = 'Confirmando…';
+    msg.textContent = 'Confirmando seu cadastro… pode levar alguns segundos.';
+    msg.className = 'msg';
+  }, 2500);
 
   try{
     // GET com parâmetros: funciona nos navegadores internos do TikTok/WhatsApp,
@@ -1724,7 +1748,7 @@ form.addEventListener('submit', async (e)=>{
     });
     urlCadastro = CONFIG.sheetWebAppUrl + '?' + params.toString();
     const ctrl = new AbortController();
-    const limite = setTimeout(() => ctrl.abort(), 20000);
+    const limite = setTimeout(() => ctrl.abort(), 9000);
     const res = await fetch(urlCadastro, { signal: ctrl.signal, cache: 'no-store' });
     clearTimeout(limite);
     if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -1752,8 +1776,21 @@ form.addEventListener('submit', async (e)=>{
     // mas o pedido chega no servidor. Reenvia às cegas antes de desistir.
     // O cadastro não duplica: o servidor ignora @ que já existe.
     const chegou = urlCadastro ? await enviarAsCegas(urlCadastro) : false;
-    if(chegou){
-      msg.textContent = 'Cadastro enviado! Acesse os links liberados abaixo. 🎬';
+
+    // confirmação de verdade: se o número de cadastros subiu, entrou
+    let confirmado = false;
+    if(urlCadastro){
+      const agora = await lerContagem();
+      if(agora !== null){
+        if(cadastrosNoInicio !== null && agora > cadastrosNoInicio) confirmado = true;
+        cadastrosNoInicio = agora;
+      }
+    }
+
+    if(confirmado || chegou){
+      msg.textContent = confirmado
+        ? 'Cadastro confirmado! Acesse os links liberados abaixo. 🎬'
+        : 'Cadastro enviado! Acesse os links liberados abaixo. 🎬';
       msg.className = 'msg ok';
       unlockLibrary();
       document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
@@ -1771,6 +1808,7 @@ form.addEventListener('submit', async (e)=>{
       'ou <a href="https://wa.me/?text=' + texto + '" target="_blank" rel="noopener">envie seus dados pelo WhatsApp</a> que a gente cadastra pra você.';
     msg.className = 'msg err';
   }finally{
+    clearTimeout(avisoLento);
     submitBtn.disabled = false;
     submitBtn.textContent = 'Confirmar cadastro';
   }
