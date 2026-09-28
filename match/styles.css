@@ -139,6 +139,13 @@ table.ranking tr:first-child td { background: rgba(255, 59, 98, .07); }
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--raio);
 }
 .inicio-qr img { width: 116px; height: 116px; background: #fff; padding: 6px; border-radius: 4px; }
+.botao-telacheia {
+  position: absolute; left: 14px; bottom: max(10px, env(safe-area-inset-bottom));
+  width: 40px; height: 40px; padding: 0; border-radius: 8px;
+  background: rgba(255, 255, 255, .06); border: 1px solid var(--line);
+  color: var(--ink-faint); font-size: 17px; line-height: 1; cursor: pointer;
+}
+.botao-telacheia:active { background: rgba(255, 255, 255, .14); }
 .inicio-qr p { margin: 0; color: var(--ink-dim); font-size: 14px; line-height: 1.4; }
 .inicio-qr strong { display: block; color: var(--ink); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
 .link-equipe {
@@ -148,6 +155,32 @@ table.ranking tr:first-child td { background: rgba(255, 59, 98, .07); }
 }
 @media (min-width: 900px) {
   .inicio-conteudo { padding-inline: 48px; }
+}
+
+/* Tablet deitado no stand: texto de um lado, QR grande do outro, tudo sem rolar. */
+@media (min-width: 900px) and (orientation: landscape) {
+  .inicio-conteudo {
+    grid-template-columns: minmax(0, 1.05fr) auto;
+    align-items: center; gap: 56px;
+    padding-block: 24px;
+  }
+  .inicio-texto { max-width: 680px; }
+  .inicio-texto .marca { margin-bottom: 20px; }
+  .inicio-texto .carimbo { margin-bottom: 20px; }
+  .inicio-titulo { margin-bottom: 16px; }
+  .inicio-sub { margin-bottom: 24px; }
+  .inicio-qr {
+    margin-top: 0; flex-direction: column; text-align: center; gap: 14px; padding: 22px;
+  }
+  .inicio-qr img { width: 190px; height: 190px; }
+  .inicio-qr p { font-size: 15px; }
+}
+
+/* Tablet deitado com pouca altura: encolhe o que dá pra caber na tela. */
+@media (orientation: landscape) and (max-height: 760px) {
+  .marquee { padding: 12px 0; }
+  .inicio-conteudo { padding-block: 16px; gap: 20px; }
+  .inicio-qr img { width: 150px; height: 150px; }
 }
 
 /* passos */

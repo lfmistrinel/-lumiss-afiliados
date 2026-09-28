@@ -599,6 +599,30 @@
   function pararContagemFinal() { clearInterval(contagemFinal); $('#final-contagem').textContent = ''; }
   $('#botao-nova').addEventListener('click', recomecar);
 
+  /* Tela cheia: no tablet do stand, esconde a barra do navegador. */
+  var botaoTelaCheia = $('#botao-telacheia');
+  if (botaoTelaCheia) {
+    function emTelaCheia() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+    function pintarBotao() {
+      botaoTelaCheia.textContent = emTelaCheia() ? '\u2715' : '\u26F6';
+      botaoTelaCheia.title = emTelaCheia() ? 'Sair da tela cheia' : 'Tela cheia';
+      botaoTelaCheia.setAttribute('aria-label', botaoTelaCheia.title);
+    }
+    botaoTelaCheia.addEventListener('click', function () {
+      try {
+        if (emTelaCheia()) {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        } else {
+          var el = document.documentElement;
+          (el.requestFullscreen || el.webkitRequestFullscreen).call(el).catch(function () {});
+        }
+      } catch (e) { /* navegador sem tela cheia: o botão simplesmente não faz nada */ }
+    });
+    document.addEventListener('fullscreenchange', pintarBotao);
+    document.addEventListener('webkitfullscreenchange', pintarBotao);
+    pintarBotao();
+  }
+
   ['pointerdown', 'keydown', 'input', 'scroll', 'touchstart'].forEach(function (tipo) {
     document.addEventListener(tipo, function () {
       if ($('#aviso-inatividade').hidden) reiniciarRelogioInatividade();

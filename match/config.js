@@ -19,7 +19,7 @@ window.LUMISS_CONFIG = {
   padrao: {
     corte_tarde: '13:30',
     whatsapp_grupo: '',
-    numeros: ['33', '34', '35', '36', '37', '38', '39', '40'],
+    numeros: ['34', '35', '36', '37', '38', '39', '40'],
     max_favoritos: 5
   }
 };
