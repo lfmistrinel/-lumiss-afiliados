@@ -1473,12 +1473,7 @@ async function refreshRanking(){
     return;
   }
   try{
-    const ctrl = new AbortController();
-    const limite = setTimeout(() => ctrl.abort(), 15000);
-    const res = await fetch(CONFIG.sheetWebAppUrl + '?action=ranking', { signal: ctrl.signal });
-    clearTimeout(limite);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    const data = await chamarPlanilha('action=ranking', 15000);
     const ranking = (data.ranking || []).slice(0, 10);
     if(!ranking.length){
       list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
@@ -1629,6 +1624,47 @@ function unlockLibrary(){
 }
 
 /* affiliate counter — real count from Google Sheets */
+/* ===== conversa com a planilha =====
+   O navegador do TikTok, do WhatsApp e às vezes o próprio Safari bloqueiam a
+   LEITURA de respostas de outro domínio. Por isso a página pede os dados como
+   script (JSONP), que nenhum navegador bloqueia, e só usa fetch como reserva. */
+function chamarPlanilha(consulta, ms){
+  const base = CONFIG.sheetWebAppUrl;
+  if(!base) return Promise.reject(new Error('sem URL'));
+  const url = base + (consulta ? '?' + consulta : '?v=' + Date.now());
+  const espera = ms || 15000;
+
+  return new Promise((resolve, reject) => {
+    const nome = 'lumissCb' + Date.now() + Math.floor(Math.random()*1000);
+    const script = document.createElement('script');
+    let encerrado = false;
+    const limpar = () => {
+      encerrado = true;
+      try{ delete window[nome]; }catch(e){ window[nome] = undefined; }
+      if(script.parentNode) script.parentNode.removeChild(script);
+      clearTimeout(relogio);
+    };
+    const relogio = setTimeout(() => { if(!encerrado){ limpar(); tentarFetch(); } }, espera);
+
+    function tentarFetch(){
+      // reserva: se o script não carregar, tenta do jeito tradicional
+      const ctrl = new AbortController();
+      const corte = setTimeout(() => ctrl.abort(), espera);
+      fetch(url, { signal: ctrl.signal, cache: 'no-store' })
+        .then(r => { clearTimeout(corte); if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(resolve)
+        .catch(reject);
+    }
+
+    window[nome] = dados => { limpar(); resolve(dados); };
+    script.onerror = () => { if(!encerrado){ limpar(); tentarFetch(); } };
+    // carregou mas não chamou de volta (servidor antigo, sem JSONP): usa a reserva
+    script.onload = () => setTimeout(() => { if(!encerrado){ limpar(); tentarFetch(); } }, 400);
+    script.src = url + '&callback=' + nome;
+    document.head.appendChild(script);
+  });
+}
+
 let cadastrosNoInicio = null;
 
 /* lê só a contagem de cadastros — é o pedido mais simples que existe aqui e
@@ -1636,12 +1672,7 @@ let cadastrosNoInicio = null;
 async function lerContagem(){
   if(!CONFIG.sheetWebAppUrl) return null;
   try{
-    const ctrl = new AbortController();
-    const limite = setTimeout(() => ctrl.abort(), 8000);
-    const res = await fetch(CONFIG.sheetWebAppUrl + '?v=' + Date.now(), { signal: ctrl.signal, cache: 'no-store' });
-    clearTimeout(limite);
-    if(!res.ok) return null;
-    const data = await res.json();
+    const data = await chamarPlanilha('', 10000);
     return typeof data.count === 'number' ? data.count : null;
   }catch(e){ return null; }
 }
@@ -1653,12 +1684,7 @@ async function refreshCounter(){
     return;
   }
   try{
-    const ctrl = new AbortController();
-    const limite = setTimeout(() => ctrl.abort(), 15000);
-    const res = await fetch(CONFIG.sheetWebAppUrl, { signal: ctrl.signal });
-    clearTimeout(limite);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    const data = await chamarPlanilha('', 12000);
     const n = data.count || 0;
     cadastrosNoInicio = n;
     el.innerHTML = `<b>${n}</b> criadora${n===1?'':'s'} já confirmada${n===1?'':'s'} nesta campanha`;
@@ -1700,6 +1726,59 @@ function enviarAsCegas(url){
     // 3) se nada responder, desiste e cai no WhatsApp
     setTimeout(() => terminar(false), 5000);
   });
+}
+
+/* Modo diagnóstico: abra a página com ?debug=1 no fim do endereço.
+   Mostra na tela o resultado de cada tipo de pedido, para achar o que trava
+   em um celular específico. Cria linhas "DIAG" na planilha, é só apagar. */
+if(/[?&]debug=1/.test(location.search)){
+  (async function diagnostico(){
+    const caixa = document.createElement('div');
+    caixa.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#0d0d0d;' +
+      'border:1px solid #444;border-radius:10px;padding:12px;color:#fff;max-height:62vh;overflow:auto;' +
+      'font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;white-space:pre-wrap;';
+    document.body.appendChild(caixa);
+    const log = t => { caixa.textContent += t + '\n'; };
+    const base = CONFIG.sheetWebAppUrl;
+    const teste = '@diag' + Date.now();
+    const urlCad = base + '?' + new URLSearchParams({
+      action:'signup', nome:'DIAG', whats:'0', tiktok:teste, seguidores:'diag', campanha:'DIAG'
+    }).toString();
+    log('DIAGNÓSTICO LUMISS');
+    log(navigator.userAgent.slice(0, 95));
+    let t;
+    t = Date.now();
+    try{
+      const r = await fetch(base + '?v=' + Date.now(), { cache:'no-store' });
+      const txt = await r.text();
+      log('1 contagem: HTTP ' + r.status + ' em ' + (Date.now()-t) + 'ms → ' + txt.slice(0,50));
+    }catch(e){ log('1 contagem: FALHOU ' + e.name + ' — ' + e.message + ' (' + (Date.now()-t) + 'ms)'); }
+    t = Date.now();
+    try{
+      const r = await fetch(urlCad, { cache:'no-store' });
+      const txt = await r.text();
+      log('2 cadastro: HTTP ' + r.status + ' em ' + (Date.now()-t) + 'ms → ' + txt.slice(0,50));
+    }catch(e){ log('2 cadastro: FALHOU ' + e.name + ' — ' + e.message + ' (' + (Date.now()-t) + 'ms)'); }
+    t = Date.now();
+    try{
+      await fetch(urlCad + '&n=1', { mode:'no-cors', cache:'no-store' });
+      log('3 sem leitura: passou em ' + (Date.now()-t) + 'ms');
+    }catch(e){ log('3 sem leitura: FALHOU ' + e.name + ' — ' + e.message); }
+    t = Date.now();
+    await new Promise(pronto => {
+      const img = new Image();
+      img.onload  = () => { log('4 imagem: load em ' + (Date.now()-t) + 'ms'); pronto(); };
+      img.onerror = () => { log('4 imagem: error em ' + (Date.now()-t) + 'ms'); pronto(); };
+      img.src = urlCad + '&img=1';
+      setTimeout(pronto, 9000);
+    });
+    t = Date.now();
+    try{
+      const r = await fetch(base + '?v=' + Date.now(), { cache:'no-store' });
+      log('5 contagem depois: ' + (await r.text()).slice(0,50));
+    }catch(e){ log('5 contagem depois: FALHOU ' + e.name); }
+    log('FIM — manda o print desta caixa');
+  })();
 }
 
 /* signup handling */
@@ -1747,12 +1826,7 @@ form.addEventListener('submit', async (e)=>{
       campanha: CONFIG.campaignCode
     });
     urlCadastro = CONFIG.sheetWebAppUrl + '?' + params.toString();
-    const ctrl = new AbortController();
-    const limite = setTimeout(() => ctrl.abort(), 9000);
-    const res = await fetch(urlCadastro, { signal: ctrl.signal, cache: 'no-store' });
-    clearTimeout(limite);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const result = await res.json();
+    const result = await chamarPlanilha(params.toString(), 15000);
 
     if(result.status === 'duplicate'){
       msg.textContent = 'Esse @ já está cadastrado nesta campanha — acesso liberado.';
@@ -1777,17 +1851,20 @@ form.addEventListener('submit', async (e)=>{
     // O cadastro não duplica: o servidor ignora @ que já existe.
     const chegou = urlCadastro ? await enviarAsCegas(urlCadastro) : false;
 
-    // confirmação de verdade: se o número de cadastros subiu, entrou
-    let confirmado = false;
+    // confirmação: se o número de cadastros subiu, entrou.
+    // se não subiu mas a planilha respondeu, ou o @ já estava lá ou o pedido
+    // chegou do mesmo jeito — nos dois casos o acesso pode ser liberado.
+    let confirmado = false, planilhaRespondeu = false;
     if(urlCadastro){
       const agora = await lerContagem();
       if(agora !== null){
+        planilhaRespondeu = true;
         if(cadastrosNoInicio !== null && agora > cadastrosNoInicio) confirmado = true;
         cadastrosNoInicio = agora;
       }
     }
 
-    if(confirmado || chegou){
+    if(confirmado || chegou || planilhaRespondeu){
       msg.textContent = confirmado
         ? 'Cadastro confirmado! Acesse os links liberados abaixo. 🎬'
         : 'Cadastro enviado! Acesse os links liberados abaixo. 🎬';
