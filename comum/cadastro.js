@@ -59,6 +59,14 @@
     }
     return s.replace(/^@+/, '');
   }
+  /* O e-mail no campo do @ (02/11/2026, igual ao OS): texto antes de um "@"
+     e sem "/" (não é link) — "maria@gmail.com" é e-mail; "@maria", "maria.loja"
+     e "tiktok.com/@maria" passam. */
+  var MSG_EMAIL_NO_PERFIL = 'Este campo é o @ do seu perfil (ex.: @maria.calcados), não o e-mail.';
+  function pareceEmail(v) {
+    var s = String(v == null ? '' : v).trim().replace(/\s+/g, '').replace(/^@+/, '');
+    return s.indexOf('/') < 0 && /^[^@]+@/.test(s);
+  }
   function normalizarWhatsapp(v) {
     var d = String(v == null ? '' : v).replace(/\D/g, '');
     return d || null;
@@ -72,6 +80,7 @@
     var nome = normalizarNome(d.nome);
     if (nome.length < 2) return 'Escreva o seu nome.';
     if (nome.length > 120) return 'O nome vai até 120 letras.';
+    if (pareceEmail(d.perfil)) return MSG_EMAIL_NO_PERFIL;
     if (!PERFIL_RE.test(normalizarPerfil(d.perfil))) return 'O @ só pode ter letras sem acento, números, ponto e sublinhado.';
     if (pedeWhatsapp) {
       var w = normalizarWhatsapp(d.whatsapp);
