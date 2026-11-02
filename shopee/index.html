@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiss · Campanha de Afiliadas Shopee</title>
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABDklEQVR42u3bQQ6CQAyF4XbwrpyOy3AQTjCTujAYVJSJRpR5/yTGjYl5X9sJi+JWd8KOefzTHxw1eHVObzz4Zt4kFH41WxIKv5oxiYV/yJpM/CTB6t90gXwHuGj1jTtgL4CIuH5KKRYRNo6juV+eSeZvOkAJICK4AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgv3P6xZ+6u3VdZxFh7v5yX6CU0h5Aztlyzn/RAV/fEltWd674NE02DEPVpkjf9+0AvDsuzY3AvDEmNwL/2AE8B6gDsCvMCFS8WtbyBNABi7tA8f7jDkj3IkrVX+sAVwr/bARcJXxNWNmXp1uB2Mx3BmZaULoVQ0zKAAAAAElFTkSuQmCC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     IDENTIDADE LUMISS — preto no branco, o laranja da Shopee só nos botões
+     ========================================================= */
+  :root{
+    color-scheme:dark;
+    --bg:#000;
+    --surface:#0c0c0c;
+    --line:rgba(255,255,255,.13);
+    --line-strong:rgba(255,255,255,.28);
+    --ink:#fff;
+    --ink-dim:rgba(255,255,255,.66);
+    --ink-faint:rgba(255,255,255,.44);
+    --accent:#EE4D2D;          /* laranja da Shopee: botões e carimbo */
+    --accent-hover:#F2694C;
+    /* destaque da premiação (badges, pódio, 1º lugar).
+       para voltar ao dourado: --prize:#d9b36c; --prize-rgb:217,179,108; */
+    --prize:#fff;
+    --prize-rgb:255,255,255;
+    --on-prize:#000;
+    --ok:#5fd18a;
+    --font:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font);
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+  .mono{font-variant-numeric:tabular-nums;}
+  .display{font-family:var(--font);text-transform:uppercase;line-height:1.04;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+  /* ---------- faixa animada com a logo ---------- */
+  .marquee-wrap{
+    --mq-h:26px; --mq-gap:46px; --mq-speed:40s;
+    overflow:hidden;background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:24px 0;
+  }
+  .marquee-track{
+    display:flex;align-items:center;width:max-content;
+    animation:marquee var(--mq-speed) linear infinite;
+  }
+  .mq-item{
+    display:flex;align-items:center;flex-shrink:0;
+    gap:var(--mq-gap);padding-right:var(--mq-gap);
+  }
+  .mq-logo{
+    display:block;height:var(--mq-h);width:calc(var(--mq-h) * 5.8207);
+    fill:currentColor;color:var(--ink);
+  }
+  .mq-dot{width:4px;height:4px;border-radius:50%;background:var(--ink-faint);flex-shrink:0;}
+  @keyframes marquee{
+    from{transform:translateX(-50%);}
+    to{transform:translateX(0%);}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:44px 0 48px;position:relative;}
+  .stamp{
+    display:inline-block;
+    border:2.5px solid var(--accent);
+    color:var(--accent);
+    font-size:12px;font-weight:800;
+    letter-spacing:.18em;text-transform:uppercase;
+    padding:7px 14px;
+    transform:rotate(-5deg);
+    border-radius:3px;
+    margin-bottom:28px;
+  }
+  h1.display{
+    font-size:clamp(30px,5.6vw,54px);
+    font-weight:100;letter-spacing:.01em;
+    color:var(--ink);
+    margin:0 0 24px;
+  }
+  h1.display b{font-weight:900;letter-spacing:-.01em;}
+  .hero p.lead{
+    font-size:clamp(15px,1.9vw,17.5px);
+    color:var(--ink-dim);
+    max-width:54ch;line-height:1.65;
+    margin:0 0 16px;
+  }
+  .hero p.lead strong{color:var(--ink);font-weight:700;}
+  .hero-dates{
+    font-size:13px;font-weight:600;color:var(--ink);
+    margin:0 0 30px;
+  }
+  .cta-row{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
+  .counter{font-size:13px;color:var(--ink-dim);}
+  .counter b{color:var(--ink);font-weight:800;}
+
+  /* ---------- botões (laranja da Shopee) ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--accent);color:#fff;
+    font-family:var(--font);font-weight:700;font-size:14.5px;letter-spacing:.01em;
+    padding:15px 28px;border-radius:6px;border:none;
+    text-decoration:none;cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);background:var(--accent-hover);}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+  .btn:disabled{opacity:.7;cursor:progress;transform:none;}
+  .btn.ghost{background:transparent;border:1px solid var(--line-strong);color:var(--ink);}
+  .btn.ghost:hover{background:rgba(255,255,255,.06);}
+
+  /* ---------- estrutura das seções ---------- */
+  section{padding:56px 0;border-top:1px solid var(--line);}
+  .eyebrow{
+    font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.24em;color:var(--ink-faint);margin:0 0 10px;
+  }
+  h2.display{
+    font-size:clamp(24px,4vw,38px);font-weight:900;letter-spacing:-.005em;
+    color:var(--ink);margin:0 0 26px;
+  }
+  .section-dates{font-size:13.5px;font-weight:500;color:var(--ink-dim);margin:-14px 0 26px;line-height:1.55;}
+
+  /* ---------- vitrine de produtos ---------- */
+  .prod-head{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;margin-bottom:26px;
+  }
+  .prod-head h2{margin-bottom:8px;}
+  .prod-head .section-dates{margin:0;}
+  .pp-count{
+    font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--bg);background:var(--ink);
+    padding:6px 12px;border-radius:999px;white-space:nowrap;
+  }
+  .showcase{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .showcase.tres{grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:700px){.showcase,.showcase.tres{grid-template-columns:1fr;gap:14px;}}
+  .sc-card{
+    position:relative;border-radius:14px;overflow:hidden;
+    display:flex;flex-direction:column;
+    border:1px solid var(--line);background:var(--surface);
+    transition:transform .35s cubic-bezier(.2,.8,.3,1), border-color .35s ease, box-shadow .35s ease;
+  }
+  .sc-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(255,255,255,.5);
+    box-shadow:0 22px 50px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.12);
+  }
+  .sc-photo{position:relative;aspect-ratio:1/1;overflow:hidden;background:#fff;flex:none;}
+  .sc-photo img{
+    width:100%;height:100%;object-fit:contain;display:block;
+    transition:transform .6s cubic-bezier(.2,.8,.3,1);
+  }
+  .sc-card:hover .sc-photo img{transform:scale(1.07);}
+  .sc-shine{
+    position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.55) 50%, transparent 62%);
+    transform:translateX(-120%);
+  }
+  .sc-card:hover .sc-shine{transition:transform .9s ease;transform:translateX(120%);}
+  .sc-tag{
+    position:absolute;top:12px;left:12px;z-index:2;
+    font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:#fff;background:#000;
+    padding:5px 11px;border-radius:999px;
+  }
+  .sc-body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1;}
+  .sc-point{
+    display:inline-block;margin:0 0 10px;padding:3px 10px;
+    border:1px solid var(--line-strong);border-radius:999px;
+    font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
+  }
+  .sc-name{font-size:15px;font-weight:600;line-height:1.4;color:var(--ink);margin:0 0 14px;flex:1;}
+  .sc-body .btn{width:100%;font-size:13.5px;padding:13px 16px;margin-top:auto;}
+  .sc-plus{
+    position:absolute;z-index:3;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:46px;height:46px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;font-weight:300;line-height:1;
+    color:var(--bg);background:var(--ink);
+    box-shadow:0 0 0 6px var(--bg);
+  }
+  @media(max-width:700px){.sc-plus{display:none;}}
+
+  /* card de produto em segredo (entre campanhas) */
+  .product-card{border:1px solid var(--line-strong);border-radius:12px;overflow:hidden;background:var(--surface);}
+  .pm-art{
+    position:relative;display:flex;align-items:center;justify-content:center;
+    aspect-ratio:1/1;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 12px, transparent 12px 24px),
+      var(--bg);
+  }
+  .pm-num{font-size:150px;font-weight:100;line-height:1;color:var(--ink);opacity:.45;}
+  .pm-q{
+    position:absolute;font-size:80px;font-weight:900;
+    color:var(--accent);animation:teaserPulse 2.2s ease-in-out infinite;
+  }
+  .pc-body{padding:16px;}
+  .pc-round{
+    font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
+    color:var(--ink-dim);margin:0 0 6px;
+  }
+  .product-card h4{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.3;color:var(--ink);}
+  .pm-soon{
+    text-align:center;border:1px dashed var(--line-strong);color:var(--ink);
+    border-radius:8px;padding:9px;font-size:10.5px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+
+  /* ---------- como pontua ---------- */
+  .pontos-card{
+    margin-top:24px;padding:24px;border-radius:12px;
+    border:1px solid var(--line);background:var(--surface);
+  }
+  .pontos-eq{
+    font-size:clamp(23px,3.6vw,32px);font-weight:100;line-height:1.1;
+    text-transform:uppercase;letter-spacing:.02em;color:var(--ink);margin-bottom:16px;
+  }
+  .pontos-eq b{font-weight:900;}
+  .pontos-eq i{font-style:normal;font-weight:900;color:var(--accent);margin:0 8px;}
+  .pontos-list{margin:0;padding:0;list-style:none;display:grid;gap:9px;}
+  .pontos-list li{position:relative;padding-left:18px;font-size:13.5px;line-height:1.55;color:var(--ink-dim);}
+  .pontos-list li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--ink-faint);}
+  .pontos-list strong{color:var(--ink);font-weight:700;}
+
+  /* ---------- premiação ---------- */
+  .prize-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .prize-row{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:16px 20px;border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .prize-row:last-child{border-bottom:none;}
+  .prize-row.gold{background:linear-gradient(90deg, rgba(var(--prize-rgb),.12), rgba(var(--prize-rgb),0) 70%), var(--surface);}
+  .place{display:flex;align-items:center;gap:12px;}
+  .place .rank{font-size:19px;font-weight:700;color:var(--ink-dim);min-width:34px;text-align:center;}
+  .place .lbl{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .amount{font-size:16px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .amount-wrap{display:flex;align-items:center;gap:10px;}
+  .pix-tag{
+    font-size:9px;font-weight:800;letter-spacing:.12em;
+    color:var(--on-prize);background:var(--prize);
+    padding:3px 8px;border-radius:999px;
+  }
+  .prize-note{margin-top:14px;font-size:12.5px;color:var(--ink-dim);line-height:1.6;}
+  .prize-note strong{color:var(--ink);}
+
+  /* ---------- benefício ---------- */
+  .bonus-card{
+    display:flex;gap:16px;align-items:flex-start;
+    padding:22px 24px;border-radius:10px;
+    border:1px dashed rgba(var(--prize-rgb),.45);
+    background:linear-gradient(90deg, rgba(var(--prize-rgb),.07), transparent);
+  }
+  .bonus-card .ic{font-size:24px;line-height:1;}
+  .bonus-card h4{
+    margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--prize);
+  }
+  .bonus-card p{margin:0;font-size:14px;color:var(--ink-dim);line-height:1.6;}
+  .bonus-card p strong{color:var(--ink);font-weight:700;}
+
+  /* ---------- ranking ---------- */
+  .ranking-wrap{position:relative;}
+  .ranking-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);}
+  #confettiCanvas{
+    position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;z-index:5;
+  }
+  .ranking-row{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:14px 20px;border-bottom:1px solid var(--line);
+    background:var(--surface);
+    opacity:0;transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s cubic-bezier(.2,.8,.3,1);
+  }
+  .ranking-row.revealed{opacity:1;transform:translateY(0);}
+  .ranking-row:last-child{border-bottom:none;}
+  .ranking-row.top3{background:linear-gradient(90deg, rgba(var(--prize-rgb),.08), transparent 70%), var(--surface);}
+  .ranking-row.rank-1{
+    background:linear-gradient(90deg, rgba(var(--prize-rgb),.22), rgba(var(--prize-rgb),.03)), var(--surface);
+    box-shadow:inset 0 0 0 1.5px rgba(var(--prize-rgb),.6), 0 0 26px rgba(var(--prize-rgb),.12);
+    padding-top:22px;padding-bottom:22px;
+    position:relative;overflow:hidden;
+  }
+  /* brilho que atravessa a linha da campeã */
+  .ranking-row.rank-1::after{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.16) 50%, transparent 60%);
+    transform:translateX(-120%);
+  }
+  .ranking-row.rank-1.revealed::after{animation:champShine 2.6s ease .5s infinite;}
+  @keyframes champShine{
+    0%{transform:translateX(-120%);}
+    35%,100%{transform:translateX(120%);}
+  }
+  .ranking-row.rank-1 .name{
+    font-size:18px;font-weight:800;color:var(--ink);
+    text-shadow:0 0 18px rgba(var(--prize-rgb),.3);
+  }
+  .ranking-row.rank-1 .rk{animation:champPulse 2.4s ease-in-out infinite;font-size:22px;}
+  @keyframes champPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+  }
+  .champ-badge{
+    font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--on-prize);background:var(--prize);
+    padding:3px 9px;border-radius:999px;white-space:nowrap;
+    box-shadow:0 0 14px rgba(var(--prize-rgb),.4);
+  }
+  .ranking-row.rank-1 .prize-badge{
+    font-size:12px;padding:4px 11px;
+    box-shadow:0 0 16px rgba(var(--prize-rgb),.4);
+  }
+  .ranking-row.pop{animation:rowPop .55s cubic-bezier(.2,1.2,.4,1);}
+  @keyframes rowPop{
+    0%{transform:scale(.97);}
+    55%{transform:scale(1.025);}
+    100%{transform:scale(1);}
+  }
+  .ranking-pos{display:flex;align-items:center;gap:12px;min-width:0;}
+  .ranking-pos .rk{
+    font-size:15px;font-weight:700;color:var(--ink-dim);
+    min-width:30px;text-align:center;flex-shrink:0;
+  }
+  .ranking-pos .who{display:flex;align-items:center;gap:9px;flex-wrap:wrap;min-width:0;}
+  .ranking-pos .name{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .ranking-pos .handle{font-size:12.5px;color:var(--ink-dim);}
+  .prize-badge{
+    font-size:11px;font-weight:800;letter-spacing:.03em;
+    color:var(--on-prize);background:var(--prize);
+    padding:3px 9px;border-radius:999px;white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .ranking-items{display:flex;align-items:center;flex-shrink:0;}
+  .ranking-empty{color:var(--ink-dim);font-size:13.5px;padding:24px;text-align:center;}
+  .ranking-soon{padding:40px 24px;text-align:center;}
+  .ranking-soon .rs-days{
+    font-size:40px;font-weight:100;line-height:1;text-transform:uppercase;
+    letter-spacing:.04em;color:var(--ink);margin-bottom:14px;
+  }
+  .ranking-soon .rs-days b{font-weight:900;}
+  .ranking-soon p{margin:0 auto;max-width:46ch;font-size:13.5px;line-height:1.65;color:var(--ink-dim);}
+  .ranking-soon strong{color:var(--ink);}
+
+  /* ---------- hall da fama ---------- */
+  .hall-card{
+    border:1px solid var(--line);border-radius:12px;
+    background:var(--surface);padding:22px 20px 0;margin-bottom:16px;overflow:hidden;
+  }
+  .hall-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;margin-bottom:24px;
+  }
+  .hall-title{font-size:17px;font-weight:900;text-transform:uppercase;letter-spacing:.02em;color:var(--ink);}
+  .hall-period{font-size:11.5px;font-weight:500;color:var(--ink-dim);}
+  .podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;}
+  .podium-col{flex:1;max-width:150px;text-align:center;}
+  .podium-medal{font-size:26px;line-height:1;margin-bottom:6px;}
+  .podium-face{position:relative;display:inline-block;margin-bottom:8px;}
+  .podium-photo{
+    display:block;width:58px;height:58px;border-radius:50%;object-fit:cover;
+    border:1px solid var(--line-strong);background:#111;
+  }
+  .podium-col.p1 .podium-photo{
+    width:74px;height:74px;border:2px solid var(--prize);
+    box-shadow:0 0 20px rgba(var(--prize-rgb),.35);
+  }
+  .podium-badge{
+    position:absolute;right:-5px;bottom:-3px;font-size:16px;line-height:1;
+    background:var(--surface);border-radius:50%;padding:2px 3px;
+  }
+  .podium-name{
+    font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:8px;
+    word-break:break-word;line-height:1.3;
+  }
+  .podium-base{
+    border-radius:8px 8px 0 0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:4px;padding:10px 6px;
+    background:linear-gradient(180deg, rgba(var(--prize-rgb),.15), rgba(var(--prize-rgb),.03));
+    border:1px solid rgba(var(--prize-rgb),.22);border-bottom:none;
+  }
+  .podium-col.p1 .podium-base{
+    height:112px;
+    background:linear-gradient(180deg, rgba(var(--prize-rgb),.30), rgba(var(--prize-rgb),.05));
+    border-color:rgba(var(--prize-rgb),.5);
+  }
+  .podium-col.p2 .podium-base{height:82px;}
+  .podium-col.p3 .podium-base{height:62px;}
+  .podium-pos{font-size:22px;font-weight:100;line-height:1;color:var(--ink);}
+  .podium-col.p1 .podium-pos{font-size:28px;}
+  .podium-prize{font-size:12px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .podium-col.p1 .podium-prize{font-size:14px;color:var(--prize);}
+  @media(max-width:480px){
+    .podium-col{max-width:none;}
+    .podium-name{font-size:11.5px;}
+    .podium-prize{font-size:10.5px;}
+    .podium-col.p1 .podium-prize{font-size:12px;}
+  }
+
+  /* ---------- vídeos das criadoras ---------- */
+  .vid-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .vid-card{min-width:0;}
+  .vid-frame{
+    position:relative;aspect-ratio:9/16;overflow:hidden;
+    border-radius:14px;border:1px solid var(--line);background:#0b0b0b;
+  }
+  .vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+  .vid-load{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .vid-meta{margin-top:11px;}
+  .vid-handle{display:inline-block;font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;}
+  .vid-handle:hover{text-decoration:underline;}
+  .vid-tag{margin-top:3px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+  @media(max-width:700px){
+    .vid-rail{
+      display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+      margin:0 -18px;padding:0 18px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .vid-rail::-webkit-scrollbar{display:none;}
+    .vid-card{flex:0 0 74%;scroll-snap-align:center;}
+  }
+
+  /* ---------- como funciona ---------- */
+  .steps{display:grid;gap:0;}
+  .step{
+    display:grid;grid-template-columns:84px 1fr;gap:12px;
+    padding:22px 0;border-bottom:1px solid var(--line);
+    align-items:center;
+  }
+  .step:last-child{border-bottom:none;}
+  .step .num{
+    font-size:58px;font-weight:100;line-height:1;letter-spacing:-.02em;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .step h3{margin:0 0 4px;font-size:16px;font-weight:700;color:var(--ink);}
+  .step p{margin:0;color:var(--ink-dim);font-size:14.5px;max-width:56ch;line-height:1.6;}
+
+  /* ---------- cadastro ---------- */
+  form{border:1px solid var(--line);border-radius:10px;padding:28px;background:var(--surface);}
+  .field{margin-bottom:18px;}
+  label{
+    display:block;font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.14em;color:var(--ink-dim);margin-bottom:8px;
+  }
+  input,select{
+    width:100%;padding:13px 14px;border-radius:6px;
+    border:1px solid var(--line-strong);
+    background:var(--bg);color:var(--ink);
+    font-family:var(--font);font-size:15px;font-weight:500;
+  }
+  input::placeholder{color:var(--ink-faint);}
+  input:focus,select:focus{outline:2px solid var(--ink);outline-offset:1px;}
+  select option{background:#000;color:#fff;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.field-row{grid-template-columns:1fr;}}
+  .agree{
+    display:flex;gap:10px;align-items:flex-start;
+    font-size:13px;font-weight:500;text-transform:none;letter-spacing:0;line-height:1.5;
+    color:var(--ink-dim);margin-bottom:22px;
+  }
+  .agree input{width:auto;margin-top:2px;accent-color:var(--accent);}
+  .msg{font-size:13.5px;font-weight:500;margin-top:14px;min-height:18px;line-height:1.55;}
+  .msg.ok{color:var(--ok);}
+  .msg.err{color:var(--accent);}
+  .msg a{color:var(--ink);text-decoration:underline;}
+  .hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;}
+  .outra-pessoa{margin-left:10px;}
+  @media(max-width:520px){.outra-pessoa{margin:12px 0 0;width:100%;}}
+
+  /* ---------- acesso pós-cadastro ---------- */
+  .lib-locked{
+    border:1px dashed var(--line-strong);border-radius:10px;
+    padding:34px 24px;text-align:center;color:var(--ink-dim);font-size:14px;
+  }
+  .lib-locked .lock{font-size:26px;margin-bottom:10px;}
+  .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.access-grid{grid-template-columns:1fr;}}
+  .access-card{
+    display:flex;flex-direction:column;gap:10px;
+    border:1px solid var(--line);border-radius:10px;padding:24px;
+    background:var(--surface);text-align:center;align-items:center;
+  }
+  .access-card .ic{font-size:28px;}
+  .access-card h3{margin:0;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);}
+  .access-card p{margin:0;font-size:13px;color:var(--ink-dim);}
+  .access-card a.btn{width:100%;margin-top:4px;}
+  .access-card.whats a.btn{background:#25D366;color:#000;}
+  .access-card.whats a.btn:hover{background:#2fe374;}
+
+  /* ---------- regulamento ---------- */
+  .reg-details{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .reg-details summary{
+    cursor:pointer;padding:18px 20px;font-size:14px;font-weight:600;color:var(--ink);
+    background:var(--surface);list-style:none;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .reg-details summary:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;}
+  .reg-details summary::-webkit-details-marker{display:none;}
+  .reg-details summary::after{content:'+';font-size:22px;font-weight:300;line-height:1;color:var(--ink);}
+  .reg-details[open] summary::after{content:'–';}
+  .reg-block{padding:8px 24px 28px;max-height:520px;overflow-y:auto;}
+  .reg-block h3{
+    font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--ink);margin:24px 0 8px;
+  }
+  .reg-block h3:first-child{margin-top:20px;}
+  .reg-block p, .reg-block li{font-size:13px;line-height:1.65;color:var(--ink-dim);margin:0 0 8px;}
+  .reg-block ul, .reg-block ol{margin:0 0 8px;padding-left:20px;}
+  .reg-block strong{color:var(--ink);font-weight:700;}
+
+  /* ---------- rodapé ---------- */
+  footer{padding:40px 0 64px;color:var(--ink-dim);font-size:12.5px;border-top:1px solid var(--line);}
+  .foot-logo{display:block;height:13px;width:calc(13px * 5.8207);fill:currentColor;color:var(--ink);margin-bottom:12px;}
+  footer .refs{margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ---------- aviso de campanha encerrada ---------- */
+  .ended-banner{
+    background:var(--ink);color:var(--bg);
+    text-align:center;padding:12px 20px;font-size:13.5px;font-weight:500;line-height:1.5;
+  }
+  .ended-banner strong{font-weight:800;}
+  .ended-banner a{color:var(--bg);font-weight:800;text-decoration:underline;margin-left:6px;white-space:nowrap;}
+
+  /* ---------- teaser da próxima campanha ---------- */
+  .teaser{
+    position:fixed;inset:0;z-index:100;display:none;
+    align-items:center;justify-content:center;padding:24px;
+    background:rgba(0,0,0,.86);backdrop-filter:blur(6px);
+    animation:teaserIn .45s ease;
+  }
+  .teaser.open{display:flex;}
+  @keyframes teaserIn{from{opacity:0;}to{opacity:1;}}
+  .teaser-box{
+    position:relative;max-width:440px;width:100%;
+    background:var(--surface);border:1px solid var(--line-strong);
+    border-radius:16px;padding:34px 30px 30px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.7);
+    animation:teaserPop .5s cubic-bezier(.2,1.1,.4,1);
+  }
+  @keyframes teaserPop{from{transform:translateY(18px) scale(.97);}to{transform:none;}}
+  .teaser-close{
+    position:absolute;top:10px;right:14px;background:none;border:none;
+    color:var(--ink-dim);font-size:26px;line-height:1;cursor:pointer;padding:4px;
+  }
+  .teaser-close:hover{color:var(--ink);}
+  .teaser-art{position:relative;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+  .teaser-num{font-size:116px;font-weight:100;line-height:1;color:var(--ink);opacity:.5;}
+  .teaser-q{
+    position:absolute;font-size:62px;font-weight:900;
+    color:var(--accent);animation:teaserPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes teaserPulse{
+    0%,100%{transform:scale(1);opacity:.9;}
+    50%{transform:scale(1.12);opacity:1;}
+  }
+  .teaser-stamp{
+    display:inline-block;border:2px solid var(--accent);color:var(--accent);
+    font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+    padding:4px 12px;border-radius:3px;transform:rotate(-4deg);margin-bottom:14px;
+  }
+  .teaser-box h3{font-size:30px;font-weight:900;margin:0 0 12px;color:var(--ink);}
+  .teaser-box p{font-size:14px;color:var(--ink-dim);margin:0 0 18px;line-height:1.6;}
+  .teaser-hint{
+    font-size:12.5px;color:var(--ink);border:1px dashed var(--line-strong);
+    border-radius:8px;padding:10px 12px;margin-bottom:20px;line-height:1.5;
+  }
+  .teaser-actions{display:flex;flex-direction:column;gap:9px;}
+  .teaser-actions .btn{width:100%;}
+
+  /* ================= AJUSTES MOBILE ================= */
+  @media(max-width:640px){
+    .wrap{padding:0 18px;}
+
+    .marquee-wrap{--mq-h:19px; --mq-gap:30px; --mq-speed:28s; padding:17px 0;}
+
+    section{padding:40px 0;}
+    .hero{padding-top:26px !important;padding-bottom:40px;}
+    .stamp{margin-bottom:22px;}
+    h1.display{font-size:29px;margin-bottom:20px;}
+    .hero p.lead{font-size:15px;max-width:none;}
+    .hero-dates{font-size:12.5px;}
+    .cta-row{flex-direction:column;align-items:stretch;gap:12px;}
+    .cta-row .btn{width:100%;padding:16px 20px;}
+    .counter{text-align:center;font-size:12px;}
+    h2.display{font-size:24px;margin-bottom:20px;}
+    .section-dates{font-size:13px;margin-top:-10px;}
+
+    .prod-head{margin-bottom:18px;}
+    .showcase{gap:14px;}
+    .sc-photo{aspect-ratio:4/3;}
+    .sc-body{padding:14px 14px 16px;}
+    .sc-name{font-size:14.5px;margin-bottom:11px;}
+    .sc-body .btn{padding:14px 16px;}
+
+    .prize-row{padding:14px 16px;}
+    .place .lbl{font-size:14px;}
+    .amount{font-size:15px;}
+
+    /* ranking: nome em cima, prêmio embaixo — sem espremer */
+    .ranking-row{flex-direction:column;align-items:flex-start;gap:7px;padding:13px 15px;}
+    .ranking-row.rank-1{padding-top:17px;padding-bottom:17px;}
+    .ranking-row.rank-1 .name{font-size:15.5px;}
+    .ranking-row.rank-1 .rk{font-size:20px;}
+    .champ-badge{font-size:8.5px;padding:2px 7px;}
+    .ranking-pos{width:100%;}
+    .ranking-pos .name{font-size:14px;}
+    .ranking-items{padding-left:42px;}
+    .ranking-soon{padding:30px 16px;}
+    .ranking-soon .rs-days{font-size:30px;}
+    .ranking-soon p{font-size:12.5px;}
+
+    /* pódio: cabe em 3 colunas sem quebrar nome */
+    .hall-card{padding:18px 14px 0;}
+    .hall-title{font-size:15px;}
+    .hall-period{font-size:10px;}
+    .podium{gap:6px;}
+    .podium-medal{font-size:21px;}
+    .podium-photo{width:46px;height:46px;}
+    .podium-col.p1 .podium-photo{width:58px;height:58px;}
+    .podium-badge{font-size:13px;right:-4px;}
+    .podium-name{font-size:10.5px;hyphens:auto;overflow-wrap:anywhere;}
+    .podium-col.p1 .podium-base{height:92px;}
+    .podium-col.p2 .podium-base{height:70px;}
+    .podium-col.p3 .podium-base{height:54px;}
+    .podium-pos{font-size:18px;}
+    .podium-col.p1 .podium-pos{font-size:23px;}
+
+    /* passos: número fino, mais espaço pro texto */
+    .step{grid-template-columns:56px 1fr;gap:10px;padding:18px 0;}
+    .step .num{font-size:40px;}
+    .step h3{font-size:15px;}
+    .step p{font-size:13.5px;}
+
+    .bonus-card{flex-direction:column;gap:9px;padding:16px;}
+    .access-card{padding:20px 16px;}
+
+    /* formulário: alvos de toque maiores e sem zoom no iOS */
+    form{padding:20px 16px;}
+    input,select{padding:14px;font-size:16px;}
+    .agree{font-size:12.5px;}
+    form .btn{width:100%;padding:16px 20px;}
+
+    /* regulamento: sem altura fixa, rola com a página */
+    .reg-details summary{padding:16px 15px;font-size:13.5px;}
+    .reg-block{padding:6px 16px 22px;max-height:none;overflow:visible;}
+    .reg-block p,.reg-block li{font-size:12.5px;}
+
+    .ended-banner{font-size:12.5px;padding:11px 16px;}
+    .ended-banner a{display:block;margin:4px 0 0;}
+
+    /* teaser: cabe na tela e rola por dentro se precisar */
+    .teaser{padding:16px;align-items:flex-start;}
+    .teaser-box{padding:26px 20px 22px;margin-top:22px;max-height:calc(100vh - 44px);overflow-y:auto;}
+    .teaser-art{height:92px;margin-bottom:14px;}
+    .teaser-num{font-size:88px;}
+    .teaser-q{font-size:48px;}
+    .teaser-box h3{font-size:24px;}
+    .teaser-box p{font-size:13.5px;}
+    .teaser-hint{font-size:11.5px;}
+    .teaser-actions .btn{padding:14px 16px;}
+    .teaser-close{font-size:30px;top:6px;right:10px;padding:8px;}
+
+    footer{padding:30px 0 46px;}
+  }
+
+  @media(max-width:380px){
+    h1.display{font-size:26px;}
+    .marquee-wrap{--mq-h:17px;}
+    .podium-name{font-size:9.5px;}
+    .sc-photo{aspect-ratio:1/1;}
+  }
+
+  /* ---------- movimento reduzido ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+    .marquee-track{animation:none;}
+    .ranking-row{opacity:1;transform:none;}
+    .ranking-row.pop,.ranking-row.rank-1 .rk,.ranking-row.rank-1.revealed::after{animation:none;}
+    .teaser,.teaser-box,.teaser-q,.pm-q{animation:none;}
+  }
+</style>
+</head>
+<body>
+<!-- logo Lumiss (vetor) — usada na faixa animada e no rodapé -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="lumiss-logo" viewBox="0 0 1000 171.8"><path d="M528.4 171.7 L510.5 171.7 L510.3 171.5 L510.1 30.2 L446.5 170.8 L446.2 171.0 L430.0 170.9 L366.1 30.2 L366.0 171.0 L347.8 171.2 L347.7 0.1 L370.9 0.1 L438.5 142.3 L505.2 0.1 L528.4 0.0 L528.4 171.7ZM198.5 171.3 L194.1 171.2 L189.1 170.7 L184.7 169.9 L179.8 168.6 L175.2 167.0 L170.4 164.9 L162.0 160.2 L159.0 158.1 L155.3 155.1 L152.6 152.5 L149.3 148.7 L146.7 145.0 L144.7 141.8 L142.8 137.7 L141.2 133.8 L139.5 127.9 L138.4 122.4 L137.8 116.7 L137.4 108.8 L137.4 0.3 L156.5 0.4 L156.7 107.0 L157.0 112.9 L157.8 119.3 L159.0 126.6 L160.1 130.7 L162.1 134.7 L165.5 139.3 L169.6 143.1 L174.2 146.4 L179.1 149.0 L184.7 151.1 L190.5 152.4 L196.4 152.9 L202.0 152.8 L208.5 151.7 L214.1 150.0 L220.1 147.3 L225.4 143.9 L229.8 139.9 L233.3 135.5 L235.6 130.9 L237.0 126.6 L238.1 121.8 L238.7 116.4 L239.3 108.3 L239.4 0.4 L258.6 0.4 L258.8 2.0 L258.8 25.9 L258.6 112.1 L258.1 118.4 L257.3 123.7 L256.1 129.3 L254.6 134.6 L253.0 138.5 L251.2 142.1 L248.8 145.9 L246.7 148.8 L244.2 151.7 L241.2 154.7 L237.4 157.9 L234.0 160.2 L229.8 162.7 L225.4 164.9 L220.4 167.0 L216.1 168.5 L211.8 169.6 L207.1 170.5 L198.5 171.3ZM65.3 171.1 L-0.1 171.0 L0.0 0.8 L18.8 0.9 L18.8 153.4 L65.3 153.4 L65.3 171.1ZM637.3 171.0 L618.5 171.0 L618.6 0.9 L637.2 0.9 L637.3 1.0 L637.3 171.0ZM950.5 170.8 L945.4 170.8 L941.3 170.5 L936.4 169.7 L932.3 168.7 L928.1 167.3 L924.1 165.4 L920.2 163.2 L916.0 160.2 L912.7 157.4 L909.4 153.9 L906.4 150.0 L904.2 146.5 L902.0 142.1 L900.4 138.5 L898.8 133.9 L897.3 128.3 L914.8 123.4 L917.8 132.1 L919.7 136.5 L922.7 141.4 L926.2 145.2 L930.2 148.5 L934.9 151.0 L940.3 152.6 L945.0 153.3 L949.8 153.3 L956.0 152.4 L960.8 150.9 L965.9 148.5 L969.3 146.1 L973.0 142.7 L976.4 138.1 L978.5 134.0 L979.8 130.4 L980.8 125.8 L981.3 121.5 L981.1 117.5 L980.3 113.4 L979.3 110.4 L977.3 106.7 L975.1 103.9 L971.3 100.3 L966.4 97.2 L934.7 81.3 L926.2 76.6 L919.4 72.1 L915.1 68.2 L913.0 65.7 L911.0 62.8 L908.1 57.1 L906.4 51.1 L905.8 46.1 L905.8 40.9 L906.1 37.2 L907.2 32.3 L908.5 28.2 L910.5 23.8 L912.9 19.6 L916.2 15.4 L919.1 12.5 L923.2 9.4 L926.8 7.1 L931.8 4.8 L936.5 3.1 L942.0 1.8 L946.6 1.1 L951.8 0.9 L957.9 1.3 L965.1 2.7 L971.3 4.9 L976.2 7.5 L981.6 11.4 L986.7 16.3 L991.3 22.3 L993.3 25.7 L993.6 26.7 L979.5 35.7 L970.8 25.2 L967.6 22.7 L963.5 20.6 L957.9 18.9 L952.3 18.2 L946.2 18.6 L940.6 20.1 L935.7 22.4 L932.2 25.1 L929.1 28.4 L926.5 32.5 L924.8 37.0 L924.0 41.5 L924.2 45.6 L925.4 50.3 L927.1 53.7 L929.2 56.6 L931.8 59.1 L934.5 61.0 L939.6 64.0 L945.1 66.8 L972.4 79.8 L980.3 84.6 L985.9 89.2 L988.8 92.2 L991.8 96.0 L994.5 100.3 L996.5 104.4 L998.0 108.3 L999.1 112.9 L999.8 117.3 L999.9 122.6 L999.5 127.5 L998.7 131.7 L997.4 136.1 L995.7 140.3 L993.4 144.9 L990.8 148.9 L987.8 152.7 L984.7 155.9 L981.2 159.0 L977.0 162.1 L972.8 164.5 L969.0 166.3 L963.8 168.3 L959.9 169.4 L955.2 170.3 L950.5 170.8ZM779.7 171.0 L774.0 171.1 L769.8 170.7 L765.4 169.9 L761.0 168.7 L757.1 167.2 L752.9 165.3 L748.1 162.4 L744.6 159.8 L741.3 157.0 L737.7 153.3 L734.8 149.5 L732.5 146.1 L729.9 141.2 L728.2 137.3 L726.8 133.1 L725.6 128.3 L743.1 123.3 L744.7 128.2 L748.9 137.8 L750.9 141.2 L754.1 144.9 L758.6 148.4 L763.7 151.1 L768.6 152.6 L774.4 153.4 L779.6 153.3 L784.8 152.4 L789.7 150.8 L793.8 148.7 L798.1 145.6 L801.6 142.1 L804.5 138.2 L806.5 134.3 L808.0 130.5 L808.9 126.6 L809.4 121.8 L809.3 118.2 L808.6 114.2 L807.6 110.8 L805.8 107.1 L803.7 104.3 L799.7 100.4 L795.4 97.6 L762.2 80.9 L754.0 76.3 L747.8 72.3 L743.0 67.8 L739.3 63.0 L736.6 57.6 L735.4 54.2 L734.6 51.0 L734.0 45.6 L734.0 41.4 L734.5 36.6 L735.5 31.9 L737.1 27.3 L739.2 22.9 L741.8 18.7 L744.8 15.0 L748.0 12.0 L751.6 9.2 L755.8 6.7 L761.0 4.4 L766.3 2.7 L771.0 1.7 L776.7 1.0 L781.4 1.0 L787.7 1.5 L794.4 3.1 L799.8 5.2 L805.6 8.3 L810.9 12.4 L814.9 16.3 L818.8 21.4 L821.9 26.7 L807.8 35.7 L798.8 25.0 L795.7 22.6 L791.7 20.6 L786.5 19.0 L781.0 18.4 L774.9 18.6 L769.3 20.0 L764.8 21.9 L760.9 24.6 L757.9 27.8 L755.0 32.1 L753.0 37.0 L752.2 41.9 L752.5 46.3 L753.7 50.4 L755.2 53.6 L757.3 56.4 L760.1 59.2 L763.0 61.3 L768.6 64.5 L791.4 75.6 L804.0 82.1 L811.2 86.5 L816.0 90.4 L819.0 93.5 L821.3 96.7 L823.5 100.5 L825.1 104.0 L826.4 108.0 L827.3 112.1 L828.0 117.5 L828.1 121.2 L827.7 126.3 L826.9 130.9 L825.7 135.4 L824.1 139.8 L822.0 144.1 L819.7 147.8 L816.8 151.8 L814.0 155.0 L810.2 158.5 L806.5 161.4 L801.8 164.4 L798.0 166.4 L794.2 167.9 L789.3 169.5 L784.3 170.5 L779.7 171.0Z"/></symbol></svg>
+
+<div id="teaser" class="teaser" role="dialog" aria-modal="true" aria-label="Campanha 02 em breve">
+  <div class="teaser-box">
+    <button class="teaser-close" id="teaserClose" aria-label="Fechar">×</button>
+    <div class="teaser-art">
+      <span class="teaser-num" id="teaserNum">03</span>
+      <span class="teaser-q">?</span>
+    </div>
+    <div class="teaser-stamp mono" id="teaserStamp">Em breve</div>
+    <h3 class="display" id="teaserTitulo">Campanha 03<br>está chegando</h3>
+    <p id="teaserTexto">Novos produtos. Novos prêmios. Novo ranking.</p>
+    <div class="teaser-hint" id="teaserHint" style="display:none;"></div>
+    <div class="teaser-actions">
+      <button class="btn" id="teaserRanking">Ver resultado da campanha</button>
+      <button class="btn ghost" id="teaserSignup">Quero participar da próxima</button>
+    </div>
+  </div>
+</div>
+
+<div id="endedBanner" class="ended-banner" style="display:none;">
+  <strong>Campanha 01 encerrada!</strong> O resultado final já está no ranking — confira quem levou os prêmios.
+  <a href="#ranking">Ver ranking →</a>
+</div>
+
+<div class="marquee-wrap" role="img" aria-label="Lumiss">
+  <div class="marquee-track" aria-hidden="true">
+    <!-- duas metades idênticas (12 + 12) para o loop ficar contínuo -->
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+    <div class="mq-item"><svg class="mq-logo" viewBox="0 0 1000 171.8" focusable="false"><use href="#lumiss-logo"/></svg><span class="mq-dot"></span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero" style="border-top:none;">
+    <div class="stamp mono" id="campaignStamp">CAMPANHA 01</div>
+    <h1 class="display">Poste o <b>produto</b>.<br>Venda e suba no <b>ranking</b>.<br>Fature em <b>dinheiro</b>.</h1>
+    <p class="lead" id="heroLead">Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e divulgue com o seu link de afiliada da Shopee. Cada par vendido pelo seu link vale <strong>1 ponto</strong>, e quem somar mais pontos leva a premiação em dinheiro.</p>
+    <p class="hero-dates mono" id="heroDates"></p>
+    <div class="cta-row">
+      <button class="btn" id="heroCta" onclick="document.getElementById('cadastro').scrollIntoView()">Quero me cadastrar →</button>
+    </div>
+  </section>
+
+  <section id="produtos">
+    <div class="prod-head">
+      <div>
+        <h2 class="display" id="prodTitle">Os produtos da rodada</h2>
+        <p class="section-dates mono" id="prodSub">Cada par vendido vale 1 ponto no mesmo ranking.</p>
+      </div>
+      <span class="pp-count mono" id="ppCount">2 produtos</span>
+    </div>
+    <div class="showcase" id="ppList"></div>
+
+    <div class="pontos-card" id="pontosCard">
+      <p class="pontos-eq display"><b>1</b> venda <i>=</i> <b>1</b> ponto</p>
+      <ul class="pontos-list">
+        <li id="pontosProdutos">Vale <strong>qualquer um dos produtos da rodada</strong>. Não importa qual deles gerou a venda.</li>
+        <li>Cor e numeração não mudam nada: <strong>todo par vendido pelo seu link vale 1 ponto</strong>.</li>
+        <li id="pontosPrazo">Ganha quem <strong>somar mais pontos</strong> até o fim da rodada.</li>
+        <li>Pedido cancelado, devolvido ou não pago pelo cliente não pontua.</li>
+      </ul>
+    </div>
+
+    <div class="product-card mystery" id="productMystery" style="display:none;max-width:340px;">
+      <div class="pm-art">
+        <span class="pm-num" id="pmNum">03</span>
+        <span class="pm-q">?</span>
+      </div>
+      <div class="pc-body">
+        <p class="pc-round mono" id="pmLabel">Campanha 03</p>
+        <h4>Produto ainda em segredo</h4>
+        <div class="pm-soon mono">Revelação em breve</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="premiacao">
+    <h2 class="display">Premiação</h2>
+    <p class="section-dates mono">As 5 que somarem mais pontos recebem em dinheiro, no Pix.</p>
+    <div class="prize-list" id="prizeList"></div>
+    <p class="prize-note" id="premioNote">Premiação desta rodada (<span id="premioDates"></span>). Consulte o regulamento completo no final desta página.</p>
+  </section>
+
+  <section id="ranking">
+    <h2 class="display" id="rankingTitle">Ranking</h2>
+    <div class="ranking-wrap">
+      <div class="ranking-list" id="rankingList">
+        <div class="ranking-empty" id="rankingEmpty">Carregando ranking…</div>
+      </div>
+      <canvas id="confettiCanvas"></canvas>
+    </div>
+    <p class="prize-note" id="rankingNote">Ranking de pontos, atualizado diariamente pela equipe Lumiss com base nas vendas da Shopee. Rodada aberta até <span id="rankingDates"></span>.</p>
+    <p class="prize-note" id="tieNote" style="display:none;">
+      <strong>Sobre a 5ª colocação:</strong> houve empate técnico na disputa pela última posição premiada. Em vez de aplicar o critério de desempate previsto no regulamento, a Lumiss optou por abrir uma exceção e premiar as <strong>duas criadoras</strong> envolvidas com R$ 100 cada — por isso o 6º lugar também aparece com premiação neste ranking.
+    </p>
+  </section>
+
+  <section id="hall">
+    <h2 class="display">Hall da Fama</h2>
+    <p class="section-dates mono">Quem já subiu ao pódio e levou o prêmio pra casa.</p>
+    <div id="hallList"></div>
+  </section>
+
+  <section id="beneficio">
+    <h2 class="display" id="beneficioTitulo">Benefício para a Campanha 02</h2>
+    <div class="bonus-card">
+      <div class="ic">🎁</div>
+      <div>
+        <h4>Amostra grátis garantida</h4>
+        <p id="beneficioTexto"><strong>Todas as afiliadas que registrarem vendas nesta Campanha 01</strong> — não importa a posição no ranking — garantem o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da Campanha 02. Quem vende, participa. E quem participa, sai na frente na próxima rodada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="videos">
+    <h2 class="display">Vídeos que venderam</h2>
+    <p class="section-dates mono">O conteúdo que colocou essas criadoras no ranking da Campanha 01. Começa sem som — toque no vídeo para ouvir.</p>
+    <div class="vid-rail" id="videoList"></div>
+  </section>
+
+  <section id="como-funciona">
+    <h2 class="display">Como funciona</h2>
+    <div class="steps">
+      <div class="step"><div class="num">01</div><div><h3>Cadastre-se</h3><p>Preencha seu nome, o seu @ da Shopee e a faixa de seguidores no formulário abaixo.</p></div></div>
+      <div class="step"><div class="num">02</div><div><h3>Acesse a biblioteca</h3><p>Vídeos crus e fotos dos produtos da campanha, liberados assim que você se cadastra, prontos pra virarem seu conteúdo.</p></div></div>
+      <div class="step"><div class="num">03</div><div><h3>Publique e venda</h3><p>Crie vídeos e conteúdos autorais que conectem de verdade com a consumidora — sempre com seu link de afiliada, pra garantir que cada venda seja atribuída a você.</p></div></div>
+      <div class="step"><div class="num">04</div><div><h3>Suba no ranking</h3><p>Cada par vendido pelo seu link vale 1 ponto, não importa qual dos produtos da rodada. O ranking mostra quem está somando mais pontos.</p></div></div>
+      <div class="step"><div class="num">05</div><div><h3>Receba o prêmio</h3><p>As 5 melhores colocadas no fechamento da campanha recebem premiação em dinheiro, via Pix, dentro do prazo estabelecido no regulamento da campanha*.</p></div></div>
+    </div>
+  </section>
+
+  <section id="cadastro">
+    <h2 class="display">Cadastro para a <span id="cadastroLabel"></span></h2>
+    <p class="section-dates mono" id="cadastroDates"></p>
+    <form id="signupForm" novalidate>
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="perfil">@ da Shopee</label>
+        <input id="perfil" name="perfil" type="text" placeholder="@seuusuario" required autocomplete="off" autocapitalize="none" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="seguidores">Faixa de seguidores</label>
+        <select id="seguidores" name="seguidores" required>
+          <option value="">Selecione</option>
+          <option value="1k-10k">1 mil a 10 mil</option>
+          <option value="10k-50k">10 mil a 50 mil</option>
+          <option value="50k-200k">50 mil a 200 mil</option>
+          <option value="200k+">acima de 200 mil</option>
+        </select>
+      </div>
+      <label class="agree">
+        <input type="checkbox" id="aceite" required>
+        <span>Aceito as regras da campanha.</span>
+      </label>
+      <!-- campo-isca contra robô: escondido de quem usa a página; o robô preenche e o cadastro dele não grava -->
+      <div class="hp" aria-hidden="true">
+        <label for="empresa">Empresa</label>
+        <input id="empresa" name="empresa" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn" type="submit">Confirmar cadastro</button>
+      <button class="btn ghost outra-pessoa" type="button" id="outraPessoa" style="display:none;">Cadastrar outra pessoa neste aparelho</button>
+      <div class="msg" id="formMsg" role="status"></div>
+    </form>
+  </section>
+
+  <section id="biblioteca">
+    <p class="eyebrow mono">Acesso liberado</p>
+    <h2 class="display">Onde pegar tudo</h2>
+    <div id="libLocked" class="lib-locked">
+      <div class="lock">🔒</div>
+      Cadastre-se acima para liberar o acesso aos vídeos e ao grupo da campanha.
+    </div>
+    <div id="libGrid" class="access-grid" style="display:none;">
+      <div class="access-card">
+        <div class="ic">🎬</div>
+        <h3>Vídeos da rodada</h3>
+        <p>Todo o material pronto pra baixar e postar.</p>
+        <a class="btn" id="driveLink" href="#" target="_blank" rel="noopener">Acessar no Drive</a>
+      </div>
+      <div class="access-card whats">
+        <div class="ic">💬</div>
+        <h3>Grupo da campanha</h3>
+        <p id="whatsDesc">Novidades, novos vídeos e suporte direto com o time.</p>
+        <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="regulamento">
+    <h2 class="display">Regulamento</h2>
+    <details class="reg-details">
+      <summary>Ver regulamento completo</summary>
+      <div class="reg-block">
+
+        <h3>1. Sobre a campanha</h3>
+        <p>Esta é uma campanha de afiliadas promovida pela <strong>Lumiss</strong> (Amorelle Vestuário e Calçados LTDA — CNPJ 31.205.194/0001-95), com o objetivo de impulsionar a divulgação e a venda de produtos Lumiss através de conteúdo criado por afiliadas e divulgado com links de afiliada da Shopee, dentro do Programa de Afiliados da Shopee. A campanha é organizada em rodadas periódicas, cada uma com produto, prazo e premiação próprios, sempre informados nos canais oficiais da Lumiss no início de cada rodada.</p>
+        <p>Esta campanha caracteriza-se como um <strong>concurso de desempenho comercial</strong>, cuja apuração dos resultados depende exclusivamente do volume de vendas gerado por cada afiliada — não envolvendo sorteio, loteria, vale-brinde ou qualquer modalidade que dependa de fator aleatório ou de sorte. Por esse motivo, não se sujeita à autorização prévia da Secretaria de Prêmios e Apostas (SPA/MF) ou de qualquer outro órgão federal aplicável a modalidades de sorteio, nos termos da legislação vigente (Lei nº 13.756/2018 e normas correlatas).</p>
+
+        <h3>2. Quem pode participar</h3>
+        <p>Podem participar pessoas maiores de 18 anos, com conta ativa e regular na Shopee e cadastro no Programa de Afiliados da Shopee. Menores de 18 anos só podem participar mediante autorização expressa de responsável legal, enviada à equipe Lumiss antes do início da rodada. Colaboradores diretos da Lumiss e familiares até 2º grau podem se cadastrar, mas não concorrem à premiação.</p>
+
+        <h3>3. Como participar</h3>
+        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, @ da Shopee e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento. Após o cadastro, a afiliada recebe acesso ao grupo oficial da campanha no WhatsApp e à biblioteca de vídeos crus e fotos dos produtos da rodada vigente, quando houver rodada em andamento.</p>
+        <p>O cadastro permanece válido para as rodadas seguintes: quem já se cadastrou não precisa repetir o processo a cada nova campanha.</p>
+
+        <h3>4. Duração e calendário das rodadas</h3>
+        <p>Cada rodada tem duração determinada pela Lumiss, com início e encerramento informados nos canais oficiais (esta página e o grupo da campanha) antes do começo de cada edição. A duração pode variar entre rodadas.</p>
+        <p id="regRoundStatus">A rodada atual é válida de <span id="regDates"></span>.</p>
+
+        <h3>5. Como o ranking é calculado</h3>
+        <p>O ranking de cada rodada é definido exclusivamente pela <strong>quantidade de pontos</strong> de cada participante: <strong>cada item da campanha vendido através do seu link de afiliada vale 1 ponto</strong>, conforme atribuição automática da Shopee. Quando a rodada contar com <strong>mais de um produto participante</strong>, as vendas de todos eles são <strong>somadas em um único ranking</strong>, sem distinção de qual produto gerou a venda e sem peso diferente entre eles: cada item vendido vale 1 ponto, qualquer que seja o produto. Todas as variações de cor e numeração de um produto participante contam como o mesmo produto. Visualizações, curtidas, comentários e outras métricas de engajamento não pontuam isoladamente — só a venda efetivamente atribuída conta. É responsabilidade da afiliada garantir que seu link esteja corretamente incluído em cada conteúdo publicado; a Lumiss não se responsabiliza por vendas não atribuídas por uso incorreto do link.</p>
+        <p>Para efeito de apuração, são consideradas apenas as vendas válidas. <strong>Não são contabilizados</strong> pedidos cancelados, devolvidos, reembolsados, não pagos pelo cliente, ou classificados pela própria Shopee como inelegíveis para comissão de afiliado — ainda que tenham aparecido em relatórios parciais durante a rodada.</p>
+
+        <h3>6. Premiação</h3>
+        <p>As <strong>5 (cinco) afiliadas mais bem colocadas</strong> no ranking ao final de cada rodada recebem premiação em dinheiro. Os valores de cada rodada são divulgados pela Lumiss nos canais oficiais antes do início da rodada e podem variar entre edições, a critério da Lumiss.</p>
+        <p>Ao final da rodada, a Lumiss anuncia as ganhadoras nesta página e no grupo da campanha; cada ganhadora informa sua chave Pix à equipe Lumiss pelo grupo da campanha ou pelo WhatsApp oficial da Lumiss, e tem até <strong>2 (dois) dias</strong> a partir do anúncio para informar a chave — caso não informe dentro desse prazo, será desclassificada e perderá o direito à premiação. Uma vez recebida a chave, o pagamento é feito via <strong>Pix</strong> em até <strong>2 (dois) dias úteis</strong>.</p>
+        <p>Em caso de empate na quantidade de pontos, o critério de desempate é a data e hora da venda que gerou o item empatado, tendo prioridade a venda mais antiga. A Lumiss poderá, a seu exclusivo critério e em caráter excepcional, optar por premiar todas as afiliadas empatadas em vez de aplicar o desempate — decisão que vale apenas para a rodada em que for adotada e não gera direito adquirido para as rodadas seguintes.</p>
+
+        <h3>7. Benefício de amostra grátis</h3>
+        <p>As <strong>50 (cinquenta) afiliadas mais bem colocadas</strong> no ranking de cada rodada — o Top 50 — adquirem o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da rodada seguinte. A solicitação deve ser feita pelos canais oficiais da Lumiss dentro do prazo comunicado no grupo da campanha, e o envio está sujeito à disponibilidade de estoque do produto e grade.</p>
+        <p>Caso o número de afiliadas com vendas válidas na rodada seja inferior a 50, o benefício se estende a todas elas.</p>
+
+        <h3>8. Divulgação do resultado</h3>
+        <p>O ranking é acompanhado ao longo da rodada nesta página e tem caráter parcial e informativo enquanto a rodada estiver em andamento, podendo sofrer alterações em razão de cancelamentos, devoluções ou reclassificação de pedidos pela Shopee. O <strong>resultado final e oficial</strong> é o publicado nesta página após o encerramento da rodada e a conferência das vendas válidas.</p>
+
+        <h3>9. Uso do conteúdo produzido</h3>
+        <p>Ao publicar vídeos com os materiais e/ou produtos da campanha, a afiliada autoriza a Lumiss a compartilhar, repostar e impulsionar esse conteúdo (inclusive via anúncios pagos), sempre com os devidos créditos ao perfil da criadora, sem que isso gere remuneração adicional além da premiação e das comissões já previstas no Programa de Afiliados da Shopee.</p>
+
+        <h3>10. Condutas proibidas e desclassificação</h3>
+        <p>Pode ser desclassificada, a qualquer momento, a afiliada que:</p>
+        <ul>
+          <li>fornecer dados falsos no cadastro;</li>
+          <li>utilizar meios artificiais para gerar vendas ou engajamento (compra de visualizações, contas falsas, etc.);</li>
+          <li>publicar conteúdo ofensivo, discriminatório ou que viole as políticas da Shopee;</li>
+          <li>utilizar o link de afiliada de forma fraudulenta ou em desacordo com as políticas do Programa de Afiliados da Shopee;</li>
+          <li>descumprir qualquer regra deste regulamento.</li>
+        </ul>
+
+        <h3>11. Privacidade e uso de dados</h3>
+        <p>Os dados fornecidos no cadastro (nome, @ da Shopee e faixa de seguidores) são usados exclusivamente para organizar e comunicar esta campanha, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). A Lumiss não compartilha, vende ou cede esses dados a terceiros para finalidades diferentes das aqui previstas. A afiliada pode solicitar a exclusão dos seus dados a qualquer momento pelos canais oficiais de contato da Lumiss.</p>
+
+        <h3>12. Alterações e cancelamento</h3>
+        <p>A Lumiss se reserva o direito de alterar, suspender ou cancelar a campanha, no todo ou em parte, a qualquer momento, mediante aviso nos canais oficiais — especialmente em caso de indisponibilidade de estoque, problemas técnicos na plataforma da Shopee, ou motivo de força maior.</p>
+
+        <h3>13. Disposições gerais</h3>
+        <p>A participação na campanha implica a aceitação integral deste regulamento. Casos omissos serão decididos pela equipe Lumiss. Fica eleito o foro da comarca de Birigui/SP para dirimir eventuais dúvidas ou controvérsias decorrentes deste regulamento, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+
+        <h3>14. Dúvidas e contato</h3>
+        <p>Em caso de dúvidas sobre este regulamento ou sobre a campanha, entre em contato pelo WhatsApp oficial da Lumiss ou pelo grupo da campanha.</p>
+
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <svg class="foot-logo" viewBox="0 0 1000 171.8" role="img" aria-label="Lumiss"><use href="#lumiss-logo"/></svg>
+    <div>Programa oficial de afiliadas</div>
+    <div class="refs" id="footerRef">Rodada 01</div>
+  </footer>
+
+</div>
+
+<script src="/comum/cadastro.js"></script>
+<script>
+/* =======================================================
+   CONFIG — edite os valores abaixo antes de publicar
+   ======================================================= */
+const CONFIG = {
+  /* ======================================================================
+     PREENCHER — o que tiver "PREENCHER" é seu (Luis). Vazio não quebra a
+     página: as datas viram "em breve" e o link vazio vira "Link em breve".
+     ====================================================================== */
+  canal: "shopee",               // não mexer
+  campaignCode: "S1",
+  campaignLabel: "CAMPANHA 01",
+  roundLabel: "Rodada 01",
+  // PREENCHER: o começo e o fim da campanha, no formato "AAAA-MM-DD" (ex.: "2026-11-03").
+  startDate: "",
+  endDate:   "",
+
+  // PRODUTOS DA RODADA — os mesmos do TikTok; as vendas de todos eles são SOMADAS no ranking
+  products: [
+    {
+      name: "Sandália Salto Bloco Baixo",
+      tag: "Campeã de vendas",
+      img: "/produto-c1-3.jpg",
+      url: ""                    // PREENCHER: o link do anúncio na Shopee
+    },
+    {
+      name: "Sandália Anabela Piton com Enfeite Dourado",
+      tag: "Novidade",
+      img: "/produto-c2.jpg",
+      url: ""                    // PREENCHER: o link do anúncio na Shopee
+    },
+    {
+      name: "Rasteira de Dedo com Fivela Dourada",
+      tag: "Novidade",
+      img: "/produto-c3.jpg",
+      url: ""                    // PREENCHER: o link do anúncio na Shopee
+    }
+  ],
+
+  // HALL DA FAMA — a primeira campanha da Shopee: aparece quando houver ganhadoras (mesmo formato do site do TikTok)
+  hallOfFame: [],
+
+  // quantas melhores colocadas recebem o convite de amostra grátis da próxima rodada
+  topBenefitCount: 50,
+  // o CADASTRO vai para o LUMISS OS — não mexer
+  cadastroUrl: "https://app.lumiss.com.br/api/afiliadas/cadastro",
+  // PREENCHER quando houver ranking: o endereço da planilha do ranking da Shopee. Vazio = o aviso de início.
+  rankingUrl: "",
+  // PREENCHER: a pasta do Drive com os vídeos desta rodada
+  driveFolderUrl: "",
+  // PREENCHER: o convite do grupo de WhatsApp da campanha da Shopee
+  whatsappGroupUrl: "",
+
+  // vire para true quando a rodada terminar
+  campaignEnded: false,
+  nextCampaignLabel: "CAMPANHA 02",
+  nextRoundLabel: "Rodada 02",
+  nextStartDate: "",             // data de início da próxima campanha ("" = em breve)
+  showTieNote: false,
+  // prêmios extras fora da tabela oficial (ex.: exceção por empate) — chave = posição
+  extraPrizes: {},
+  // "Vídeos que venderam" — a primeira campanha da Shopee: aparece quando houver vídeos
+  creatorVideos: [],
+  // a premiação — a mesma do TikTok (PREENCHER se a da Shopee for outra)
+  prizes: [
+    { place: "1º lugar",     amount: "R$ 1.000" },
+    { place: "2º lugar",     amount: "R$ 500" },
+    { place: "3º lugar",     amount: "R$ 300" },
+    { place: "4º lugar",     amount: "R$ 200" },
+    { place: "5º lugar",     amount: "R$ 100" },
+  ],
+};
+
+/* atalho seguro: se o elemento não existir, apenas ignora em vez de quebrar a página */
+const $ = id => document.getElementById(id) || { style:{}, classList:{add(){},remove(){}}, addEventListener(){} };
+
+$('campaignStamp').textContent = CONFIG.campaignLabel;
+$('cadastroLabel').textContent = 'Campanha ' + CONFIG.campaignLabel.replace(/^campanha\s*/i,'');
+
+const temDatas = /^\d{4}-\d{2}-\d{2}$/.test(CONFIG.startDate) && /^\d{4}-\d{2}-\d{2}$/.test(CONFIG.endDate);
+const fullRange = temDatas ? formatDateRange(CONFIG.startDate, CONFIG.endDate) : 'datas em breve';
+const encerrada = CONFIG.campaignEnded === true;
+
+/* estado da rodada: 'pre' (ainda não começou), 'ativa', 'apuracao' ou 'encerrada' */
+function hojeZerado(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function dataDe(str){ const [y,m,dd] = str.split('-').map(Number); return new Date(y, m-1, dd); }
+function statusRodada(){
+  if(encerrada) return 'encerrada';
+  if(!temDatas) return 'pre';
+  const hoje = hojeZerado();
+  if(hoje < dataDe(CONFIG.startDate)) return 'pre';
+  if(hoje > dataDe(CONFIG.endDate))  return 'apuracao';
+  return 'ativa';
+}
+const status = statusRodada();
+const nomeCampanha = CONFIG.campaignLabel.charAt(0) + CONFIG.campaignLabel.slice(1).toLowerCase();
+
+/* --- textos que mudam conforme o estado --- */
+if(status === 'pre' && !temDatas){
+  $('campaignStamp').textContent = CONFIG.campaignLabel + ' · EM BREVE';
+  $('heroDates').textContent = 'As datas da campanha saem em breve, aqui e no grupo da campanha';
+  $('cadastroDates').textContent = 'Cadastre-se agora para largar na frente no primeiro dia.';
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · em breve';
+  $('premioNote').textContent = 'Premiação desta rodada. Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A <strong>' + nomeCampanha + '</strong> ainda não começou: as datas saem em breve nesta página e no grupo da campanha.';
+  $('heroCta').textContent = 'Quero garantir minha vaga →';
+}else if(status === 'pre'){
+  $('campaignStamp').textContent = CONFIG.campaignLabel + ' · EM BREVE';
+  $('heroDates').textContent = 'Começa em ' + formatDateLong(CONFIG.startDate) + ' · vai até ' + formatDateLong(CONFIG.endDate);
+  $('cadastroDates').textContent = 'A rodada começa em ' + formatDateLong(CONFIG.startDate) + ' — cadastre-se agora para largar na frente no primeiro dia.';
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · começa ' + formatDateShort(CONFIG.startDate);
+  $('premioNote').textContent = 'Premiação desta rodada (' + fullRange + '). Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A <strong>' + nomeCampanha + '</strong> ainda não começou: acontece de ' + fullRange + '.';
+  $('heroCta').textContent = 'Quero garantir minha vaga →';
+}else if(status === 'ativa'){
+  $('heroDates').textContent = 'Campanha em andamento · ' + fullRange;
+  $('cadastroDates').textContent = 'Cadastros abertos até ' + formatDateLong(CONFIG.endDate);
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · até ' + formatDateShort(CONFIG.endDate);
+  $('premioNote').textContent = 'Premiação válida para a rodada em andamento (' + fullRange + '). Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A rodada em andamento é válida de <span>' + fullRange + '</span>.';
+}else if(status === 'apuracao'){
+  $('heroDates').textContent = 'Rodada finalizada em ' + formatDateLong(CONFIG.endDate) + ' · resultado em apuração';
+  $('cadastroDates').textContent = 'Esta rodada foi finalizada. Cadastre-se para participar da próxima.';
+  $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · em apuração';
+  $('premioNote').textContent = 'Premiação da rodada de ' + fullRange + '. Consulte o regulamento completo no final desta página.';
+  $('regRoundStatus').innerHTML = 'A rodada de <strong>' + fullRange + '</strong> foi finalizada e o resultado está em apuração.';
+  $('rankingNote').textContent = 'Rodada finalizada em ' + formatDateLong(CONFIG.endDate) + '. O resultado final está sendo conferido e será publicado aqui em breve.';
+}
+
+$('rankingDates').textContent = temDatas ? formatDateLong(CONFIG.endDate) : 'o fim da campanha';
+$('premioDates').textContent = fullRange;
+$('regDates').textContent = fullRange;
+
+if(encerrada){
+  const proxCamp   = CONFIG.nextCampaignLabel || 'PRÓXIMA CAMPANHA';
+  const proxRodada = CONFIG.nextRoundLabel || '';
+  // "CAMPANHA 03" -> "Campanha 03"
+  const bonito = s => s.charAt(0) + s.slice(1).toLowerCase();
+  const proxNome = bonito(proxCamp);
+  const estaNome = bonito(CONFIG.campaignLabel);
+  const temData  = !!CONFIG.nextStartDate;
+  const proxData = temData ? formatDateLong(CONFIG.nextStartDate) : '';
+  const quando   = temData ? 'começa em ' + proxData : 'será divulgada em breve';
+
+  // carimbo do hero anuncia a próxima campanha
+  $('campaignStamp').textContent = proxCamp + (temData ? ' · ' + formatDateShort(CONFIG.nextStartDate) : ' · EM BREVE');
+  $('heroCta').textContent = 'Garantir vaga na ' + proxNome + ' →';
+
+  // produtos viram suspense
+  $('ppList').style.display = 'none';
+  $('premiacao').style.display = 'none';
+  $('prodTitle').textContent = 'Próxima rodada';
+  $('prodSub').textContent = 'Os produtos da ' + proxNome + ' serão revelados em breve.';
+  $('ppCount').style.display = 'none';
+  $('productMystery').style.display = 'block';
+  $('pmNum').textContent = proxCamp.replace(/\D/g, '') || '';
+  $('pmLabel').textContent = proxNome;
+  $('pontosCard').style.display = 'none';
+  $('heroLead').innerHTML =
+    'A <strong>' + estaNome + '</strong> terminou e o resultado final está no ranking, aqui embaixo. ' +
+    'A <strong>' + proxNome + '</strong> ' + quando + ': cadastre-se agora para entrar na próxima rodada desde o primeiro dia.';
+
+  // cadastro, rodapé e grupo apontam para a próxima
+  $('cadastroLabel').textContent = proxNome;
+  $('cadastroDates').textContent = temData
+    ? 'A ' + proxNome + ' começa em ' + proxData + ' — cadastre-se agora para largar na frente no primeiro dia.'
+    : 'Cadastre-se agora para participar da ' + proxNome + '.';
+  $('footerRef').textContent = proxRodada + (temData ? ' · começa ' + formatDateShort(CONFIG.nextStartDate) : ' · em breve');
+  $('whatsDesc').textContent =
+    'É por lá que a ' + proxNome + ' sai primeiro — com os produtos e os prêmios da rodada.';
+
+  // benefício da amostra grátis aponta para a próxima rodada
+  $('beneficioTitulo').textContent = 'Benefício para a ' + proxNome;
+  $('beneficioTexto').innerHTML =
+    '<strong>Todas as afiliadas que registraram vendas na ' + estaNome + '</strong> — não importa a posição ' +
+    'no ranking — já garantiram o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da ' +
+    proxNome + '. Quem vendeu, participou. E quem participou, sai na frente na próxima rodada.';
+
+  // ranking vira resultado final
+  $('rankingTitle').textContent = 'Resultado final · ' + estaNome;
+  $('rankingNote').innerHTML =
+    'Ranking final da ' + estaNome + ', encerrada em ' + formatDateLong(CONFIG.endDate) +
+    ', apurado com base nas vendas da Shopee. As ganhadoras serão contatadas pela equipe Lumiss para o envio da chave Pix.';
+  $('regRoundStatus').innerHTML =
+    'A <strong>' + estaNome + '</strong> foi realizada de ' + fullRange + ' e está oficialmente encerrada, ' +
+    'com resultado final publicado nesta página. A <strong>' + proxNome + '</strong> ' + quando + '.';
+
+  $('endedBanner').innerHTML =
+    '<strong>' + estaNome + ' encerrada!</strong> Confira o resultado final no ranking. A ' + proxNome + ' ' + quando + '.' +
+    '<a href="#ranking">Ver ranking →</a>';
+  $('endedBanner').style.display = 'block';
+  if(CONFIG.showTieNote) $('tieNote').style.display = 'block';
+
+  /* teaser de suspense da próxima campanha */
+  $('teaserNum').textContent = proxCamp.replace(/\D/g, '') || '';
+  $('teaserStamp').textContent = temData ? formatDateShort(CONFIG.nextStartDate) : 'Em breve';
+  $('teaserTitulo').innerHTML = proxNome + '<br>está chegando';
+  $('teaserTexto').innerHTML = temData
+    ? 'Novos produtos. Novos prêmios. Novo ranking.<br>Começa em <strong>' + proxData + '</strong>.'
+    : 'Novos produtos. Novos prêmios. Novo ranking.';
+  // a mensagem de abertura fica só com o anúncio da próxima campanha
+  $('teaserHint').style.display = 'none';
+  document.getElementById('teaserRanking').textContent = 'Ver resultado da ' + estaNome;
+  document.getElementById('teaserSignup').textContent = 'Quero participar da ' + proxNome.replace(/^Campanha\s*/i, '');
+  const teaser = document.getElementById('teaser');
+  teaser.setAttribute('aria-label', proxNome + ' em breve');
+  setTimeout(() => teaser.classList.add('open'), 600);
+  const fecharTeaser = () => teaser.classList.remove('open');
+  document.getElementById('teaserClose').addEventListener('click', fecharTeaser);
+  teaser.addEventListener('click', e => { if(e.target === teaser) fecharTeaser(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharTeaser(); });
+  document.getElementById('teaserRanking').addEventListener('click', () => {
+    fecharTeaser();
+    document.getElementById('ranking').scrollIntoView({behavior:'smooth'});
+  });
+  document.getElementById('teaserSignup').addEventListener('click', () => {
+    fecharTeaser();
+    document.getElementById('cadastro').scrollIntoView({behavior:'smooth'});
+  });
+}
+
+function formatDateRange(startStr, endStr){
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const pad = n => String(n).padStart(2,'0');
+  const [sy, sm, sd] = startStr.split('-').map(Number);
+  const [ey, em, ed] = endStr.split('-').map(Number);
+  if(sy === ey && sm === em){
+    return `${pad(sd)} a ${pad(ed)} de ${meses[sm-1]} de ${sy}`;
+  }
+  if(sy === ey){
+    return `${pad(sd)} de ${meses[sm-1]} a ${pad(ed)} de ${meses[em-1]} de ${sy}`;
+  }
+  return `${pad(sd)} de ${meses[sm-1]} de ${sy} a ${pad(ed)} de ${meses[em-1]} de ${ey}`;
+}
+
+function formatDateLong(dateStr){
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return `${String(d).padStart(2,'0')} de ${meses[m-1]} de ${y}`;
+}
+
+function formatDateShort(dateStr){
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
+}
+/* hall da fama — pódio das campanhas já encerradas */
+(function montarHall(){
+  const alvo = document.getElementById('hallList');
+  const hall = CONFIG.hallOfFame || [];
+  const secao = document.getElementById('hall');
+  if(!alvo) return;
+  if(!hall.length){ if(secao) secao.style.display = 'none'; return; }
+
+  const medalhas = { 1:'🏆', 2:'🥈', 3:'🥉' };
+  // ordem visual do pódio: 2º à esquerda, 1º no centro, 3º à direita
+  const ordemVisual = [2, 1, 3];
+
+  alvo.innerHTML = '';
+  hall.forEach(ed => {
+    const card = document.createElement('div');
+    card.className = 'hall-card';
+
+    const colunas = ordemVisual.map(pos => {
+      const w = (ed.winners || []).find(x => x.pos === pos);
+      if(!w) return '';
+      return `
+        <div class="podium-col p${pos}">
+          ${w.photo
+            ? `<div class="podium-face"><img class="podium-photo" src="${w.photo}" alt="${w.name}" loading="lazy"><span class="podium-badge">${medalhas[pos] || ''}</span></div>`
+            : `<div class="podium-medal">${medalhas[pos] || ''}</div>`}
+          <div class="podium-name">${w.name}</div>
+          <div class="podium-base">
+            <span class="podium-pos">${pos}º</span>
+            <span class="podium-prize">${w.prize || ''}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="hall-head">
+        <span class="hall-title">${ed.campaign}</span>
+        <span class="hall-period">${ed.period || ''}</span>
+      </div>
+      <div class="podium">${colunas}</div>`;
+    alvo.appendChild(card);
+  });
+})();
+
+/* tabela de premiação da rodada */
+(function montarPremios(){
+  const alvo = document.getElementById('prizeList');
+  const secao = document.getElementById('premiacao');
+  const lista = CONFIG.prizes || [];
+  if(!alvo) return;
+  if(!lista.length){ if(secao) secao.style.display = 'none'; return; }
+
+  const medals = ['🏆','🥈','🥉'];
+  alvo.innerHTML = '';
+  lista.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'prize-row' + (i === 0 ? ' gold' : '');
+    row.innerHTML = `
+      <div class="place"><span class="rank mono">${medals[i] || '#'+(i+1)}</span><span class="lbl">${p.place}</span></div>
+      <div class="amount-wrap"><div class="amount">${p.amount}</div><span class="pix-tag">NO PIX</span></div>`;
+    alvo.appendChild(row);
+  });
+})();
+
+/* vitrine dos produtos da rodada — todas as vendas somam no mesmo ranking */
+(function montarProdutos(){
+  const lista = CONFIG.products || [];
+  const alvo = document.getElementById('ppList');
+  if(!alvo || !lista.length) return;
+  // com a rodada encerrada, quem manda nos textos é o bloco de encerramento
+  if(CONFIG.campaignEnded === true) return;
+
+  const n = lista.length;
+  const extenso = { 1:'um', 2:'dois', 3:'três', 4:'quatro', 5:'cinco', 6:'seis' };
+  const porExtenso = extenso[n] || String(n);
+
+  $('ppCount').textContent = n + (n === 1 ? ' produto' : ' produtos');
+  alvo.classList.toggle('tres', n >= 3);
+
+  if(n === 1){
+    $('prodTitle').textContent = 'O produto da rodada';
+    $('prodSub').textContent = 'Cada par vendido dele vale 1 ponto no ranking.';
+    $('heroLead').innerHTML = 'Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e divulgue ' +
+      'com o seu link de afiliada da Shopee. Cada par vendido pelo seu link vale <strong>1 ponto</strong>, e quem somar mais pontos ' +
+      'leva a premiação em dinheiro.';
+    $('pontosProdutos').innerHTML = 'Vale <strong>cada par vendido do produto da rodada</strong> pelo seu link de afiliada.';
+  }else{
+    $('prodTitle').textContent = 'Os produtos da rodada';
+    $('prodSub').textContent = 'Cada par vendido de qualquer um dos ' + porExtenso + ' vale 1 ponto no mesmo ranking.';
+    $('heroLead').innerHTML = 'Cadastre-se como afiliada Lumiss, acesse a biblioteca oficial de vídeos e divulgue ' +
+      'com o seu link de afiliada da Shopee. Nesta rodada são <strong>' + porExtenso + ' produtos</strong>: cada par vendido de qualquer ' +
+      'um deles vale <strong>1 ponto</strong>, e quem somar mais pontos leva a premiação em dinheiro.';
+    $('pontosProdutos').innerHTML = 'Vale <strong>qualquer um dos ' + porExtenso + ' produtos da rodada</strong>. ' +
+      'Não importa qual deles gerou a venda.';
+  }
+  $('pontosPrazo').innerHTML = 'Ganha quem <strong>somar mais pontos</strong> até ' + (temDatas ? formatDateLong(CONFIG.endDate) : 'o fim da campanha') + '.';
+
+  alvo.innerHTML = '';
+
+  lista.forEach((prod, i) => {
+    const card = document.createElement('div');
+    card.className = 'sc-card';
+    card.innerHTML = `
+      <div class="sc-photo">
+        ${prod.tag ? `<span class="sc-tag">${prod.tag}</span>` : ''}
+        <img src="${prod.img}" alt="${prod.name}" loading="lazy">
+        <span class="sc-shine"></span>
+      </div>
+      <div class="sc-body">
+        ${lista.length > 1 ? '<span class="sc-point mono">1 venda = 1 ponto</span>' : ''}
+        <p class="sc-name">${prod.name}</p>
+        ${prod.url
+          ? `<a class="btn" href="${prod.url}" target="_blank" rel="noopener">Ver na Shopee →</a>`
+          : '<span class="btn ghost" aria-disabled="true">Link em breve</span>'}
+      </div>`;
+    alvo.appendChild(card);
+  });
+
+  // "+" entre os dois primeiros cards, só no desktop
+  if(lista.length === 2){
+    const mais = document.createElement('span');
+    mais.className = 'sc-plus';
+    mais.textContent = '+';
+    alvo.style.position = 'relative';
+    alvo.appendChild(mais);
+  }
+})();
+/* vídeos das criadoras — player oficial do TikTok: começa mudo, em looping,
+   e só toca o que está na tela */
+(function montarVideos(){
+  const lista = CONFIG.creatorVideos || [];
+  const alvo  = document.getElementById('videoList');
+  const secao = document.getElementById('videos');
+  if(!alvo) return;
+  if(!lista.length){ if(secao) secao.style.display = 'none'; return; }
+
+  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PARAMS = (semMovimento ? 'autoplay=0' : 'autoplay=1') +
+    '&muted=1&loop=1&controls=1&progress_bar=0&play_button=1&volume_control=1' +
+    '&fullscreen_button=1&timestamp=0&music_info=0&description=0&rel=0' +
+    '&native_context_menu=0&closed_caption=0';
+
+  const cards = [];
+  lista.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vid-card';
+    card.innerHTML =
+      '<div class="vid-frame"><div class="vid-load mono">carregando…</div></div>' +
+      '<div class="vid-meta">' +
+        '<a class="vid-handle" href="https://www.tiktok.com/@' + v.handle + '/video/' + v.id +
+          '" target="_blank" rel="noopener">@' + v.handle + '</a>' +
+        (v.tag ? '<div class="vid-tag">' + v.tag + '</div>' : '') +
+      '</div>';
+    alvo.appendChild(card);
+    cards.push({ dados: v, card, frame: card.querySelector('.vid-frame'),
+                 iframe: null, pronto: false, querVer: false });
+  });
+
+  function comando(item, tipo){
+    const w = item.iframe && item.iframe.contentWindow;
+    if(!w) return;
+    const msg = { type: tipo, value: null, 'x-tiktok-player': true };
+    try{ w.postMessage(msg, '*'); w.postMessage(JSON.stringify(msg), '*'); }catch(e){}
+  }
+
+  /* só manda play/pause depois que o player avisa que está pronto */
+  function aplicar(item){
+    if(!item.pronto || semMovimento) return;
+    comando(item, item.querVer ? 'play' : 'pause');
+  }
+
+  function criarPlayer(item){
+    if(item.iframe) return;
+    const f = document.createElement('iframe');
+    f.src = 'https://www.tiktok.com/player/v1/' + item.dados.id + '?' + PARAMS;
+    f.title = 'Vídeo de @' + item.dados.handle + ' no TikTok';
+    f.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
+    f.setAttribute('loading', 'lazy');
+    f.setAttribute('frameborder', '0');
+    // se o aviso de "pronto" não chegar, assume pronto pouco depois de carregar
+    f.addEventListener('load', () => setTimeout(() => {
+      if(!item.pronto){ item.pronto = true; aplicar(item); }
+    }, 900));
+    item.frame.appendChild(f);
+    item.iframe = f;
+  }
+
+  if('IntersectionObserver' in window){
+    // o player só carrega quando o card chega perto da tela
+    const carregador = new IntersectionObserver((ents, obs) => {
+      ents.forEach(e => {
+        if(!e.isIntersecting) return;
+        const item = cards.find(c => c.card === e.target);
+        if(item){ criarPlayer(item); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '300px 200px' });
+    cards.forEach(c => carregador.observe(c.card));
+
+    // toca o que está visível, pausa o resto
+    if(!semMovimento){
+      const tocador = new IntersectionObserver((ents) => {
+        ents.forEach(e => {
+          const item = cards.find(c => c.card === e.target);
+          if(!item) return;
+          item.querVer = e.isIntersecting && e.intersectionRatio >= 0.5;
+          aplicar(item);
+        });
+      }, { threshold: [0, 0.5, 0.8] });
+      cards.forEach(c => tocador.observe(c.card));
+    }
+  }else{
+    cards.forEach(criarPlayer);
+  }
+
+  window.addEventListener('message', (e) => {
+    if(!/(^|\.)tiktok\.com$/.test(String(e.origin || '').replace(/^https?:\/\//, ''))) return;
+    let d = e.data;
+    if(typeof d === 'string'){ try{ d = JSON.parse(d); }catch(err){ return; } }
+    if(!d || d['x-tiktok-player'] !== true) return;
+    const item = cards.find(c => c.iframe && c.iframe.contentWindow === e.source);
+    if(!item) return;
+
+    if(d.type === 'onPlayerReady'){ item.pronto = true; aplicar(item); return; }
+
+    // vídeo apagado, privado ou fora do ar simplesmente some da página
+    if(d.type === 'onPlayerError'){
+      console.warn('[vídeos] player indisponível:', item.dados.id, d.value);
+      item.card.style.display = 'none';
+      if(cards.every(c => c.card.style.display === 'none') && secao) secao.style.display = 'none';
+    }
+  });
+})();
+
+/* ranking ao vivo — busca a aba "Ranking" da planilha */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let rankingJaAnimado = false;
+
+/* a campanha já começou? (compara só a data, sem hora) */
+function campanhaComecou(){
+  if(!temDatas) return false;
+  const [y,m,d] = CONFIG.startDate.split('-').map(Number);
+  const inicio = new Date(y, m-1, d);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  return hoje >= inicio;
+}
+
+function diasAteInicio(){
+  const [y,m,d] = CONFIG.startDate.split('-').map(Number);
+  const inicio = new Date(y, m-1, d);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  return Math.ceil((inicio - hoje) / 86400000);
+}
+
+async function refreshRanking(){
+  const list = document.getElementById('rankingList');
+
+  // antes do início da rodada, o ranking dá lugar à contagem regressiva
+  if(!temDatas && CONFIG.campaignEnded !== true){
+    list.innerHTML =
+      '<div class="ranking-soon">' +
+        '<div class="rs-days">Em breve</div>' +
+        '<p>O ranking da <strong>' + nomeCampanha + '</strong> abre quando a campanha começar. ' +
+        'Cadastre-se agora para largar na frente.</p>' +
+      '</div>';
+    $('rankingTitle').textContent = 'Ranking';
+    $('rankingNote').textContent =
+      'Assim que a campanha começar, o ranking passa a ser atualizado diariamente pela equipe Lumiss com base nas vendas da Shopee.';
+    return;
+  }
+  if(!campanhaComecou() && CONFIG.campaignEnded !== true){
+    const dias = diasAteInicio();
+    const quando = dias === 1 ? 'Começa <b>amanhã</b>' : `Faltam <b>${dias}</b> dias`;
+    list.innerHTML =
+      '<div class="ranking-soon">' +
+        '<div class="rs-days">' + quando + '</div>' +
+        '<p>O ranking abre em <strong>' + formatDateLong(CONFIG.startDate) + '</strong>, ' +
+        'quando a campanha começar. Cadastre-se agora para largar na frente.</p>' +
+      '</div>';
+    $('rankingTitle').textContent = 'Ranking';
+    $('rankingNote').textContent =
+      'Assim que a campanha começar, o ranking passa a ser atualizado diariamente pela equipe Lumiss com base nas vendas da Shopee.';
+    return;
+  }
+
+  if(!CONFIG.rankingUrl){
+    list.innerHTML = '<div class="ranking-empty">A campanha começou! O ranking aparece aqui assim que as primeiras vendas forem apuradas.</div>';
+    return;
+  }
+  try{
+    const data = await chamarPlanilha('action=ranking', 12000);
+    const ranking = (data.ranking || []).slice(0, 10);
+    if(!ranking.length){
+      list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
+      console.warn('[ranking] resposta sem lista de ranking:', data);
+      return;
+    }
+
+    const medals = ['🏆','🥈','🥉'];
+    list.innerHTML = '';
+    ranking.forEach((r, i) => {
+      const pos = Number(r.posicao) || (i+1);
+      const prize = (CONFIG.prizes[pos-1] || {}).amount || (CONFIG.extraPrizes || {})[pos];
+
+      const row = document.createElement('div');
+      row.className = 'ranking-row' + (i < 3 ? ' top3' : '') + (pos === 1 && status === 'encerrada' ? ' rank-1' : '');
+      // durante a rodada é liderança; encerrada, é título
+      const selo = (pos === 1 && status === 'encerrada')
+        ? '<span class="champ-badge">👑 Campeã</span>'
+        : '';
+      row.innerHTML = `
+        <div class="ranking-pos">
+          <span class="rk">${medals[pos-1] || '#'+pos}</span>
+          <div class="who">
+            <span class="name">${r.nome || ''}</span>
+            ${(r.perfil || r.tiktok) ? `<span class="handle">${r.perfil || r.tiktok}</span>` : ''}
+            ${selo}
+          </div>
+        </div>
+        ${prize ? `<div class="ranking-items"><span class="prize-badge">${prize}</span></div>` : ''}`;
+      list.appendChild(row);
+    });
+
+    if(rankingJaAnimado || reduceMotion){
+      list.querySelectorAll('.ranking-row').forEach(r => r.classList.add('revealed'));
+    }else{
+      observarRanking();
+    }
+  }catch(e){
+    console.error('[ranking] falha ao carregar:', e);
+    const motivo = e.name === 'AbortError'
+      ? 'A planilha demorou demais para responder.'
+      : 'Não foi possível conectar à planilha.';
+    list.innerHTML = '<div class="ranking-empty">' + motivo + ' Recarregue a página em instantes.</div>';
+  }
+}
+
+/* dispara a revelação quando a seção entra na tela */
+function observarRanking(){
+  const secao = document.getElementById('ranking');
+
+  // rede de segurança: se por qualquer motivo o gatilho não disparar,
+  // revela tudo mesmo assim — o ranking nunca pode ficar invisível
+  const fallback = setTimeout(() => {
+    if(!rankingJaAnimado){
+      rankingJaAnimado = true;
+      revelarRanking();
+    }
+  }, 2500);
+
+  if(!('IntersectionObserver' in window)){
+    clearTimeout(fallback);
+    rankingJaAnimado = true;
+    revelarRanking();
+    return;
+  }
+
+  const obs = new IntersectionObserver((entries, o) => {
+    entries.forEach(e => {
+      if(e.isIntersecting && !rankingJaAnimado){
+        clearTimeout(fallback);
+        rankingJaAnimado = true;
+        revelarRanking();
+        o.disconnect();
+      }
+    });
+  }, { threshold: .05 });
+  obs.observe(secao);
+}
+
+/* revela de trás pra frente — do último até o 1º lugar */
+function revelarRanking(){
+  const rows = [...document.querySelectorAll('#rankingList .ranking-row')];
+  const ordem = [...rows].reverse();
+  const passo = window.innerWidth < 640 ? 170 : 260;
+
+  ordem.forEach((row, idx) => {
+    setTimeout(() => {
+      row.classList.add('revealed', 'pop');
+      setTimeout(() => row.classList.remove('pop'), 600);
+      if(row.classList.contains('rank-1') && status === 'encerrada') soltarConfete();
+    }, idx * passo);
+  });
+}
+
+/* confete no momento em que o 1º lugar aparece */
+function soltarConfete(){
+  if(reduceMotion) return;
+  const canvas = document.getElementById('confettiCanvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width; canvas.height = rect.height;
+  const ctx = canvas.getContext('2d');
+  const cores = ['#ffffff','#d4d4d4','#9a9a9a','#EE4D2D'];
+  const qtd = window.innerWidth < 640 ? 45 : 90; // menos peças no celular
+  const pecas = Array.from({length: qtd}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * canvas.height * .5,
+    w: 5 + Math.random() * 5,
+    h: 8 + Math.random() * 7,
+    cor: cores[Math.floor(Math.random() * cores.length)],
+    vy: 1.8 + Math.random() * 2.6,
+    vx: -.7 + Math.random() * 1.4,
+    rot: Math.random() * Math.PI,
+    vr: -.09 + Math.random() * .18
+  }));
+
+  const inicio = performance.now();
+  function frame(now){
+    const t = now - inicio;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const fade = t > 1800 ? Math.max(0, 1 - (t - 1800) / 900) : 1;
+    pecas.forEach(p => {
+      p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+      ctx.save();
+      ctx.globalAlpha = fade;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.cor;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    if(t < 2700) requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  requestAnimationFrame(frame);
+}
+
+refreshRanking();
+setInterval(refreshRanking, 5 * 60 * 1000); // atualiza sozinho a cada 5 minutos, enquanto a página estiver aberta
+function fillAccessLinks(){
+  ligarLink('driveLink', CONFIG.driveFolderUrl);
+  ligarLink('whatsLink', CONFIG.whatsappGroupUrl);
+}
+function ligarLink(id, url){
+  const a = document.getElementById(id);
+  if(!a) return;
+  if(url){ a.href = url; return; }
+  a.removeAttribute('href');
+  a.textContent = 'Link em breve';
+  a.classList.add('ghost');
+}
+
+function unlockLibrary(){
+  $('libLocked').style.display = 'none';
+  $('libGrid').style.display = 'grid';
+  fillAccessLinks();
+}
+
+/* ===== conversa com a planilha (só o ranking) =====
+   O navegador do TikTok, do WhatsApp e às vezes o próprio Safari bloqueiam a
+   LEITURA de respostas de outro domínio. Por isso a página pede os dados como
+   script (JSONP), que nenhum navegador bloqueia, e só usa fetch como reserva. */
+function chamarPlanilha(consulta, ms){
+  const base = CONFIG.rankingUrl;
+  if(!base) return Promise.reject(new Error('sem URL'));
+  const url = base + (consulta ? '?' + consulta : '?v=' + Date.now());
+  const espera = ms || 15000;
+
+  return new Promise((resolve, reject) => {
+    const nome = 'lumissCb' + Date.now() + Math.floor(Math.random()*1000);
+    const script = document.createElement('script');
+    let encerrado = false;
+    const limpar = () => {
+      encerrado = true;
+      try{ delete window[nome]; }catch(e){ window[nome] = undefined; }
+      if(script.parentNode) script.parentNode.removeChild(script);
+      clearTimeout(relogio);
+    };
+    const relogio = setTimeout(() => { if(!encerrado){ limpar(); tentarFetch(); } }, espera);
+
+    function tentarFetch(){
+      // reserva: se o script não carregar, tenta do jeito tradicional
+      const ctrl = new AbortController();
+      const corte = setTimeout(() => ctrl.abort(), espera);
+      fetch(url, { signal: ctrl.signal, cache: 'no-store' })
+        .then(r => { clearTimeout(corte); if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(resolve)
+        .catch(reject);
+    }
+
+    window[nome] = dados => { limpar(); resolve(dados); };
+    script.onerror = () => { if(!encerrado){ limpar(); tentarFetch(); } };
+    // carregou mas não chamou de volta (servidor antigo, sem JSONP): usa a reserva
+    script.onload = () => setTimeout(() => { if(!encerrado){ limpar(); tentarFetch(); } }, 400);
+    script.src = url + '&callback=' + nome;
+    document.head.appendChild(script);
+  });
+}
+
+/* ===== o cadastro: vai para o LUMISS OS (01/11/2026; /comum/cadastro.js) =====
+   Antes ia para a planilha do Apps Script. Agora o cadastro é GUARDADO NO
+   APARELHO antes de enviar; em até 2,5 s a afiliada vê "recebido", e o que não
+   chegou reenvia sozinho até chegar. O OS não repete o mesmo @. */
+const form = document.getElementById('signupForm');
+const msg = document.getElementById('formMsg');
+const submitBtn = form.querySelector('button[type="submit"]');
+const outraPessoa = document.getElementById('outraPessoa');
+const TEXTO_DO_BOTAO = submitBtn.textContent;
+const TEXTO_CONFIRMADO = 'Cadastro confirmado! Acesse os links liberados abaixo. 🎬';
+const TEXTO_GUARDADO = 'Cadastro recebido! Se a internet falhou, ele fica guardado neste aparelho e vai sozinho assim que ela voltar. Acesse os links liberados abaixo. 🎬';
+
+function liberarAcesso(texto){
+  msg.textContent = texto;
+  msg.className = 'msg ok';
+  unlockLibrary();
+  document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'});
+}
+
+/* no estande, o mesmo aparelho pode cadastrar a próxima da fila */
+outraPessoa.addEventListener('click', () => {
+  form.reset();
+  msg.textContent = '';
+  msg.className = 'msg';
+  submitBtn.disabled = false;
+  submitBtn.textContent = TEXTO_DO_BOTAO;
+  outraPessoa.style.display = 'none';
+  document.getElementById('nome').focus();
+});
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(submitBtn.disabled) return;
+  const dados = {
+    canal: CONFIG.canal,
+    nome: document.getElementById('nome').value,
+    perfil: document.getElementById('perfil').value,
+    seguidores: document.getElementById('seguidores').value,
+    aceite: document.getElementById('aceite').checked,
+    campanha: CONFIG.campaignCode,
+    origem: location.host + location.pathname,
+    empresa: document.getElementById('empresa').value
+  };
+  const problema = window.CadastroOS
+    ? CadastroOS.validar(dados, false)
+    : 'A página não carregou inteira. Recarregue e tente de novo.';
+  if(problema){
+    msg.textContent = problema;
+    msg.className = 'msg err';
+    return;
+  }
+
+  // trava no primeiro clique: daqui em diante o cadastro já está guardado no aparelho
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Enviando…';
+  msg.textContent = '';
+  msg.className = 'msg';
+
+  const r = await CadastroOS.enviar(CONFIG.cadastroUrl, dados, (depois) => {
+    if(depois.estado === 'confirmado'){ msg.textContent = TEXTO_CONFIRMADO; msg.className = 'msg ok'; }
+  });
+  if(r.estado === 'recusado'){
+    msg.textContent = r.mensagem;
+    msg.className = 'msg err';
+    submitBtn.disabled = false;
+    submitBtn.textContent = TEXTO_DO_BOTAO;
+    return;
+  }
+  submitBtn.textContent = 'Cadastro recebido ✓';
+  liberarAcesso(r.estado === 'confirmado' ? TEXTO_CONFIRMADO : TEXTO_GUARDADO);
+  outraPessoa.style.display = 'inline-flex';
+});
+
+/* Modo diagnóstico: abra a página com ?debug=1 no fim do endereço — mostra quantos
+   cadastros estão guardados neste aparelho esperando a internet. */
+if(/[?&]debug=1/.test(location.search) && window.CadastroOS){
+  const caixa = document.createElement('div');
+  caixa.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#0d0d0d;' +
+    'border:1px solid #444;border-radius:10px;padding:12px;color:#fff;' +
+    'font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;white-space:pre-wrap;';
+  document.body.appendChild(caixa);
+  const mostrar = () => {
+    caixa.textContent = 'DIAGNÓSTICO LUMISS\n' + navigator.userAgent.slice(0, 95) +
+      '\nInternet: ' + (navigator.onLine === false ? 'sem' : 'com') +
+      '\nCadastros guardados neste aparelho: ' + CadastroOS.pendentes();
+  };
+  mostrar();
+  CadastroOS.aoMudar(mostrar);
+  setInterval(mostrar, 2000);
+}
+</script>
+
+</body>
+</html>
