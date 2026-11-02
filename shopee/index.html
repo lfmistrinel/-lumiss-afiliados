@@ -506,6 +506,7 @@
   .access-card h3{margin:0;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);}
   .access-card p{margin:0;font-size:13px;color:var(--ink-dim);}
   .access-card a.btn{width:100%;margin-top:4px;}
+  .access-grid.um{grid-template-columns:1fr;}
   .access-card.whats a.btn{background:#25D366;color:#000;}
   .access-card.whats a.btn:hover{background:#2fe374;}
 
@@ -831,17 +832,6 @@
     <div id="hallList"></div>
   </section>
 
-  <section id="beneficio">
-    <h2 class="display" id="beneficioTitulo">Benefício para a Campanha 02</h2>
-    <div class="bonus-card">
-      <div class="ic">🎁</div>
-      <div>
-        <h4>Amostra grátis garantida</h4>
-        <p id="beneficioTexto"><strong>Todas as afiliadas que registrarem vendas nesta Campanha 01</strong> — não importa a posição no ranking — garantem o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da Campanha 02. Quem vende, participa. E quem participa, sai na frente na próxima rodada.</p>
-      </div>
-    </div>
-  </section>
-
   <section id="videos">
     <h2 class="display">Vídeos que venderam</h2>
     <p class="section-dates mono">O conteúdo que colocou essas criadoras no ranking da Campanha 01. Começa sem som — toque no vídeo para ouvir.</p>
@@ -901,20 +891,14 @@
     <h2 class="display">Onde pegar tudo</h2>
     <div id="libLocked" class="lib-locked">
       <div class="lock">🔒</div>
-      Cadastre-se acima para liberar o acesso aos vídeos e ao grupo da campanha.
+      Cadastre-se acima para liberar o acesso aos vídeos da campanha.
     </div>
-    <div id="libGrid" class="access-grid" style="display:none;">
+    <div id="libGrid" class="access-grid um" style="display:none;">
       <div class="access-card">
         <div class="ic">🎬</div>
         <h3>Vídeos da rodada</h3>
         <p>Todo o material pronto pra baixar e postar.</p>
         <a class="btn" id="driveLink" href="#" target="_blank" rel="noopener">Acessar no Drive</a>
-      </div>
-      <div class="access-card whats">
-        <div class="ic">💬</div>
-        <h3>Grupo da campanha</h3>
-        <p id="whatsDesc">Novidades, novos vídeos e suporte direto com o time.</p>
-        <a class="btn" id="whatsLink" href="#" target="_blank" rel="noopener">Entrar no grupo</a>
       </div>
     </div>
   </section>
@@ -933,11 +917,11 @@
         <p>Podem participar pessoas maiores de 18 anos, com conta ativa e regular na Shopee e cadastro no Programa de Afiliados da Shopee. Menores de 18 anos só podem participar mediante autorização expressa de responsável legal, enviada à equipe Lumiss antes do início da rodada. Colaboradores diretos da Lumiss e familiares até 2º grau podem se cadastrar, mas não concorrem à premiação.</p>
 
         <h3>3. Como participar</h3>
-        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, @ da Shopee e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento. Após o cadastro, a afiliada recebe acesso ao grupo oficial da campanha no WhatsApp e à biblioteca de vídeos crus e fotos dos produtos da rodada vigente, quando houver rodada em andamento.</p>
+        <p>A participação ocorre através do cadastro no formulário desta página, informando nome completo, @ da Shopee e faixa de seguidores. Ao se cadastrar, a afiliada declara estar de acordo com este regulamento. Após o cadastro, a afiliada recebe acesso à biblioteca de vídeos crus e fotos dos produtos da rodada vigente, quando houver rodada em andamento.</p>
         <p>O cadastro permanece válido para as rodadas seguintes: quem já se cadastrou não precisa repetir o processo a cada nova campanha.</p>
 
         <h3>4. Duração e calendário das rodadas</h3>
-        <p>Cada rodada tem duração determinada pela Lumiss, com início e encerramento informados nos canais oficiais (esta página e o grupo da campanha) antes do começo de cada edição. A duração pode variar entre rodadas.</p>
+        <p>Cada rodada tem duração determinada pela Lumiss, com início e encerramento informados nos canais oficiais (esta página) antes do começo de cada edição. A duração pode variar entre rodadas.</p>
         <p id="regRoundStatus">A rodada atual é válida de <span id="regDates"></span>.</p>
 
         <h3>5. Como o ranking é calculado</h3>
@@ -946,20 +930,16 @@
 
         <h3>6. Premiação</h3>
         <p>As <strong>5 (cinco) afiliadas mais bem colocadas</strong> no ranking ao final de cada rodada recebem premiação em dinheiro. Os valores de cada rodada são divulgados pela Lumiss nos canais oficiais antes do início da rodada e podem variar entre edições, a critério da Lumiss.</p>
-        <p>Ao final da rodada, a Lumiss anuncia as ganhadoras nesta página e no grupo da campanha; cada ganhadora informa sua chave Pix à equipe Lumiss pelo grupo da campanha ou pelo WhatsApp oficial da Lumiss, e tem até <strong>2 (dois) dias</strong> a partir do anúncio para informar a chave — caso não informe dentro desse prazo, será desclassificada e perderá o direito à premiação. Uma vez recebida a chave, o pagamento é feito via <strong>Pix</strong> em até <strong>2 (dois) dias úteis</strong>.</p>
+        <p>Ao final da rodada, a Lumiss anuncia as ganhadoras nesta página; cada ganhadora informa sua chave Pix à equipe Lumiss pelo WhatsApp oficial da Lumiss, e tem até <strong>2 (dois) dias</strong> a partir do anúncio para informar a chave — caso não informe dentro desse prazo, será desclassificada e perderá o direito à premiação. Uma vez recebida a chave, o pagamento é feito via <strong>Pix</strong> em até <strong>2 (dois) dias úteis</strong>.</p>
         <p>Em caso de empate na quantidade de pontos, o critério de desempate é a data e hora da venda que gerou o item empatado, tendo prioridade a venda mais antiga. A Lumiss poderá, a seu exclusivo critério e em caráter excepcional, optar por premiar todas as afiliadas empatadas em vez de aplicar o desempate — decisão que vale apenas para a rodada em que for adotada e não gera direito adquirido para as rodadas seguintes.</p>
 
-        <h3>7. Benefício de amostra grátis</h3>
-        <p>As <strong>50 (cinquenta) afiliadas mais bem colocadas</strong> no ranking de cada rodada — o Top 50 — adquirem o direito de solicitar <strong>amostra grátis</strong> de um dos produtos da rodada seguinte. A solicitação deve ser feita pelos canais oficiais da Lumiss dentro do prazo comunicado no grupo da campanha, e o envio está sujeito à disponibilidade de estoque do produto e grade.</p>
-        <p>Caso o número de afiliadas com vendas válidas na rodada seja inferior a 50, o benefício se estende a todas elas.</p>
-
-        <h3>8. Divulgação do resultado</h3>
+        <h3>7. Divulgação do resultado</h3>
         <p>O ranking é acompanhado ao longo da rodada nesta página e tem caráter parcial e informativo enquanto a rodada estiver em andamento, podendo sofrer alterações em razão de cancelamentos, devoluções ou reclassificação de pedidos pela Shopee. O <strong>resultado final e oficial</strong> é o publicado nesta página após o encerramento da rodada e a conferência das vendas válidas.</p>
 
-        <h3>9. Uso do conteúdo produzido</h3>
+        <h3>8. Uso do conteúdo produzido</h3>
         <p>Ao publicar vídeos com os materiais e/ou produtos da campanha, a afiliada autoriza a Lumiss a compartilhar, repostar e impulsionar esse conteúdo (inclusive via anúncios pagos), sempre com os devidos créditos ao perfil da criadora, sem que isso gere remuneração adicional além da premiação e das comissões já previstas no Programa de Afiliados da Shopee.</p>
 
-        <h3>10. Condutas proibidas e desclassificação</h3>
+        <h3>9. Condutas proibidas e desclassificação</h3>
         <p>Pode ser desclassificada, a qualquer momento, a afiliada que:</p>
         <ul>
           <li>fornecer dados falsos no cadastro;</li>
@@ -969,17 +949,17 @@
           <li>descumprir qualquer regra deste regulamento.</li>
         </ul>
 
-        <h3>11. Privacidade e uso de dados</h3>
+        <h3>10. Privacidade e uso de dados</h3>
         <p>Os dados fornecidos no cadastro (nome, @ da Shopee e faixa de seguidores) são usados exclusivamente para organizar e comunicar esta campanha, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). A Lumiss não compartilha, vende ou cede esses dados a terceiros para finalidades diferentes das aqui previstas. A afiliada pode solicitar a exclusão dos seus dados a qualquer momento pelos canais oficiais de contato da Lumiss.</p>
 
-        <h3>12. Alterações e cancelamento</h3>
+        <h3>11. Alterações e cancelamento</h3>
         <p>A Lumiss se reserva o direito de alterar, suspender ou cancelar a campanha, no todo ou em parte, a qualquer momento, mediante aviso nos canais oficiais — especialmente em caso de indisponibilidade de estoque, problemas técnicos na plataforma da Shopee, ou motivo de força maior.</p>
 
-        <h3>13. Disposições gerais</h3>
+        <h3>12. Disposições gerais</h3>
         <p>A participação na campanha implica a aceitação integral deste regulamento. Casos omissos serão decididos pela equipe Lumiss. Fica eleito o foro da comarca de Birigui/SP para dirimir eventuais dúvidas ou controvérsias decorrentes deste regulamento, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
 
-        <h3>14. Dúvidas e contato</h3>
-        <p>Em caso de dúvidas sobre este regulamento ou sobre a campanha, entre em contato pelo WhatsApp oficial da Lumiss ou pelo grupo da campanha.</p>
+        <h3>13. Dúvidas e contato</h3>
+        <p>Em caso de dúvidas sobre este regulamento ou sobre a campanha, entre em contato pelo WhatsApp oficial da Lumiss.</p>
 
       </div>
     </details>
@@ -1044,8 +1024,6 @@ const CONFIG = {
   rankingUrl: "",
   // PREENCHER: a pasta do Drive com os vídeos desta rodada
   driveFolderUrl: "",
-  // PREENCHER: o convite do grupo de WhatsApp da campanha da Shopee
-  whatsappGroupUrl: "",
 
   // vire para true quando a rodada terminar
   campaignEnded: false,
@@ -1094,11 +1072,11 @@ const nomeCampanha = CONFIG.campaignLabel.charAt(0) + CONFIG.campaignLabel.slice
 /* --- textos que mudam conforme o estado --- */
 if(status === 'pre' && !temDatas){
   $('campaignStamp').textContent = CONFIG.campaignLabel + ' · EM BREVE';
-  $('heroDates').textContent = 'As datas da campanha saem em breve, aqui e no grupo da campanha';
+  $('heroDates').textContent = 'As datas da campanha saem em breve, aqui nesta página';
   $('cadastroDates').textContent = 'Cadastre-se agora para largar na frente no primeiro dia.';
   $('footerRef').textContent = (CONFIG.roundLabel || '') + ' · em breve';
   $('premioNote').textContent = 'Premiação desta rodada. Consulte o regulamento completo no final desta página.';
-  $('regRoundStatus').innerHTML = 'A <strong>' + nomeCampanha + '</strong> ainda não começou: as datas saem em breve nesta página e no grupo da campanha.';
+  $('regRoundStatus').innerHTML = 'A <strong>' + nomeCampanha + '</strong> ainda não começou: as datas saem em breve nesta página.';
   $('heroCta').textContent = 'Quero garantir minha vaga →';
 }else if(status === 'pre'){
   $('campaignStamp').textContent = CONFIG.campaignLabel + ' · EM BREVE';
@@ -1670,7 +1648,6 @@ refreshRanking();
 setInterval(refreshRanking, 5 * 60 * 1000); // atualiza sozinho a cada 5 minutos, enquanto a página estiver aberta
 function fillAccessLinks(){
   ligarLink('driveLink', CONFIG.driveFolderUrl);
-  ligarLink('whatsLink', CONFIG.whatsappGroupUrl);
 }
 function ligarLink(id, url){
   const a = document.getElementById(id);
