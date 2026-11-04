@@ -146,9 +146,15 @@ input[type=text]:focus { outline: none; border-color: var(--ink); }
 .final-cartao { width: 100%; max-width: 1080px; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .final-titulo { margin: 18px 0 6px; }
 .final-titulo:focus { outline: none; }
-.final-envio { margin: 0 0 22px; color: var(--ink-dim); font-size: 16px; min-height: 24px; }
-.final-envio.pendente { color: var(--ink); }
-.final-envio.recusado { color: var(--erro); font-weight: 700; }
+/* o status do envio: pequeno, no canto, sem disputar atenção */
+.final-envio {
+  position: fixed; left: 18px; bottom: 14px; margin: 0; max-width: 60vw;
+  color: var(--ink-faint); font-size: 12px; text-align: left;
+}
+.final-envio.pendente { color: var(--ink-dim); }
+.final-envio.recusado { color: var(--erro); font-weight: 700; font-size: 14px; }
+.recebido { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 60px 0; }
+.recebido .final-titulo { margin: 0; font-size: clamp(40px, 6vw, 72px); }
 .jogo { width: 100%; padding: 26px; border: 1px solid var(--line); border-radius: var(--raio); background: var(--surface); }
 .jogo-chamada { margin: 0 0 6px; font-size: 18px; color: var(--ink-dim); }
 .jogo-chamada b { color: var(--ink); }
@@ -190,5 +196,62 @@ input[type=text]:focus { outline: none; border-color: var(--ink); }
   .resultado { grid-template-columns: 1fr; }
   .jogo-opcoes { grid-template-columns: 1fr; }
   .tela-inicio, .tela-final { padding: 20px 16px; }
+  .tela-final { flex-direction: column; }
+  .final-envio { position: static; order: 2; margin-top: 14px; max-width: none; }
+  .jogo-pergunta { font-size: 28px; }
 }
-@media (prefers-reduced-motion: reduce) { .botao { transition: none; } }
+/* ===================== O MOVIMENTO (04/11/2026, o pedido do Luis: "muito pobre") =====================
+   Só transform e opacity (o tablet comum não trava); nada espera a animação para aceitar o toque. */
+
+/* a troca de tela: cada passo entra deslizando, rápido */
+.tela:not([hidden]) { animation: entra-tela .25s ease-out both; }
+@keyframes entra-tela { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+
+/* a abertura: o título entra, o carimbo "carimba", o Começar respira, a linha da brincadeira aparece por último */
+.inicio-titulo { animation: sobe .8s cubic-bezier(.2, .8, .2, 1) .1s both; }
+.tela-inicio .carimbo { animation: carimba .5s cubic-bezier(.3, 1.6, .5, 1) .5s both; }
+.inicio-sub { animation: sobe .7s ease-out .35s both; }
+.botao-respira { animation: sobe .6s ease-out .55s both, respira 2.8s ease-in-out 1.3s infinite; }
+.inicio-brincadeira {
+  margin: 26px 0 0; font-size: 17px; font-weight: 700; color: var(--ink);
+  animation: sobe .6s ease-out .9s both;
+}
+.inicio-brincadeira::before { content: '♥'; color: var(--shopee); margin-right: 10px; }
+@keyframes sobe { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes carimba { from { opacity: 0; transform: rotate(-4deg) scale(1.8); } to { opacity: 1; transform: rotate(-4deg) scale(1); } }
+@keyframes respira { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* o favorito: o cartão dá um pulo e o coração pulsa ao marcar; ao desmarcar, volta suave */
+.produto-caixa { transition: border-color .2s ease, box-shadow .2s ease, opacity .25s ease, transform .2s ease; }
+.produto.pulou .produto-caixa { animation: pulo .38s cubic-bezier(.3, 1.5, .5, 1); }
+.produto input:checked + .produto-caixa .marca-fav { animation: pulsa .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes pulo { 0% { transform: scale(1); } 40% { transform: scale(1.06) translateY(-6px); } 100% { transform: none; } }
+@keyframes pulsa { 0% { transform: scale(0); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+/* o 6º: o "5 de 5" balança */
+.contador.balanca { animation: balanca .45s ease; color: var(--shopee); }
+@keyframes balanca { 0%, 100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+
+/* o recebido e as perguntas, uma de cada vez */
+.recebido .final-titulo { animation: carimba-titulo .5s cubic-bezier(.3, 1.5, .5, 1) both; }
+@keyframes carimba-titulo { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+.jogo-quadro.entra { animation: pergunta .38s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes pergunta { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: none; } }
+.jogo { padding: 40px 30px; }
+.jogo-pergunta { font-size: 38px; margin-bottom: 28px; }
+
+/* o par revelado: o cartão que vira */
+.resultado { perspective: 1200px; }
+.resultado.vira { animation: vira .75s cubic-bezier(.2, .8, .2, 1) both; transform-origin: center; }
+@keyframes vira {
+  0% { opacity: 0; transform: rotateY(90deg) scale(.85); }
+  60% { opacity: 1; transform: rotateY(-10deg) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+.final-acoes:not([hidden]) { animation: sobe .4s ease-out .5s both; }
+
+/* o confete: uma tela por cima de tudo, que não pega o toque */
+.confete { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 30; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

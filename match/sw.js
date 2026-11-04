@@ -1,7 +1,7 @@
 /* LUMISS · /match do evento da Shopee — guarda o site no tablet para abrir mesmo sem internet (as 20 fotos inclusive).
    O cadastro (POST para o LUMISS OS) nunca passa por aqui: quem segura sem internet é o comum/cadastro.js.
    Troque a VERSAO sempre que publicar arquivos novos. */
-var VERSAO = 'lumiss-match-shopee-2026-11-04-1';
+var VERSAO = 'lumiss-match-shopee-2026-11-04-2';
 var FOTOS = ['SG7.png', 'MEL3.png', 'LARA2.png', 'TATI1.png', 'TATI2.jpg', 'LILA1.png', 'DUDA1.png', 'CH3.png', 'JELLY1.png', 'JELLY3.jpg',
   'ROSA1.png', 'ROSA2.png', 'DORA1.png', 'DORA2.png', 'IRIS1.png', 'GIN5.jpg', 'GIN7.jpg', 'TAM3.jpg', 'SG3.png', 'MEL2.png'];
 var ESSENCIAIS = ['./', './styles.css', './app.js', './config.js', './logo.svg', './manifest.webmanifest',

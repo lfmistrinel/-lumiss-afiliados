@@ -32,7 +32,8 @@
       <p class="carimbo">Afiliadas · Shopee</p>
       <h1 class="inicio-titulo">Seja <b>afiliada LUMISS</b> na Shopee</h1>
       <p class="inicio-sub">Leva 1 minuto: a sua numeração, os seus modelos favoritos e o seu @ da Shopee.</p>
-      <button type="button" class="botao botao-grande" id="botao-comecar">Começar</button>
+      <button type="button" class="botao botao-grande botao-respira" id="botao-comecar">Começar</button>
+      <p class="inicio-brincadeira">No fim, descubra qual dos seus 5 é a sua cara</p>
     </div>
     <button type="button" class="botao-telacheia" id="botao-telacheia" title="Tela cheia" aria-label="Tela cheia">⛶</button>
   </section>
@@ -134,18 +135,26 @@
 
   <!-- Final: o recebido e a brincadeira -->
   <section class="tela tela-final" id="tela-final" hidden>
+    <!-- O status do envio: uma linha pequena no canto, sem disputar atenção -->
+    <p class="final-envio" id="final-envio" role="status" aria-live="polite"></p>
     <div class="final-cartao">
-      <img class="logo" src="logo.svg" alt="LUMISS">
-      <h2 class="final-titulo" id="final-titulo" tabindex="-1">Cadastro recebido!</h2>
-      <p class="final-envio" id="final-envio" role="status" aria-live="polite"></p>
-
-      <div class="jogo" id="jogo">
-        <p class="jogo-chamada">Agora, uma brincadeira: <b>qual dos seus 5 favoritos é a sua cara?</b></p>
-        <p class="jogo-contador" id="jogo-contador"></p>
-        <p class="jogo-pergunta" id="jogo-pergunta"></p>
-        <div class="jogo-opcoes" id="jogo-opcoes"></div>
+      <!-- 1. o recebido (com confete), antes da 1ª pergunta -->
+      <div class="recebido" id="recebido">
+        <img class="logo logo-grande" src="logo.svg" alt="LUMISS">
+        <h2 class="final-titulo" id="final-titulo" tabindex="-1">Cadastro recebido!</h2>
       </div>
 
+      <!-- 2. as 3 perguntas, uma de cada vez (obrigatórias: sem botão de sair) -->
+      <div class="jogo" id="jogo" hidden>
+        <p class="jogo-chamada">Qual dos seus 5 favoritos <b>é a sua cara?</b></p>
+        <p class="jogo-contador" id="jogo-contador"></p>
+        <div class="jogo-quadro" id="jogo-quadro">
+          <p class="jogo-pergunta" id="jogo-pergunta"></p>
+          <div class="jogo-opcoes" id="jogo-opcoes"></div>
+        </div>
+      </div>
+
+      <!-- 3. o par revelado (o cartão que vira, com confete), e só então a próxima afiliada -->
       <div class="resultado" id="resultado" hidden>
         <div class="resultado-foto" id="resultado-foto"></div>
         <div class="resultado-texto">
@@ -156,12 +165,13 @@
         </div>
       </div>
 
-      <div class="final-acoes">
+      <div class="final-acoes" id="final-acoes" hidden>
         <button type="button" class="botao botao-grande" id="botao-proxima">Próxima afiliada</button>
         <p class="final-contagem" id="final-contagem"></p>
       </div>
     </div>
   </section>
+  <canvas class="confete" id="confete" aria-hidden="true"></canvas>
 </main>
 
 <div class="sobreposicao" id="aviso-inatividade" hidden>

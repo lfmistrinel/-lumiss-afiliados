@@ -40,6 +40,64 @@
     var s = String(v == null ? '' : v).trim().replace(/\s+/g, '').replace(/^@+/, '');
     return s.indexOf('/') < 0 && /^[^@]+@/.test(s);
   }
+  /* Põe (de novo) a classe que dispara a animação; ela sai sozinha no fim. Não segura o toque. */
+  function reanimar(el, classe) {
+    if (!el) return;
+    el.classList.remove(classe);
+    void el.offsetWidth; // o navegador "esquece" a animação anterior
+    el.classList.add(classe);
+    el.addEventListener('animationend', function fim() { el.classList.remove(classe); el.removeEventListener('animationend', fim); });
+  }
+  var SEM_MOVIMENTO = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* O CONFETE, feito à mão (nada de biblioteca: o site abre sem internet). Só as cores da pele: preto, branco, cinza e o laranja da
+     Shopee. ~1,6 s; o recomeço o apaga na hora. Com "reduzir movimento", não sai. */
+  var CORES_CONFETE = ['#ffffff', '#9a9a9a', '#4d4d4d', '#000000', '#EE4D2D', '#EE4D2D'];
+  var confete = { quadro: 0, pecas: [] };
+  function soltarConfete() {
+    pararConfete();
+    if (SEM_MOVIMENTO) return;
+    var tela = document.getElementById('confete');
+    var w = tela.width = window.innerWidth;
+    var h = tela.height = window.innerHeight;
+    var ctx = tela.getContext('2d');
+    var pecas = [];
+    for (var i = 0; i < 90; i++) {
+      pecas.push({
+        x: w * (0.2 + Math.random() * 0.6), y: h * 0.35 + Math.random() * 40,
+        vx: (Math.random() - 0.5) * 14, vy: -8 - Math.random() * 10,
+        g: 0.42 + Math.random() * 0.15, r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.4,
+        lw: 7 + Math.random() * 6, lh: 4 + Math.random() * 5, cor: CORES_CONFETE[i % CORES_CONFETE.length]
+      });
+    }
+    var inicio = performance.now();
+    function passo(agora) {
+      var t = agora - inicio;
+      ctx.clearRect(0, 0, w, h);
+      if (t > 1700) { pararConfete(); return; }
+      ctx.globalAlpha = t > 1200 ? Math.max(0, 1 - (t - 1200) / 500) : 1;
+      for (var j = 0; j < pecas.length; j++) {
+        var p = pecas[j];
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= 0.985; p.r += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r);
+        ctx.fillStyle = p.cor;
+        if (p.cor === '#000000') { ctx.strokeStyle = '#4d4d4d'; ctx.lineWidth = 1; ctx.strokeRect(-p.lw / 2, -p.lh / 2, p.lw, p.lh); }
+        ctx.fillRect(-p.lw / 2, -p.lh / 2, p.lw, p.lh);
+        ctx.restore();
+      }
+      confete.quadro = requestAnimationFrame(passo);
+    }
+    confete.quadro = requestAnimationFrame(passo);
+  }
+  function pararConfete() {
+    cancelAnimationFrame(confete.quadro);
+    confete.quadro = 0;
+    var tela = document.getElementById('confete');
+    if (tela && tela.width) tela.getContext('2d').clearRect(0, 0, tela.width, tela.height);
+  }
+
   function produto(codigo) {
     for (var i = 0; i < C.produtos.length; i++) if (C.produtos[i].codigo === codigo) return C.produtos[i];
     return null;
@@ -151,8 +209,14 @@
       E.numero = t.value;
     } else if (t.name === 'favoritos') {
       if (t.checked) {
-        if (E.favoritos.length >= QUANTOS) { t.checked = false; aviso('São ' + QUANTOS + '. Desmarque um para trocar.'); return; }
+        if (E.favoritos.length >= QUANTOS) {
+          t.checked = false;
+          reanimar($('#contador-favoritos'), 'balanca');
+          aviso('São ' + QUANTOS + '. Desmarque um para trocar.');
+          return;
+        }
         E.favoritos.push(t.value);
+        reanimar(t.closest('.produto'), 'pulou');
       } else {
         E.favoritos = E.favoritos.filter(function (x) { return x !== t.value; });
       }
@@ -213,29 +277,38 @@
     el.classList.remove('pendente', 'recusado');
     if (!r) { el.textContent = 'Enviando…'; return; }
     if (r.estado === 'confirmado') {
-      $('#final-titulo').textContent = 'Cadastro recebido!';
-      el.textContent = 'Tudo certo: o seu cadastro chegou à LUMISS.';
+      el.textContent = 'Cadastro enviado à LUMISS.';
     } else if (r.estado === 'guardado') {
-      $('#final-titulo').textContent = 'Cadastro recebido!';
-      el.textContent = 'A internet está lenta: o cadastro ficou guardado neste tablet e vai sozinho.';
+      el.textContent = 'Internet lenta: o cadastro ficou guardado neste tablet e vai sozinho.';
       el.classList.add('pendente');
     } else {
-      $('#final-titulo').textContent = 'Quase lá';
       el.textContent = 'O cadastro não passou (' + (r.mensagem || 'confira os dados') + '). Chame a equipe LUMISS e faça de novo.';
       el.classList.add('recusado');
     }
   }
 
-  /* ------------------------------------------------------------ a tela final e a brincadeira */
+  /* ------------------------------------------------------------ a tela final e a brincadeira
+     Três momentos, um de cada vez: (1) o "Cadastro recebido!" com confete; (2) as 3 perguntas, OBRIGATÓRIAS (nenhum botão de
+     sair — se ninguém tocar, vale o "Ainda está aí?"); (3) o par revelado, e só então o "Próxima afiliada" e os 25 s. */
+  var RECEBIDO_MS = 1700;
+  var relogioRecebido = null;
   function mostrarFinal(pares) {
     E.jogo = { i: 0, respostas: {}, pares: pares };
-    $('#final-titulo').textContent = 'Cadastro recebido!';
+    $('#recebido').hidden = false;
+    $('#jogo').hidden = true;
     $('#resultado').hidden = true;
-    $('#jogo').hidden = false;
+    $('#final-acoes').hidden = true;
     pararContagemFinal();
     mostrar('tela-final');
-    renderizarPergunta();
     focar($('#final-titulo'));
+    soltarConfete();
+    clearTimeout(relogioRecebido);
+    relogioRecebido = setTimeout(comecarPerguntas, SEM_MOVIMENTO ? 900 : RECEBIDO_MS);
+  }
+  function comecarPerguntas() {
+    $('#recebido').hidden = true;
+    $('#jogo').hidden = false;
+    renderizarPergunta();
   }
   function renderizarPergunta() {
     var q = PERGUNTAS[E.jogo.i];
@@ -244,10 +317,11 @@
     $('#jogo-opcoes').innerHTML = q.opcoes.map(function (o) {
       return '<button type="button" class="botao botao-secundario" data-resposta="' + esc(o[0]) + '">' + esc(o[1]) + '</button>';
     }).join('');
+    reanimar($('#jogo-quadro'), 'entra');
   }
   $('#jogo-opcoes').addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-resposta]');
-    if (!b) return;
+    if (!b || E.jogo.i >= PERGUNTAS.length) return;
     E.jogo.respostas[PERGUNTAS[E.jogo.i].chave] = b.getAttribute('data-resposta');
     E.jogo.i += 1;
     if (E.jogo.i < PERGUNTAS.length) renderizarPergunta(); else revelar();
@@ -270,13 +344,16 @@
     var p = parDaCara(E.jogo.pares, E.jogo.respostas);
     $('#jogo').hidden = true;
     $('#jogo-opcoes').innerHTML = '';
-    if (!p) { iniciarContagemFinal(); return; }
+    if (!p) { $('#final-acoes').hidden = false; iniciarContagemFinal(); return; }
     var estilo = C.estilos[p.ocasiao + '|' + p.altura + '|' + p.tom] || { nome: 'Do seu jeito', frase: 'Um par que é a sua cara.' };
     $('#resultado-foto').innerHTML = '<img src="' + esc(foto(p)) + '" alt="' + esc(p.nome) + '">';
     $('#resultado-estilo').textContent = estilo.nome;
     $('#resultado-frase').textContent = estilo.frase;
     $('#resultado-modelo').textContent = 'Dos seus 5 favoritos, o que é a sua cara: ' + p.nome + '.';
     $('#resultado').hidden = false;
+    reanimar($('#resultado'), 'vira');
+    $('#final-acoes').hidden = false;
+    soltarConfete();
     iniciarContagemFinal();
   }
 
@@ -291,6 +368,13 @@
     $('#aviso-inatividade').hidden = true;
     $('#regulamento').hidden = true;
     pararContagemFinal();
+    clearTimeout(relogioRecebido);
+    pararConfete();
+    $('#recebido').hidden = false;
+    $('#jogo').hidden = true;
+    $('#resultado').hidden = true;
+    $('#final-acoes').hidden = true;
+    $$('.pulou, .balanca, .entra, .vira').forEach(function (el) { el.classList.remove('pulou', 'balanca', 'entra', 'vira'); });
     F.reset();
     E.passo = 0;
     E.numero = '';
