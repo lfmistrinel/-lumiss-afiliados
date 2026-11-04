@@ -1,12 +1,12 @@
 {
-  "name": "LUMISS · Match de Verão",
+  "name": "LUMISS · Afiliadas Shopee",
   "short_name": "LUMISS",
-  "description": "Cadastro de afiliadas LUMISS no TikTok Shop Fashion · Match de Verão.",
+  "description": "Cadastro de afiliadas LUMISS na Shopee — estande do evento.",
   "lang": "pt-BR",
   "start_url": "./?modo=tablet",
   "scope": "./",
   "display": "fullscreen",
-  "orientation": "any",
+  "orientation": "landscape",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
