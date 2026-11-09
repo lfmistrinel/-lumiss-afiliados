@@ -1053,11 +1053,11 @@ const CONFIG = {
   // o CADASTRO vai para o LUMISS OS (01/11/2026) — não mexer
   canal: "tiktok",
   cadastroUrl: "https://app.lumiss.com.br/api/afiliadas/cadastro",
-  // O RANKING DA RODADA: false = a página NÃO lê a planilha e mostra "o ranking aparece a partir da primeira apuração" (a aba antiga
-  // ainda tem o resultado da campanha anterior). Vire para true quando a fonte do ranking desta rodada estiver pronta.
-  rankingLigado: false,
-  // a planilha do Apps Script agora serve SÓ para o RANKING (a aba "Ranking")
-  rankingUrl: "https://script.google.com/macros/s/AKfycbzDLf8loMU5GzEUUo24yjCRAvlQT24y9I6_C9JSesuHotEB_OI_6OOlgw1r-QWu0Zx2/exec",
+  // O RANKING DA RODADA: false = a página NÃO lê o ranking e mostra "o ranking aparece a partir da primeira apuração".
+  // Desde a C03 (o AFI-4, 09/11/2026) o ranking vem do LUMISS OS, apurado todo dia pela API do TikTok: SÓ a posição e o @ (o Luis:
+  // "mostra só o arroba"). Este ramo sobe SÓ depois da 1ª apuração boa, com o ok do Luis.
+  rankingLigado: true,
+  rankingUrl: "https://app.lumiss.com.br/api/afiliadas/ranking?campanha=C3",
   // pasta do Drive com os vídeos desta rodada
   driveFolderUrl: "https://drive.google.com/drive/folders/1IsZ5f_K1XC4DEf5cSn47EQDOIfDNs92H?usp=sharing",
   // link de convite do grupo de WhatsApp da campanha
@@ -1533,8 +1533,13 @@ async function refreshRanking(){
     return;
   }
   try{
-    const data = await chamarPlanilha('action=ranking', 12000);
-    const ranking = (data.ranking || []).slice(0, 10);
+    // O ranking do LUMISS OS (o AFI-4): um GET simples, sem cookie; a resposta é { data: { ranking: [{ posicao, tiktok }] } }.
+    const ctrlRanking = new AbortController();
+    const corteRanking = setTimeout(() => ctrlRanking.abort(), 12000);
+    const resp = await fetch(CONFIG.rankingUrl, { cache: 'no-store', credentials: 'omit', signal: ctrlRanking.signal });
+    clearTimeout(corteRanking);
+    const data = resp.ok ? await resp.json() : {};
+    const ranking = ((data.data && data.data.ranking) || []).slice(0, 10);
     if(!ranking.length){
       list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
       console.warn('[ranking] resposta sem lista de ranking:', data);
@@ -1557,8 +1562,7 @@ async function refreshRanking(){
         <div class="ranking-pos">
           <span class="rk">${medals[pos-1] || '#'+pos}</span>
           <div class="who">
-            <span class="name">${r.nome || ''}</span>
-            ${r.tiktok ? `<span class="handle">${r.tiktok}</span>` : ''}
+            <span class="name">${String(r.tiktok || '').replace(/[^@A-Za-z0-9._-]/g, '')}</span>
             ${selo}
           </div>
         </div>
