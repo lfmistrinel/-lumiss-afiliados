@@ -820,7 +820,7 @@
       </div>
       <canvas id="confettiCanvas"></canvas>
     </div>
-    <p class="prize-note" id="rankingNote">Ranking de pontos, atualizado diariamente pela equipe Lumiss com base nos vídeos e lives publicados no TikTok. Rodada aberta até <span id="rankingDates"></span>.</p>
+    <p class="prize-note" id="rankingNote">O ranking é atualizado todos os dias e mostra os vídeos e lives publicados até 3 dias antes — é o tempo que o TikTok leva para liberar os dados. Rodada aberta até <span id="rankingDates"></span>.</p>
     <p class="prize-note" id="tieNote" style="display:none;">
       <strong>Sobre a 5ª colocação:</strong> houve empate técnico na disputa pela última posição premiada. Em vez de aplicar o critério de desempate previsto no regulamento, a Lumiss optou por abrir uma exceção e premiar as <strong>duas criadoras</strong> envolvidas com R$ 100 cada — por isso o 6º lugar também aparece com premiação neste ranking.
     </p>
@@ -945,7 +945,7 @@
         </ul>
         <p>Vários produtos da campanha no mesmo vídeo ou na mesma live continuam valendo <strong>1 ponto</strong>. Todas as variações de cor e numeração de um produto participante contam como o mesmo produto. Não há limite de pontos por dia. <strong>A venda não pontua</strong>: ela serve apenas como critério de desempate (item 6). É responsabilidade da afiliada garantir que o produto da campanha esteja corretamente marcado no vídeo ou na sacolinha da live; a Lumiss não se responsabiliza por conteúdo que não possa ser atribuído à afiliada.</p>
         <p>Para efeito de apuração, são considerados apenas os vídeos e as lives que cumprem as regras acima e as deste regulamento. <strong>Não são contabilizados</strong> conteúdos removidos pelo TikTok, que violem as diretrizes da plataforma, ou publicados por perfis não cadastrados nesta página.</p>
-        <p><strong>O vídeo só vale ponto se continuar publicado até o fim da campanha (30/12).</strong> Vídeo apagado ou deixado privado antes disso perde o ponto.</p>
+        <p><strong>O vídeo só vale ponto se continuar publicado até o fim da campanha (30/11).</strong> Vídeo apagado ou deixado privado antes disso perde o ponto.</p>
 
         <h3>6. Premiação</h3>
         <p>As <strong>5 (cinco) afiliadas mais bem colocadas</strong> no ranking ao final de cada rodada recebem premiação em dinheiro. Os valores de cada rodada são divulgados pela Lumiss nos canais oficiais antes do início da rodada e podem variar entre edições, a critério da Lumiss.</p>
@@ -954,6 +954,7 @@
 
         <h3>7. Divulgação do resultado</h3>
         <p>O ranking é acompanhado ao longo da rodada nesta página e tem caráter parcial e informativo enquanto a rodada estiver em andamento, podendo sofrer alterações em razão da conferência dos vídeos e das lives pela Lumiss. O <strong>resultado final e oficial</strong> é o publicado nesta página após o encerramento da rodada e a conferência dos conteúdos válidos.</p>
+        <p>O ranking é atualizado todos os dias e mostra os vídeos e lives publicados até 3 dias antes — é o tempo que o TikTok leva para liberar os dados.</p>
 
         <h3>8. Uso do conteúdo produzido</h3>
         <p>Ao publicar vídeos com os materiais e/ou produtos da campanha, a afiliada autoriza a Lumiss a compartilhar, repostar e impulsionar esse conteúdo (inclusive via anúncios pagos), sempre com os devidos créditos ao perfil da criadora, sem que isso gere remuneração adicional além da premiação e das comissões já previstas no programa de afiliados do TikTok Shop.</p>
@@ -1002,7 +1003,7 @@ const CONFIG = {
   campaignLabel: "CAMPANHA 03",
   roundLabel: "Rodada 03",
   startDate: "2026-11-10",
-  endDate:   "2026-12-30",
+  endDate:   "2026-11-30",
 
   // PRODUTOS DA RODADA — o vídeo ou a live com QUALQUER um deles marcado vale ponto (Campanha 03: conteúdo, não venda)
   products: [
@@ -1513,7 +1514,7 @@ async function refreshRanking(){
       '</div>';
     $('rankingTitle').textContent = 'Ranking';
     $('rankingNote').textContent =
-      'Assim que a campanha começar, o ranking passa a ser atualizado diariamente pela equipe Lumiss com base nos vídeos e lives publicados no TikTok.';
+      'Assim que a campanha começar, o ranking passa a ser atualizado todos os dias, com os vídeos e lives publicados até 3 dias antes — é o tempo que o TikTok leva para liberar os dados.';
     return;
   }
 
@@ -1525,7 +1526,7 @@ async function refreshRanking(){
       '</div>';
     $('rankingTitle').textContent = 'Ranking';
     $('rankingNote').textContent =
-      'O ranking é calculado pela equipe Lumiss com base nos vídeos e lives publicados no TikTok. Rodada aberta até ' + formatDateLong(CONFIG.endDate) + '.';
+      'O ranking é atualizado todos os dias e mostra os vídeos e lives publicados até 3 dias antes — é o tempo que o TikTok leva para liberar os dados. Rodada aberta até ' + formatDateLong(CONFIG.endDate) + '.';
     return;
   }
 
