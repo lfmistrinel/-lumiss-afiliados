@@ -1478,7 +1478,7 @@ function formatDateShort(dateStr){
   });
 })();
 
-/* ranking ao vivo — busca a aba "Ranking" da planilha */
+/* ranking ao vivo — lido do LUMISS OS (o AFI-4): só a posição e o @ */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let rankingJaAnimado = false;
 
@@ -1580,8 +1580,8 @@ async function refreshRanking(){
   }catch(e){
     console.error('[ranking] falha ao carregar:', e);
     const motivo = e.name === 'AbortError'
-      ? 'A planilha demorou demais para responder.'
-      : 'Não foi possível conectar à planilha.';
+      ? 'O ranking demorou demais para responder.'
+      : 'Não foi possível carregar o ranking.';
     list.innerHTML = '<div class="ranking-empty">' + motivo + ' Recarregue a página em instantes.</div>';
   }
 }
