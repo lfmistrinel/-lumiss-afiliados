@@ -1541,7 +1541,8 @@ async function refreshRanking(){
     const resp = await fetch(CONFIG.rankingUrl, { cache: 'no-store', credentials: 'omit', signal: ctrlRanking.signal });
     clearTimeout(corteRanking);
     const data = resp.ok ? await resp.json() : {};
-    const ranking = ((data.data && data.data.ranking) || []).slice(0, 10);
+    // só as 5 melhores (o Luis, 12/11/2026: "Só mostra o ranking das 5 melhores"); a porta do OS também devolve só 5
+    const ranking = ((data.data && data.data.ranking) || []).slice(0, 5);
     if(!ranking.length){
       list.innerHTML = '<div class="ranking-empty">Ranking ainda não divulgado — volte amanhã.</div>';
       console.warn('[ranking] resposta sem lista de ranking:', data);
